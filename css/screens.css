@@ -449,16 +449,19 @@
 
 /* Range Slider Styling inside Selected Cards */
 .qty-slider-wrap {
-  display: none;
+  display: none !important;
   width: 100%;
   margin-top: 14px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.28);
-  padding-top: 12px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.06);
+  padding-top: 14px;
+  padding-bottom: 4px;
+  flex-direction: column;
+  gap: 14px;
   animation: slideDown 0.24s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mcq.sel .qty-slider-wrap {
-  display: block;
+  display: flex !important;
 }
 
 .qty-slider {

@@ -95,6 +95,52 @@ const LANG = {
         trad_blend_multimillet: "Multi Millet Atta",
         trad_blend_multimillet_desc: "Gluten-free blend of ragi, jowar, bajra, and nutritious millets",
 
+        // Categories
+        cat_atta: "Atta",
+        cat_pulses: "Pulses",
+        cat_spices: "Spices",
+        cat_oil: "Oil",
+        cat_ghee: "Ghee",
+        cat_salt: "Salt",
+
+        // Pulses Products
+        trad_blend_toor_dal: "Toor Dal",
+        trad_blend_toor_dal_desc: "Premium unpolished split pigeon peas, rich in protein",
+        trad_blend_masoor_dal: "Masoor Dal",
+        trad_blend_masoor_dal_desc: "Nutritious red split lentils, quick to cook and delicious",
+        trad_blend_arhar_dal: "Arhar Dal",
+        trad_blend_arhar_dal_desc: "Traditional split yellow pigeon peas, ideal for daily meals",
+
+        // Spices Products
+        trad_blend_turmeric: "Turmeric Powder",
+        trad_blend_turmeric_desc: "Rich in curcumin, naturally sourced golden turmeric",
+        trad_blend_jeera_powder: "Jeera Powder",
+        trad_blend_jeera_powder_desc: "Freshly ground roasted cumin seeds, adds rich earthy flavor",
+        trad_blend_garam_masala: "Garam Masala",
+        trad_blend_garam_masala_desc: "Aromatic blend of premium handpicked whole spices",
+
+        // Oil Products
+        trad_blend_yellow_mustard_oil: "Yellow Mustard Oil",
+        trad_blend_yellow_mustard_oil_desc: "Cold-pressed Svasti Yellow Mustard Oil with sharp aroma",
+        trad_blend_groundnut_oil: "Groundnut Oil",
+        trad_blend_groundnut_oil_desc: "100% pure cold-pressed groundnut oil, ideal for cooking",
+        trad_blend_coconut_oil: "Coconut Oil",
+        trad_blend_coconut_oil_desc: "100% natural cold-pressed coconut oil, pure and aromatic",
+
+        // Ghee Products
+        trad_blend_desi_cow_ghee: "Desi Cow Ghee",
+        trad_blend_desi_cow_ghee_desc: "Slow-cooked cow ghee with rich granular texture and aroma",
+        trad_blend_buffalo_ghee: "Buffalo Ghee",
+        trad_blend_buffalo_ghee_desc: "Pure premium buffalo ghee, high in fat and rich flavor",
+
+        // Salt Products
+        trad_blend_iodized_salt: "Iodized Salt",
+        trad_blend_iodized_salt_desc: "Solar evaporated pure iodized salt for daily wellness",
+        trad_blend_black_salt: "Black Salt",
+        trad_blend_black_salt_desc: "Naturally sourced tangy black salt, perfect for chaats",
+        trad_blend_pink_salt: "Himalayan Pink Salt",
+        trad_blend_pink_salt_desc: "100% natural Himalayan pink rock salt with trace minerals",
+
         // Nutritional Goals (Track 2 - Q4)
         nutr_title: "What matters most in your family’s everyday meals?",
         nutr_subtitle: "Select up to 2 goals",
@@ -166,7 +212,7 @@ const LANG = {
         toast_name_req: "Please enter your name",
         toast_select_req: "Please make a selection",
         toast_limit_goals: "You can select up to 2 goals only",
-        toast_pick_blend: "Please select a traditional blend to continue"
+        toast_pick_blend: "Please select at least one product to continue"
     },
     hi: {
         // Selection Screen
@@ -231,6 +277,52 @@ const LANG = {
         trad_blend_multigrain_desc: "गेहूं, सोया, जई, मक्का और चने का शक्तिशाली पौष्टिक मिश्रण",
         trad_blend_multimillet: "मल्टी मिलेट आटा",
         trad_blend_multimillet_desc: "रागी, ज्वार, बाजरा और पौष्टिक बाजरा का लस मुक्त स्वस्थ मिश्रण",
+
+        // Categories
+        cat_atta: "आटा",
+        cat_pulses: "दालें",
+        cat_spices: "मसाले",
+        cat_oil: "तेल",
+        cat_ghee: "घी",
+        cat_salt: "नमक",
+
+        // Pulses Products
+        trad_blend_toor_dal: "तूर दाल",
+        trad_blend_toor_dal_desc: "प्रीमियम बिना पॉलिश की हुई अरहर दाल, प्रोटीन से भरपूर",
+        trad_blend_masoor_dal: "मसूर दाल",
+        trad_blend_masoor_dal_desc: "पौष्टिक लाल मसूर दाल, पकाने में आसान और स्वादिष्ट",
+        trad_blend_arhar_dal: "अरहर दाल",
+        trad_blend_arhar_dal_desc: "पारंपरिक पीली अरहर दाल, दैनिक भोजन के लिए आदर्श",
+
+        // Spices Products
+        trad_blend_turmeric: "हल्दी पाउडर",
+        trad_blend_turmeric_desc: "करक्यूमिन से भरपूर, प्राकृतिक रूप से प्राप्त सुनहरी हल्दी",
+        trad_blend_jeera_powder: "जीरा पाउडर",
+        trad_blend_jeera_powder_desc: "ताज़ा भुना और पिसा हुआ जीरा, समृद्ध स्वाद प्रदान करता है",
+        trad_blend_garam_masala: "गरम मसाला",
+        trad_blend_garam_masala_desc: "प्रीमियम चुनिंदा खड़े मसालों का सुगंधित मिश्रण",
+
+        // Oil Products
+        trad_blend_yellow_mustard_oil: "पीला सरसों का तेल",
+        trad_blend_yellow_mustard_oil_desc: "तीखी खुशबू वाला कोल्ड-प्रेस (कच्ची घानी) पीला सरसों का तेल",
+        trad_blend_groundnut_oil: "मूंगफली का तेल",
+        trad_blend_groundnut_oil_desc: "100% शुद्ध कोल्ड-प्रेस मूंगफली का तेल, खाना पकाने के लिए आदर्श",
+        trad_blend_coconut_oil: "नारियल तेल",
+        trad_blend_coconut_oil_desc: "100% प्राकृतिक कोल्ड-प्रेस नारियल तेल, शुद्ध और सुगंधित",
+
+        // Ghee Products
+        trad_blend_desi_cow_ghee: "देशी गाय का घी",
+        trad_blend_desi_cow_ghee_desc: "दानेदार बनावट और बेहतरीन महक वाला धीमी आंच पर पका गाय का घी",
+        trad_blend_buffalo_ghee: "भैंस का घी",
+        trad_blend_buffalo_ghee_desc: "शुद्ध प्रीमियम भैंस का घी, भरपूर वसा और उत्तम स्वाद",
+
+        // Salt Products
+        trad_blend_iodized_salt: "आयोडीन युक्त नमक",
+        trad_blend_iodized_salt_desc: "दैनिक स्वास्थ्य के लिए प्राकृतिक रूप से तैयार शुद्ध आयोडीन युक्त नमक",
+        trad_blend_black_salt: "काला नमक",
+        trad_blend_black_salt_desc: "प्राकृतिक रूप से प्राप्त चटपटा काला नमक, चाट के लिए उत्तम",
+        trad_blend_pink_salt: "हिमालयन पिंक साल्ट",
+        trad_blend_pink_salt_desc: "खनिजों से भरपूर 100% प्राकृतिक हिमालयन रॉक साल्ट",
 
         // Nutritional Goals (Track 2 - Q4)
         nutr_title: "आपके परिवार के रोज़मर्रा के भोजन में सबसे महत्वपूर्ण क्या है?",
@@ -303,7 +395,7 @@ const LANG = {
         toast_name_req: "कृपया अपना नाम दर्ज करें",
         toast_select_req: "कृपया चयन करें",
         toast_limit_goals: "आप केवल अधिकतम 2 लक्ष्य ही चुन सकते हैं",
-        toast_pick_blend: "कृपया जारी रखने के लिए एक पारंपरिक मिश्रण चुनें"
+        toast_pick_blend: "कृपया जारी रखने के लिए कम से कम एक उत्पाद चुनें"
     }
 };
 

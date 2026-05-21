@@ -417,4 +417,53 @@
   box-shadow: 0 4px 14px rgba(232, 184, 75, 0.22);
 }
 
+/* =============================================
+   CATEGORY TABS (PREMIUM GLASSMORPHIC TAB BAR)
+   ============================================= */
+.category-tabs {
+  display: flex;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(251, 245, 230, 0.12);
+  border-radius: 18px;
+  padding: 8px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  margin-bottom: 4px;
+}
+.category-tabs::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari/Opera */
+}
+.cat-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  background: transparent;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+.cat-tab:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+}
+.cat-tab.active {
+  background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%);
+  color: var(--br);
+  font-weight: 750;
+  border-color: var(--g1);
+  box-shadow: 0 4px 16px rgba(232, 184, 75, 0.26);
+}
+
 

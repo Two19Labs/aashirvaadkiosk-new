@@ -504,9 +504,19 @@
       <div class="trad-layout-grid">
         <!-- Left Column: Products List -->
         <div class="trad-products-list">
+          <!-- Glassmorphic Category Tabs -->
+          <div class="category-tabs">
+            <button class="cat-tab active" data-cat="atta" onclick="switchCategory('atta')">🌾 <span data-i18n="cat_atta">Atta</span></button>
+            <button class="cat-tab" data-cat="pulses" onclick="switchCategory('pulses')">🫘 <span data-i18n="cat_pulses">Pulses</span></button>
+            <button class="cat-tab" data-cat="spices" onclick="switchCategory('spices')">🌶️ <span data-i18n="cat_spices">Spices</span></button>
+            <button class="cat-tab" data-cat="oil" onclick="switchCategory('oil')">💧 <span data-i18n="cat_oil">Oil</span></button>
+            <button class="cat-tab" data-cat="ghee" onclick="switchCategory('ghee')">🍯 <span data-i18n="cat_ghee">Ghee</span></button>
+            <button class="cat-tab" data-cat="salt" onclick="switchCategory('salt')">🧂 <span data-i18n="cat_salt">Salt</span></button>
+          </div>
+
           <div class="mcq-grid g1" style="max-width: 100%; gap: 14px;">
             <!-- 1. Sharbati Atta (Aisle 01) -->
-            <div class="mcq" onclick="selectTraditionalBlend(this, 'sharbati')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'sharbati')" data-category="atta" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
               <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Image Placeholder Slot -->
@@ -531,7 +541,7 @@
                 </div>
               </div>
               <!-- Quantity & Granulation Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <!-- Quantity selection -->
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
@@ -555,7 +565,7 @@
             </div>
 
             <!-- 2. Khapli Atta (Aisle 02) -->
-            <div class="mcq" onclick="selectTraditionalBlend(this, 'khapli')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'khapli')" data-category="atta" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
               <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Image Placeholder Slot -->
@@ -580,7 +590,7 @@
                 </div>
               </div>
               <!-- Quantity & Granulation Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <!-- Quantity selection -->
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
@@ -604,7 +614,7 @@
             </div>
 
             <!-- 3. Lokwan Atta (Aisle 03) -->
-            <div class="mcq" onclick="selectTraditionalBlend(this, 'lokwan')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'lokwan')" data-category="atta" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
               <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Image Placeholder Slot -->
@@ -629,7 +639,7 @@
                 </div>
               </div>
               <!-- Quantity & Granulation Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <!-- Quantity selection -->
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
@@ -652,8 +662,8 @@
               </div>
             </div>
 
-            <!-- 4. Multigrain Atta (Aisle 04 - Out of Stock) -->
-            <div class="mcq" onclick="selectTraditionalBlend(this, 'multigrain')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+            <!-- 4. Multigrain Atta (Aisle 04) -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'multigrain')" data-category="atta" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
               <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Image Placeholder Slot -->
@@ -678,7 +688,7 @@
                 </div>
               </div>
               <!-- Quantity & Granulation Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <!-- Quantity selection -->
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
@@ -702,7 +712,7 @@
             </div>
 
             <!-- 5. MultiMillet Atta (Aisle 05) -->
-            <div class="mcq" onclick="selectTraditionalBlend(this, 'multimillet')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'multimillet')" data-category="atta" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
               <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Image Placeholder Slot -->
@@ -727,7 +737,7 @@
                 </div>
               </div>
               <!-- Quantity & Granulation Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <!-- Quantity selection -->
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
@@ -749,6 +759,503 @@
                 </div>
               </div>
             </div>
+
+            <!-- PULSES (Aisle 06) -->
+            <!-- 6. Toor Dal -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'toor_dal')" data-category="pulses" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 12l7.03 5.61C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"></path>
+                    <circle cx="9" cy="11" r="1" fill="currentColor"></circle>
+                    <circle cx="15" cy="11" r="1" fill="currentColor"></circle>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 06</span>
+                    <span class="stock-badge in-stock">18 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_toor_dal">Toor Dal</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_toor_dal_desc">Premium unpolished split pigeon peas, rich in protein</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'toor_dal', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'toor_dal', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'toor_dal', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'toor_dal', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. Masoor Dal -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'masoor_dal')" data-category="pulses" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 12l7.03 5.61C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"></path>
+                    <circle cx="9" cy="11" r="1" fill="currentColor"></circle>
+                    <circle cx="15" cy="11" r="1" fill="currentColor"></circle>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 06</span>
+                    <span class="stock-badge in-stock">22 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_masoor_dal">Masoor Dal</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_masoor_dal_desc">Nutritious red split lentils, quick to cook and delicious</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'masoor_dal', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'masoor_dal', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'masoor_dal', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'masoor_dal', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 8. Arhar Dal -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'arhar_dal')" data-category="pulses" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 12l7.03 5.61C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"></path>
+                    <circle cx="9" cy="11" r="1" fill="currentColor"></circle>
+                    <circle cx="15" cy="11" r="1" fill="currentColor"></circle>
+                    <circle cx="12" cy="8" r="1" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 06</span>
+                    <span class="stock-badge in-stock">15 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_arhar_dal">Arhar Dal</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_arhar_dal_desc">Traditional split yellow pigeon peas, ideal for daily meals</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'arhar_dal', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'arhar_dal', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'arhar_dal', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'arhar_dal', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SPICES (Aisle 07) -->
+            <!-- 9. Turmeric -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'turmeric')" data-category="spices" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12l1.5 4.5L18 12H6L4.5 7.5 6 3z"></path>
+                    <path d="M8 12v7a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-7"></path>
+                    <line x1="9" y1="16" x2="15" y2="16"></line>
+                    <line x1="12" y1="6" x2="12" y2="6.01"></line>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 07</span>
+                    <span class="stock-badge in-stock">12 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_turmeric">Turmeric</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_turmeric_desc">High-curcumin golden turmeric powder, rich in flavor and immunity</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'turmeric', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'turmeric', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'turmeric', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'turmeric', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 10. Jeera Powder -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'jeera_powder')" data-category="spices" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12l1.5 4.5L18 12H6L4.5 7.5 6 3z"></path>
+                    <path d="M8 12v7a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-7"></path>
+                    <line x1="9" y1="16" x2="15" y2="16"></line>
+                    <line x1="12" y1="6" x2="12" y2="6.01"></line>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 07</span>
+                    <span class="stock-badge in-stock">10 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_jeera_powder">Jeera Powder</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_jeera_powder_desc">Aromatic dry-roasted cumin powder, perfect seasoning for dishes</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'jeera_powder', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'jeera_powder', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'jeera_powder', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'jeera_powder', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 11. Garam Masala -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'garam_masala')" data-category="spices" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12l1.5 4.5L18 12H6L4.5 7.5 6 3z"></path>
+                    <path d="M8 12v7a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-7"></path>
+                    <line x1="9" y1="16" x2="15" y2="16"></line>
+                    <line x1="12" y1="6" x2="12" y2="6.01"></line>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 07</span>
+                    <span class="stock-badge in-stock">8 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_garam_masala">Garam Masala</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_garam_masala_desc">Authentic Indian spice blend, adds rich flavor to recipes</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'garam_masala', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'garam_masala', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'garam_masala', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'garam_masala', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OIL (Aisle 08) -->
+            <!-- 12. Yellow Mustard Oil -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'yellow_mustard_oil')" data-category="oil" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-13-7-13S5 10.7 5 15a7 7 0 0 0 7 7z"></path>
+                    <path d="M12 18a3 3 0 0 0 3-3" stroke-width="1.5"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 08</span>
+                    <span class="stock-badge in-stock">15 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_yellow_mustard_oil">Yellow Mustard Oil</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_yellow_mustard_oil_desc">Cold-pressed pure yellow mustard oil, robust pungent aroma</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'yellow_mustard_oil', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'yellow_mustard_oil', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'yellow_mustard_oil', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'yellow_mustard_oil', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 13. Groundnut Oil -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'groundnut_oil')" data-category="oil" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-13-7-13S5 10.7 5 15a7 7 0 0 0 7 7z"></path>
+                    <path d="M12 18a3 3 0 0 0 3-3" stroke-width="1.5"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 08</span>
+                    <span class="stock-badge in-stock">12 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_groundnut_oil">Groundnut Oil</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_groundnut_oil_desc">100% pure filtered groundnut oil, ideal for daily deep frying</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'groundnut_oil', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'groundnut_oil', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'groundnut_oil', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'groundnut_oil', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 14. Coconut Oil -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'coconut_oil')" data-category="oil" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-13-7-13S5 10.7 5 15a7 7 0 0 0 7 7z"></path>
+                    <path d="M12 18a3 3 0 0 0 3-3" stroke-width="1.5"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 08</span>
+                    <span class="stock-badge in-stock">9 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_coconut_oil">Coconut Oil</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_coconut_oil_desc">100% pure edible coconut oil, made from sun-dried copras</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'coconut_oil', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'coconut_oil', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'coconut_oil', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'coconut_oil', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GHEE (Aisle 09) -->
+            <!-- 15. Desi Cow Ghee -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'desi_cow_ghee')" data-category="ghee" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 10H5a2 2 0 0 0-2 2v7a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-7a2 2 0 0 0-2-2z"></path>
+                    <path d="M7 10V6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v4"></path>
+                    <circle cx="12" cy="16" r="2" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 09</span>
+                    <span class="stock-badge in-stock">14 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_desi_cow_ghee">Desi Cow Ghee</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_desi_cow_ghee_desc">Slow-cooked cow ghee with rich granular texture and aroma</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'desi_cow_ghee', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'desi_cow_ghee', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'desi_cow_ghee', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'desi_cow_ghee', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 16. Buffalo Ghee -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'buffalo_ghee')" data-category="ghee" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 10H5a2 2 0 0 0-2 2v7a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-7a2 2 0 0 0-2-2z"></path>
+                    <path d="M7 10V6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v4"></path>
+                    <circle cx="12" cy="16" r="2" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 09</span>
+                    <span class="stock-badge in-stock">11 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_buffalo_ghee">Buffalo Ghee</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_buffalo_ghee_desc">Pure buffalo milk ghee with classic white texture and rich taste</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'buffalo_ghee', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'buffalo_ghee', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'buffalo_ghee', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'buffalo_ghee', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SALT (Aisle 10) -->
+            <!-- 17. Iodized Salt -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'iodized_salt')" data-category="salt" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 3h6v3H9z"></path>
+                    <path d="M8 6h8v12a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6z"></path>
+                    <circle cx="10" cy="10" r="0.5" fill="currentColor"></circle>
+                    <circle cx="14" cy="11" r="0.5" fill="currentColor"></circle>
+                    <circle cx="12" cy="13" r="0.5" fill="currentColor"></circle>
+                    <circle cx="10" cy="15" r="0.5" fill="currentColor"></circle>
+                    <circle cx="14" cy="16" r="0.5" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 10</span>
+                    <span class="stock-badge in-stock">25 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_iodized_salt">Iodized Salt</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_iodized_salt_desc">Pure vacuum evaporated iodized salt, guarantees clean taste</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'iodized_salt', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'iodized_salt', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'iodized_salt', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'iodized_salt', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 18. Black Salt -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'black_salt')" data-category="salt" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 3h6v3H9z"></path>
+                    <path d="M8 6h8v12a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6z"></path>
+                    <circle cx="10" cy="10" r="0.5" fill="currentColor"></circle>
+                    <circle cx="14" cy="11" r="0.5" fill="currentColor"></circle>
+                    <circle cx="12" cy="13" r="0.5" fill="currentColor"></circle>
+                    <circle cx="10" cy="15" r="0.5" fill="currentColor"></circle>
+                    <circle cx="14" cy="16" r="0.5" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 10</span>
+                    <span class="stock-badge in-stock">15 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_black_salt">Black Salt</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_black_salt_desc">Naturally sourced tangy black salt, perfect for chaats</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'black_salt', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'black_salt', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'black_salt', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'black_salt', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 19. Himalayan Pink Salt -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'pink_salt')" data-category="salt" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 3h6v3H9z"></path>
+                    <path d="M8 6h8v12a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6z"></path>
+                    <circle cx="10" cy="10" r="0.5" fill="currentColor"></circle>
+                    <circle cx="14" cy="11" r="0.5" fill="currentColor"></circle>
+                    <circle cx="12" cy="13" r="0.5" fill="currentColor"></circle>
+                    <circle cx="10" cy="15" r="0.5" fill="currentColor"></circle>
+                    <circle cx="14" cy="16" r="0.5" fill="currentColor"></circle>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 10</span>
+                    <span class="stock-badge in-stock">20 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_pink_salt">Himalayan Pink Salt</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_pink_salt_desc">Premium mineral-rich pink rock salt, excellent for overall health</div>
+                </div>
+              </div>
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'pink_salt', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'pink_salt', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'pink_salt', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'pink_salt', 10)">10 kg</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
