@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Aashirvaad Nutrition Kiosk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Modular CSS -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/screens.css">
+  <link rel="stylesheet" href="css/utilities.css">
+</head>
+<body>
+
+  <!-- Toast Notification element -->
+  <div class="toast" id="toast"></div>
+
+  <!-- =============================================
+       SCREEN 1: LANGUAGE SELECT
+       ============================================= -->
+  <div class="screen active" id="s-lang" style="align-items:center; justify-content:center;">
+    <div style="text-align:center; padding:40px 24px; width: 100%; max-width: 500px;">
+      <!-- Branding Title -->
+      <div style="font-size:48px; font-weight:700; color:var(--g2); margin-bottom:4px; letter-spacing:0.5px; text-shadow: 0 4px 12px rgba(0,0,0,0.3);">Aashirvaad</div>
+      <div style="font-size:11px; color:rgba(255,255,255,0.65); letter-spacing:3px; text-transform:uppercase; margin-bottom:48px; font-weight:600;">Nutrition Kiosk</div>
+      
+      <!-- Center Gold Line -->
+      <div class="gold-line" style="margin:0 auto 36px; width: 100px; height: 2px;"></div>
+      
+      <!-- Bilingual Titles -->
+      <h1 style="font-size:26px; color:#fff; margin-bottom:8px; font-weight:600; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Choose Your Language</h1>
+      <p style="font-family:'Noto Sans Devanagari', sans-serif; font-size:22px; color:var(--g2); margin-bottom:44px; font-weight:500;">अपनी भाषा चुनें</p>
+      
+      <!-- Language Buttons Grid -->
+      <div class="lang-btns">
+        <!-- English Selection Button -->
+        <button class="lang-btn" onclick="chooseLang('en')">
+          <span class="lang-flag">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="16" fill="#012169"/>
+              <path d="M16 0V32M0 16H32" stroke="white" stroke-width="4"/>
+              <path d="M16 0V32M0 16H32" stroke="#C8102E" stroke-width="2.5"/>
+              <path d="M0 0L32 32M32 0L0 32" stroke="white" stroke-width="3"/>
+              <path d="M0 0L32 32M32 0L0 32" stroke="#C8102E" stroke-width="1.5"/>
+            </svg>
+          </span> 
+          <span>English</span>
+        </button>
+        
+        <!-- Hindi Selection Button -->
+        <button class="lang-btn" onclick="chooseLang('hi')" style="font-family:'Noto Sans Devanagari', 'DM Sans', sans-serif;">
+          <span class="lang-flag">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="16" fill="#FF9933"/>
+              <rect y="10.6" width="32" height="10.8" fill="white"/>
+              <rect y="21.4" width="32" height="10.6" fill="#138808"/>
+              <circle cx="16" cy="16" r="3" stroke="#000080" stroke-width="0.5"/>
+              <circle cx="16" cy="16" r="0.5" fill="#000080"/>
+            </svg>
+          </span> 
+          <span>हिंदी</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 2: ENTRY
+       ============================================= -->
+  <div class="screen" id="s-entry">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Freshly Milled &middot; Freshly Yours</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+    
+    <div class="content">
+      <div class="hero">
+        <div class="hero-badge" data-i18n="entry_badge">Kiosk #041 • Bengaluru</div>
+        <div class="gold-line"></div>
+        <h1 data-i18n="entry_title">Welcome to Aashirvaad</h1>
+        <p data-i18n="entry_subtitle">Personalized Nutrition for your Ghar</p>
+      </div>
+      
+      <div class="card">
+        <!-- Name Group -->
+        <div class="fg">
+          <label class="label" for="i-name" data-i18n="details_name_label">Name</label>
+          <input class="inp" id="i-name" type="text" placeholder="Enter your name" data-i18n="details_name_placeholder" value="Aditya">
+          <div class="err" id="e-name" data-i18n="toast_name_req">Please enter your name</div>
+        </div>
+        
+        <!-- Mobile Phone Group -->
+        <div class="fg">
+          <label class="label" for="i-phone" data-i18n="entry_phone_label">Mobile Number</label>
+          <input class="inp" id="i-phone" type="tel" placeholder="Enter 10 digit number" maxlength="10" inputmode="numeric" data-i18n="entry_phone_placeholder" value="7007679485">
+          <div class="err" id="e-phone" data-i18n="toast_phone_req">Please enter a valid phone number</div>
+        </div>
+        
+        <!-- Send OTP Button -->
+        <button class="btn" onclick="goOTP()" data-i18n="entry_btn">Send OTP &rarr;</button>
+        
+        <!-- Subtitle/Footer note inside card -->
+        <div style="text-align:center; margin-top:20px; font-size:11px; color:var(--brF); letter-spacing:1px; text-transform:uppercase;" data-i18n="entry_footer">
+          Secure login for your profile
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 3: OTP
+       ============================================= -->
+  <div class="screen" id="s-otp">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Freshly Milled &middot; Freshly Yours</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+    
+    <div class="content">
+      <div class="hero">
+        <div class="hero-badge" data-i18n="otp_badge">Verify Number</div>
+        <div class="gold-line"></div>
+        <h1 data-i18n="otp_title">Verify your Mobile</h1>
+        <p id="otp-desc" data-i18n="otp_subtitle">OTP sent to your mobile number</p>
+      </div>
+      
+      <div class="card">
+        <!-- OTP digit group -->
+        <div class="fg">
+          <label class="label" data-i18n="otp_label">4-Digit OTP</label>
+          <input class="otp-inp" id="i-otp" type="tel" inputmode="numeric" maxlength="4" placeholder="&#xB7; &#xB7; &#xB7; &#xB7;" data-i18n="otp_placeholder" value="1234">
+          <div class="err" id="e-otp" data-i18n="toast_otp_req">Please enter 4-digit OTP</div>
+        </div>
+        
+        <!-- Verify Button -->
+        <button class="btn" onclick="verifyOTP()" data-i18n="otp_btn">Verify &amp; Continue</button>
+        
+        <!-- Bottom links for Resend/Go Back -->
+        <div style="text-align:center; margin-top:20px;">
+          <span style="font-size:13px; color:var(--brF);" data-i18n="otp_resend">Didn't receive it?</span>
+          <a href="javascript:void(0)" style="font-size:13px; color:var(--r3); font-weight:600; text-decoration:none; margin-left:6px;" onclick="show('s-entry')" data-i18n="otp_back">Go Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 4: DETAILS SUMMARY
+       ============================================= -->
+  <div class="screen" id="s-details">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Freshly Milled &middot; Freshly Yours</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+    
+    <div class="content">
+      <div class="hero">
+        <div class="hero-badge" data-i18n="details_badge">Tell us about yourself</div>
+        <div class="gold-line"></div>
+        <h1 data-i18n="details_title">Who is this for?</h1>
+        <p data-i18n="details_desc">This helps us tailor the recommendations for your family.</p>
+      </div>
+      
+      <div class="card">
+        <!-- Disabled Name field -->
+        <div class="fg">
+          <label class="label" data-i18n="details_name_label">Name</label>
+          <input class="inp" id="d-name" disabled>
+        </div>
+        
+        <!-- Disabled Mobile field -->
+        <div class="fg">
+          <label class="label" data-i18n="entry_phone_label">Mobile Number</label>
+          <input class="inp" id="d-phone" disabled>
+        </div>
+        
+        <!-- Optional Email field -->
+        <div class="fg">
+          <label class="label">
+            <span data-i18n="details_email_label">Email (Optional)</span>
+          </label>
+          <input class="inp" id="d-email" type="email" placeholder="Enter your email" data-i18n="details_email_placeholder">
+        </div>
+        
+        <!-- Begin Profiling Button -->
+        <button class="btn" onclick="beginProfiling()" data-i18n="details_btn">Begin Ghar Profiling &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 5: SURVEY Q1 (FAMILY SIZE)
+       ============================================= -->
+  <div class="screen" id="s-q1">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="prog-bar-wrap" style="padding: 18px 24px 0px 24px; width: 100%; max-width: 540px; margin: 0 auto;">
+      <div class="prog-label" style="color: #fff;">Step 1 of 4</div>
+      <div class="prog-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;">
+        <div class="prog-fill" style="height: 100%; width: 25%; background: linear-gradient(90deg, var(--g1), var(--g2)); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+
+    <div class="content top">
+      <div class="qhead">
+        <div class="qchip">Question 1 &middot; <span data-i18n="quiz_single_select">Single Select</span></div>
+        <h2 data-i18n="q1_title">Select your family size</h2>
+        <p data-i18n="q1_subtitle">Select the number of members in your household</p>
+      </div>
+
+      <div class="mcq-grid g2">
+        <div class="mcq" onclick="selectFamilySize(this, '1-2')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <div class="lbl">1-2</div>
+          <div class="sub" style="font-size: 11px; opacity: 0.7;">Members</div>
+        </div>
+        
+        <div class="mcq" onclick="selectFamilySize(this, '2-4')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <div class="lbl">2-4</div>
+          <div class="sub" style="font-size: 11px; opacity: 0.7;">Members</div>
+        </div>
+        
+        <div class="mcq" onclick="selectFamilySize(this, '4-6')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <div class="lbl">4-6</div>
+          <div class="sub" style="font-size: 11px; opacity: 0.7;">Members</div>
+        </div>
+        
+        <div class="mcq" onclick="selectFamilySize(this, '6+')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <div class="lbl">6+</div>
+          <div class="sub" style="font-size: 11px; opacity: 0.7;">Members</div>
+        </div>
+      </div>
+      
+      <div class="err" id="e-q1" style="text-align: center; margin-top: 14px;" data-i18n="toast_select_req">Please make a selection</div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="surveyBack('q1')" data-i18n="quiz_back">&larr; Back</button>
+      <button class="btn-sm" onclick="surveyNext('q1')" data-i18n="quiz_next">Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 6: SURVEY Q2 (COMPOSITION)
+       ============================================= -->
+  <div class="screen" id="s-q2">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="prog-bar-wrap" style="padding: 18px 24px 0px 24px; width: 100%; max-width: 540px; margin: 0 auto;">
+      <div class="prog-label" style="color: #fff;">Step 2 of 4</div>
+      <div class="prog-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;">
+        <div class="prog-fill" style="height: 100%; width: 50%; background: linear-gradient(90deg, var(--g1), var(--g2)); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+
+    <div class="content top">
+      <div class="qhead">
+        <div class="qchip">Question 2 &middot; <span data-i18n="quiz_multi_select">Multi Select</span></div>
+        <h2 data-i18n="q2_title">Composition</h2>
+        <p data-i18n="q2_subtitle">Select all age groups present in your household (select all that apply)</p>
+      </div>
+
+      <div class="mcq-grid g2">
+        <div class="mcq" onclick="toggleComposition(this, 'kids')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 3"></path>
+          </svg>
+          <div class="lbl" data-i18n="q2_opt_kids">Children (age &lt; 13)</div>
+        </div>
+        
+        <div class="mcq" onclick="toggleComposition(this, 'young')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 21a6 6 0 0 0-12 0"></path>
+            <circle cx="12" cy="10" r="4"></circle>
+            <path d="M12 2a14 14 0 0 0-3 3"></path>
+          </svg>
+          <div class="lbl" data-i18n="q2_opt_young">Youngsters (age 13 - 24)</div>
+        </div>
+        
+        <div class="mcq" onclick="toggleComposition(this, 'adults')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <div class="lbl" data-i18n="q2_opt_adults">Adults (age 25 - 45)</div>
+        </div>
+        
+        <div class="mcq" onclick="toggleComposition(this, 'elderly')">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M2 21v-2a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <path d="M12 3a4 4 0 0 1 4 4"></path>
+          </svg>
+          <div class="lbl" data-i18n="q2_opt_elderly">Elderly (age &gt; 45)</div>
+        </div>
+      </div>
+
+      <div class="err" id="e-q2" style="text-align: center; margin-top: 14px;" data-i18n="toast_select_req">Please make a selection</div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="surveyBack('q2')" data-i18n="quiz_back">&larr; Back</button>
+      <button class="btn-sm" onclick="surveyNext('q2')" data-i18n="quiz_next">Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 7: SURVEY Q3 (CHOOSE TRACK)
+       ============================================= -->
+  <div class="screen" id="s-q3">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="prog-bar-wrap" style="padding: 18px 24px 0px 24px; width: 100%; max-width: 540px; margin: 0 auto;">
+      <div class="prog-label" style="color: #fff;">Step 3 of 4</div>
+      <div class="prog-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;">
+        <div class="prog-fill" style="height: 100%; width: 75%; background: linear-gradient(90deg, var(--g1), var(--g2)); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+
+    <div class="content top">
+      <div class="qhead">
+        <div class="qchip">Question 3 &middot; <span data-i18n="quiz_single_select">Single Select</span></div>
+        <h2 data-i18n="q3_title">How would you like to choose your atta today?</h2>
+        <p data-i18n="q3_subtitle">Select the journey that best fits your preference</p>
+      </div>
+
+      <div class="mcq-grid g1" style="max-width: 540px;">
+        <!-- Track 1: Traditional -->
+        <div class="mcq" onclick="selectTrack(this, 'traditional')" style="padding: 24px 20px; min-height: 120px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 44px; height: 44px; margin-bottom: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20"></path>
+            <path d="M12 4c-2 1.5-3 3.5-3 5.5s1 3.5 3 4.5"></path>
+            <path d="M12 4c2 1.5 3 3.5 3 5.5s-1 3.5-3 4.5"></path>
+            <path d="M12 9.5c-2 1.5-3 3.5-3 5.5s1 3.5 3 4.5"></path>
+            <path d="M12 9.5c2 1.5 3 3.5 3 5.5s-1 3.5-3 4.5"></path>
+            <path d="M12 15c-2 1.5-3 3.5-3 5.5"></path>
+            <path d="M12 15c2 1.5 3 3.5 3 5.5"></path>
+          </svg>
+          <div class="lbl" style="font-size: 16px;" data-i18n="q3_track_trad_title">Choose from traditional & everyday favourites</div>
+          <div class="sub" style="margin-top: 4px; font-size: 12px;" data-i18n="q3_track_trad_desc">Popular, tried-and-tested classic everyday flours</div>
+        </div>
+        
+        <!-- Track 2: Nutritional -->
+        <div class="mcq" onclick="selectTrack(this, 'nutrition')" style="padding: 24px 20px; min-height: 120px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 44px; height: 44px; margin-bottom: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3c0 4.5 1.5 6 6 6-4.5 0-6 1.5-6 6 0-4.5-1.5-6-6-6 4.5 0 6-1.5 6-6Z"></path>
+            <path d="M19 5c0 1.5.5 2 2 2-1.5 0-2 .5-2 2 0-1.5-.5-2-2-2 1.5 0 2-.5 2-2Z" stroke-width="1.5"></path>
+            <path d="M5 15c0 1.5.5 2 2 2-1.5 0-2 .5-2 2 0-1.5-.5-2-2-2 1.5 0 2-.5 2-2Z" stroke-width="1.5"></path>
+          </svg>
+          <div class="lbl" style="font-size: 16px;" data-i18n="q3_track_nutr_title">Choose atta based on your family’s nutritional needs</div>
+          <div class="sub" style="margin-top: 4px; font-size: 12px;" data-i18n="q3_track_nutr_desc">Customize flours based on health and wellness goals</div>
+        </div>
+      </div>
+
+      <div class="err" id="e-q3" style="text-align: center; margin-top: 14px;" data-i18n="toast_select_req">Please make a selection</div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="surveyBack('q3')" data-i18n="quiz_back">&larr; Back</button>
+      <button class="btn-sm" onclick="surveyNext('q3')" data-i18n="quiz_next">Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 8: SURVEY TRACK 1 (TRADITIONAL BLENDS)
+       ============================================= -->
+  <div class="screen" id="s-track-trad">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="prog-bar-wrap" style="padding: 18px 24px 0px 24px; width: 100%; max-width: 540px; margin: 0 auto;">
+      <div class="prog-label" style="color: #fff;">Step 4 of 4</div>
+      <div class="prog-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;">
+        <div class="prog-fill" style="height: 100%; width: 100%; background: linear-gradient(90deg, var(--g1), var(--g2)); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+
+    <div class="content top" style="padding-bottom: 24px;">
+      <div class="qhead">
+        <div class="qchip">Everyday Blends &middot; <span data-i18n="quiz_multi_select">Multi Select</span></div>
+        <h2 data-i18n="trad_title">Traditional & Everyday Favourites</h2>
+        <p data-i18n="trad_subtitle">Choose from our pre-blended premium flours</p>
+      </div>
+
+      <div class="trad-layout-grid">
+        <!-- Left Column: Products List -->
+        <div class="trad-products-list">
+          <div class="mcq-grid g1" style="max-width: 100%; gap: 14px;">
+            <!-- 1. Sharbati Atta (Aisle 01) -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'sharbati')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <!-- Image Placeholder Slot -->
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; margin-bottom: 0px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20"></path>
+                    <path d="M12 4c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 4c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                    <path d="M12 9c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 9c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <!-- Text details -->
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 01</span>
+                    <span class="stock-badge in-stock">25 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_sharbati">100% Sharbati Atta</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_sharbati_desc">Premium stone-ground wheat from MP, makes softest rotis</div>
+                </div>
+              </div>
+              <!-- Quantity Slider Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
+                  <span class="qty-val" id="qty-val-sharbati" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+                </div>
+                <input type="range" min="1" max="25" value="5" class="qty-slider" oninput="updateCardQty(this, 'sharbati')">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+                  <span>1 kg</span>
+                  <span>25 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Khapli Atta (Aisle 02) -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'khapli')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <!-- Image Placeholder Slot -->
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; margin-bottom: 0px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20"></path>
+                    <path d="M12 4c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 4c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                    <path d="M12 9c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 9c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <!-- Text details -->
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 02</span>
+                    <span class="stock-badge in-stock">14 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_khapli">100% Khapli Atta</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_khapli_desc">Ancient Emmer wheat, high in fibre, low GI, good for diabetic health</div>
+                </div>
+              </div>
+              <!-- Quantity Slider Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
+                  <span class="qty-val" id="qty-val-khapli" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+                </div>
+                <input type="range" min="1" max="14" value="5" class="qty-slider" oninput="updateCardQty(this, 'khapli')">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+                  <span>1 kg</span>
+                  <span>14 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Lokwan Atta (Aisle 03) -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'lokwan')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <!-- Image Placeholder Slot -->
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; margin-bottom: 0px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20"></path>
+                    <path d="M12 4c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 4c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                    <path d="M12 9c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 9c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <!-- Text details -->
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 03</span>
+                    <span class="stock-badge in-stock">12 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_lokwan">100% Lokwan Atta</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_lokwan_desc">Superior golden grain Lokwan wheat, yields nutritious daily rotis</div>
+                </div>
+              </div>
+              <!-- Quantity Slider Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
+                  <span class="qty-val" id="qty-val-lokwan" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+                </div>
+                <input type="range" min="1" max="12" value="5" class="qty-slider" oninput="updateCardQty(this, 'lokwan')">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+                  <span>1 kg</span>
+                  <span>12 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Multigrain Atta (Aisle 04 - Out of Stock) -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'multigrain')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <!-- Image Placeholder Slot -->
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; margin-bottom: 0px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20"></path>
+                    <path d="M12 4c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 4c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                    <path d="M12 9c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 9c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <!-- Text details -->
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 04</span>
+                    <span class="stock-badge out-of-stock">OUT OF STOCK</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_multigrain">Multigrain Atta</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_multigrain_desc">Power-packed blend of wheat, soy, oats, maize, and chana</div>
+                </div>
+              </div>
+              <!-- Quantity Slider Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
+                  <span class="qty-val" id="qty-val-multigrain" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+                </div>
+                <input type="range" min="1" max="10" value="5" class="qty-slider" oninput="updateCardQty(this, 'multigrain')">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+                  <span>1 kg</span>
+                  <span>10 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. MultiMillet Atta (Aisle 05) -->
+            <div class="mcq" onclick="selectTraditionalBlend(this, 'multimillet')" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
+              <div style="display: flex; flex-direction: row; gap: 18px; align-items: center; width: 100%;">
+                <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
+                <!-- Image Placeholder Slot -->
+                <div style="width: 80px; height: 80px; border-radius: 12px; border: 2px dashed rgba(201,147,46,0.38); background: rgba(255,255,255,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: var(--brM); font-weight: 600; text-align: center; gap: 4px; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);">
+                  <svg class="svg-ico" style="width: 28px; height: 28px; margin-bottom: 0px; color: var(--g1);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20"></path>
+                    <path d="M12 4c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 4c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                    <path d="M12 9c-1.5 1-2.5 2.5-2.5 4s1 2.5 2.5 3"></path>
+                    <path d="M12 9c1.5 1 2.5 2.5 2.5 4s-1 2.5-2.5 3"></path>
+                  </svg>
+                  <span>[Image Slot]</span>
+                </div>
+                <!-- Text details -->
+                <div style="flex: 1; padding-right: 28px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="aisle-tag">Aisle 05</span>
+                    <span class="stock-badge in-stock">8 kg left in store</span>
+                  </div>
+                  <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_multimillet">Multi Millet Atta</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_multimillet_desc">Gluten-free blend of ragi, jowar, bajra, and nutritious millets</div>
+                </div>
+              </div>
+              <!-- Quantity Slider Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
+                  <span class="qty-val" id="qty-val-multimillet" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+                </div>
+                <input type="range" min="1" max="8" value="5" class="qty-slider" oninput="updateCardQty(this, 'multimillet')">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+                  <span>1 kg</span>
+                  <span>8 kg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Sidebar Panels -->
+        <div class="trad-sidebar">
+          <!-- Unified Checkout Summary Card -->
+          <div class="summary-card" id="unified-summary-card" style="display: none;"></div>
+
+          <!-- No Blends Selected Placeholder Card -->
+          <div class="summary-card" id="empty-summary-card">
+            <div style="text-align: center; padding: 10px 0;">
+              <svg style="width: 48px; height: 48px; color: rgba(201,147,46,0.35); margin-bottom: 12px; margin-top: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <h3 style="font-size: 15px; color: #fff; font-weight: 600; margin-bottom: 6px;">No Blends Selected</h3>
+              <p style="font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.45;">Select everyday favourites on the left to customize your mill order.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="err" id="e-trad" style="text-align: center; margin-top: 14px;" data-i18n="toast_pick_blend">Please select a traditional blend to continue</div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="surveyBack('trad')" data-i18n="quiz_back">&larr; Back</button>
+      <button class="btn-sm" onclick="surveyNext('trad')" data-i18n="quiz_gen_plan">Generate My Plan &rarr;</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 9: SURVEY TRACK 2 (NUTRITIONAL GOALS - Q4)
+       ============================================= -->
+  <div class="screen" id="s-q4-nutr">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="prog-bar-wrap" style="padding: 18px 24px 0px 24px; width: 100%; max-width: 540px; margin: 0 auto;">
+      <div class="prog-label" style="color: #fff;">Step 4 of 4</div>
+      <div class="prog-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;">
+        <div class="prog-fill" style="height: 100%; width: 100%; background: linear-gradient(90deg, var(--g1), var(--g2)); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+
+    <div class="content top" style="padding-bottom: 24px;">
+      <div class="qhead">
+        <div class="qchip">Health Goals &middot; <span data-i18n="quiz_multi_select">Multi Select</span></div>
+        <h2 data-i18n="nutr_title">What matters most in your family’s everyday meals?</h2>
+        <p data-i18n="nutr_subtitle">Select up to 2 goals</p>
+      </div>
+
+      <div class="mcq-grid g3" style="max-width: 720px; gap: 10px;">
+        <!-- 1. Protein -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'protein')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15.4 3.4c2.5 2.5 3.1 6.5 1.4 9.6l-3.3 3.3c-.6.6-1.5.6-2.1 0l-3.8-3.8c-.6-.6-.6-1.5 0-2.1l3.3-3.3c3.1-1.7 7.1-1.2 9.5 1.3z"></path>
+            <path d="M9.5 14.5L5 19"></path>
+            <circle cx="3.5" cy="20.5" r="1.5"></circle>
+            <circle cx="5.5" cy="18.5" r="1.5"></circle>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_protein">More protein in everyday meals</div>
+        </div>
+
+        <!-- 2. Strength -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'strength')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_strength">Daily strength &amp; energy support</div>
+        </div>
+
+        <!-- 3. Digestive -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'digestive')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 0 9.5a7 7 0 0 1-8 8.5z"></path>
+            <path d="M19 2L9.8 11.2"></path>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_digestive">Better digestive balance</div>
+        </div>
+
+        <!-- 4. Sugar -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'sugar')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-13-7-13S5 10.7 5 15a7 7 0 0 0 7 7z"></path>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_sugar">Better sugar balance in everyday meals</div>
+        </div>
+
+        <!-- 5. Lighter -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'lighter')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 10h-.79A4.8 4.8 0 0 0 12 6a4.8 4.8 0 0 0-5.2 4H6a5 5 0 0 0 0 10h12a5 5 0 0 0 0-10z"></path>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_lighter">Lighter everyday eating</div>
+        </div>
+
+        <!-- 6. Complete Nutrition -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'complete')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_complete">Complete daily nutrition support</div>
+        </div>
+
+        <!-- 7. Vitamins -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'vitamin')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+            <path d="m8.5 8.5 7 7"></path>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_vitamin">Balanced vitamin support for daily wellness</div>
+        </div>
+
+        <!-- 8. Alternates -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'alternative')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 22h20"></path>
+            <path d="M12 22V11"></path>
+            <path d="M12 11c0-3.5 2.5-6 6.5-6"></path>
+            <path d="M12 14c0-3.5-2.5-6-6.5-6"></path>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_alternative">Grain alternatives for special diets</div>
+        </div>
+
+        <!-- 9. Heart -->
+        <div class="mcq" onclick="toggleNutritionalGoal(this, 'heart')" style="min-height: 100px; padding: 14px 10px;">
+          <div class="chk">&#10003;</div>
+          <svg class="svg-ico" style="width: 32px; height: 32px; margin-bottom: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <div class="lbl" style="font-size: 13px;" data-i18n="nutr_goal_heart">Balanced eating for heart wellness</div>
+        </div>
+      </div>
+
+      <div class="err" id="e-nutr" style="text-align: center; margin-top: 14px;" data-i18n="toast_select_req">Please make a selection</div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="surveyBack('nutr')" data-i18n="quiz_back">&larr; Back</button>
+      <button class="btn-sm" onclick="surveyNext('nutr')" data-i18n="quiz_gen_plan">Generate My Plan &rarr;</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 9B: NUTRITIONAL BLEND RECOMMENDATION
+       ============================================= -->
+  <div class="screen" id="s-nutr-result">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub" data-i18n="rec_logo_sub">Your Nutrition Plan</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <div class="content top" style="padding-bottom: 40px; display: flex; flex-direction: column; align-items: center;">
+      <!-- Sparkle Badge -->
+      <div style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(201,147,46,0.18) 0%, rgba(232,184,75,0.10) 100%); border: 1px solid rgba(201,147,46,0.25); padding: 6px 16px; border-radius: 20px; margin-bottom: 16px; margin-top: 8px;">
+        <svg style="width:14px; height:14px; color: var(--g2);" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span style="font-size: 11px; font-weight: 700; color: var(--g2); letter-spacing: 1.5px; text-transform: uppercase;" data-i18n="nutr_rec_badge">Personalized Recommendation</span>
+      </div>
+
+      <!-- Headline -->
+      <h2 style="color: #fff; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; letter-spacing: -0.3px;" data-i18n="nutr_rec_title">We Recommend This For You</h2>
+      <p style="color: var(--brF); font-size: 13px; text-align: center; margin-bottom: 28px; max-width: 400px; line-height: 1.5;" data-i18n="nutr_rec_subtitle">Based on your selected nutritional goals, here is the ideal Aashirvaad blend crafted for your family</p>
+
+      <!-- Layout Grid -->
+      <div class="rec-layout-grid">
+        <!-- Left Column: Recommendation Card & CTA -->
+        <div class="rec-main-col">
+          <div id="nutr-rec-card" class="rec-card-premium" style="width: 100%; max-width: 440px; border-radius: 24px; padding: 24px 22px; position: relative; overflow: hidden; margin-bottom: 20px;">
+            <!-- Decorative corner glow -->
+            <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(201,147,46,0.15) 0%, transparent 70%); pointer-events: none;"></div>
+
+            <!-- Image Placeholder -->
+            <div id="nutr-rec-img" style="width: 100%; height: 160px; background: linear-gradient(135deg, rgba(201,147,46,0.08) 0%, rgba(82,8,16,0.12) 100%); border: 2px dashed rgba(201,147,46,0.25); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; position: relative; overflow: hidden;">
+              <div style="text-align: center; color: rgba(201,147,46,0.5);">
+                <svg style="width: 36px; height: 36px; margin-bottom: 6px; opacity: 0.5;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <div style="font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Product Image</div>
+              </div>
+            </div>
+
+            <!-- Blend Name -->
+            <div id="nutr-rec-name" style="font-size: 20px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 4px; letter-spacing: -0.3px; line-height: 1.3;"></div>
+
+            <!-- Subtitle -->
+            <div style="font-size: 11px; color: var(--g2); text-align: center; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;">Aashirvaad Custom Blend</div>
+
+            <!-- Gold Divider -->
+            <div class="gold-line" style="margin: 0 auto 12px; height: 2px; width: 48px;"></div>
+
+            <!-- Goal Tags -->
+            <div style="text-align: center; margin-bottom: 4px;">
+              <div style="font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">Selected Goals</div>
+              <div id="nutr-rec-goals" style="display: flex; justify-content: center; gap: 6px; flex-wrap: wrap;"></div>
+            </div>
+
+            <!-- Nutritional Highlight Strip -->
+            <div id="nutr-rec-highlights" style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+          </div>
+
+          <!-- Proceed Button -->
+          <button class="btn" onclick="nutrRecProceed()" style="max-width: 440px; width: 100%; font-size: 15px; font-weight: 700; padding: 16px; border-radius: 14px; letter-spacing: 0.5px; height: 58px;">
+            <span data-i18n="nutr_rec_cta">Send to Chakki</span>
+            <svg style="width:18px; height:18px; margin-left:6px; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <!-- Subtle divider (visible only on mobile) -->
+        <div class="mobile-or-divider" style="display: none; align-items: center; gap: 14px; margin: 24px auto; width: 100%; max-width: 440px;">
+          <div style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,147,46,0.25), transparent);"></div>
+          <span style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap;">or</span>
+          <div style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,147,46,0.25), transparent);"></div>
+        </div>
+
+        <!-- Right Column: Try a Sample Card -->
+        <div class="rec-side-col">
+          <div class="rec-card-premium" style="border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 440px; height: 100%; min-height: 380px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <!-- Heading -->
+            <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <svg style="width: 18px; height: 18px; color: var(--g2);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <span style="font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -0.2px;" data-i18n="nutr_sample_title">Not sure? Try a sample</span>
+            </div>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; margin-bottom: 22px; max-width: 300px;" data-i18n="nutr_sample_desc">Scan the QR code below to request a free sample pack of this blend</p>
+
+            <!-- QR Code -->
+            <div id="nutr-sample-qr" style="width: 180px; height: 180px; margin: 0 auto; border-radius: 20px; background: #ffffff; padding: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;">
+              <img src="images/sample_qr.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" alt="Try a Sample QR Code">
+            </div>
+
+            <p style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 14px; letter-spacing: 0.3px;" data-i18n="nutr_sample_hint">Point your phone camera at the code above</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="show('s-q4-nutr')" data-i18n="quiz_back">&larr; Back</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 9C: CHAKKI GRINDING STATUS SCREEN
+       ============================================= -->
+  <div class="screen" id="s-chakki-processing">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <div class="content top" style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; padding-bottom: 40px;">
+      <div class="chakki-container">
+        <!-- Sparkle/Chakki Badge -->
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(201,147,46,0.18) 0%, rgba(232,184,75,0.10) 100%); border: 1px solid rgba(201,147,46,0.25); padding: 6px 16px; border-radius: 20px; margin-bottom: 24px;">
+          <svg style="width:14px; height:14px; color: var(--g2); animation: spin 4s linear infinite;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span style="font-size: 11px; font-weight: 700; color: var(--g2); letter-spacing: 1.5px; text-transform: uppercase;" data-i18n="chakki_badge">Chakki Mill Processing</span>
+        </div>
+
+        <!-- Spinning Stone Mill Animation Container -->
+        <div class="chakki-wheel-outer">
+          <div class="chakki-wheel-spin-ring"></div>
+          <div class="chakki-wheel-glow"></div>
+          
+          <!-- Elegant Stone Chakki Wheel SVG -->
+          <svg class="chakki-wheel-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="#3a302d" stroke="var(--g2)" stroke-width="3"/>
+            <circle cx="50" cy="50" r="38" fill="#4d423f" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+            <path d="M50 12 L50 30" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M50 70 L50 88" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M12 50 L30 50" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M70 50 L88 50" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M23 23 L36 36" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M64 64 L77 77" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M23 77 L36 64" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M64 36 L77 23" stroke="rgba(232,184,75,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="16" fill="#302624" stroke="var(--g2)" stroke-width="2"/>
+            <circle cx="50" cy="50" r="6" fill="var(--g2)"/>
+            <circle cx="50" cy="50" r="2.5" fill="#fff"/>
+            <circle cx="78" cy="50" r="4.5" fill="#e74c3c" stroke="#fff" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        <!-- Processing Status & Headline -->
+        <h2 style="color: #fff; font-size: 26px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px;" data-i18n="chakki_title">Your Aata is in the Chakki!</h2>
+        <div style="font-size: 13px; font-weight: 700; color: var(--g2); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <span style="display:inline-block; width:8px; height:8px; background:var(--g2); border-radius:50%; box-shadow:0 0 10px var(--g2); animation: pulse 1.5s infinite;"></span>
+          <span data-i18n="chakki_status">Grinding & Processing...</span>
+        </div>
+        <p style="color: var(--brF); font-size: 13px; margin-bottom: 24px; max-width: 420px; line-height: 1.55;" data-i18n="chakki_subtitle">Your custom nutritional blend is being freshly ground using our traditional stone-grill mill</p>
+
+        <!-- Progress Loading Indicator -->
+        <div class="chakki-progress-container">
+          <div class="chakki-progress-fill"></div>
+        </div>
+
+        <!-- ETA Card Box -->
+        <div style="background: rgba(0,0,0,0.18); border: 1.5px solid rgba(232,184,75,0.22); border-radius: 18px; padding: 18px; width: 100%; max-width: 380px; margin: 0 auto 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+          <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;" data-i18n="chakki_eta_lbl">Estimated Wait Time</div>
+          <div style="font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.5px; font-family: 'DM Sans', sans-serif;" data-i18n="chakki_eta_val">10 - 12 Minutes</div>
+        </div>
+
+        <!-- Dual CTA Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 380px; margin: 0 auto;">
+          <button class="btn" onclick="exploreOtherProducts()" style="width: 100%; font-size: 14.5px; font-weight: 700; padding: 14px; border-radius: 12px; height: 52px; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(232,184,75,0.3); display: flex; align-items: center; justify-content: center;">
+            <span data-i18n="chakki_explore_cta">Explore Other Products in Store</span>
+            <svg style="width:16px; height:16px; margin-left:6px; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-ghost" onclick="proceedToBilling()" style="width: 100%; font-size: 13.5px; font-weight: 600; padding: 12px; border-radius: 12px; height: 48px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: #fff; cursor: pointer; transition: all 0.2s;">
+            <span data-i18n="chakki_billing_cta">Proceed to Billing Directly</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 10: MOCK SUCCESS COMPLETION
+       ============================================= -->
+  <div class="screen" id="s-success" style="align-items:center; justify-content:center;">
+    <div class="suc-box" style="text-align:center; width:100%; max-width:520px; padding:32px;">
+      <!-- Glowing checkmark circle icon -->
+      <div class="suc-ico" id="suc-icon" style="margin-bottom:20px; display:inline-flex; align-items:center; justify-content:center; width:96px; height:96px; border-radius:50%; background:rgba(201,147,46,0.15); border: 2.5px solid var(--g2); box-shadow:0 0 24px rgba(201,147,46,0.3); animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--g2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      
+      <!-- Headline & Subtext (Dynamic Summary box loaded here!) -->
+      <div id="delivery-badge-container"></div>
+      <h1 class="suc-title" id="suc-headline" style="color:#fff; font-size:32px; font-weight:700; margin-bottom:12px; letter-spacing:-0.5px;">Welcome!</h1>
+      <div class="suc-sub" id="suc-desc" style="margin-bottom: 24px;"></div>
+      
+      <!-- Reference Code Box -->
+      <div class="ref-box" style="background:rgba(0,0,0,0.22); border-radius:18px; padding:20px; border:1px solid rgba(201,147,46,0.22); margin-bottom:30px; box-shadow:0 8px 24px rgba(0,0,0,0.15);">
+        <div class="ref-lbl" style="font-size:10px; font-weight:600; color:var(--g2); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;" data-i18n="suc_ref_lbl">Order Reference</div>
+        <div class="ref-code" id="ref-code" style="font-size:36px; font-weight:700; color:#fff; letter-spacing:4px;">ASH-000000</div>
+        <div style="font-size:11px; color:var(--brF); margin-top:6px;" data-i18n="suc_ref_note">Share this code at the counter</div>
+      </div>
+      
+      <!-- Restart button -->
+      <button class="btn" onclick="resetSession()" data-i18n="suc_reset">Start New Session</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 11: HOME DELIVERY ADDRESS COLLECTION
+       ============================================= -->
+  <div class="screen" id="s-delivery-address">
+    <div class="header">
+      <div class="logo-wrap">
+        <a href="javascript:void(0)" onclick="resetSession()" style="text-decoration:none">
+          <img class="logo-img" src="images/logo.png" alt="Aashirvaad Logo">
+        </a>
+        <div>
+          <div class="logo-text">Aashirvaad</div>
+          <div class="logo-sub">Ghar Profiling</div>
+        </div>
+      </div>
+      <div class="itc-tag">An ITC Product</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="prog-bar-wrap" style="padding: 18px 24px 0px 24px; width: 100%; max-width: 540px; margin: 0 auto;">
+      <div class="prog-label" style="color: #fff;">Step 5 of 5</div>
+      <div class="prog-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;">
+        <div class="prog-fill" style="height: 100%; width: 100%; background: linear-gradient(90deg, var(--g1), var(--g2)); transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+
+    <div class="content top" style="padding-bottom: 24px;">
+      <div class="qhead">
+        <div class="qchip">Home Delivery &middot; <span>24-Hour Express</span></div>
+        <h2>Enter Delivery Address</h2>
+        <p>Your selected blend will be freshly milled and delivered to your doorstep</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <!-- Recipient Name & Phone in two-column layout -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+          <div class="fg">
+            <label class="label" for="i-delivery-name">Name</label>
+            <input class="inp" id="i-delivery-name" type="text" placeholder="Enter recipient name" value="Aditya">
+            <div class="err" id="e-delivery-name">Please enter a name</div>
+          </div>
+          
+          <div class="fg">
+            <label class="label" for="i-delivery-phone">Mobile Number</label>
+            <input class="inp" id="i-delivery-phone" type="tel" placeholder="10 digit number" maxlength="10" inputmode="numeric" value="7007679485">
+            <div class="err" id="e-delivery-phone">Please enter a valid phone number</div>
+          </div>
+        </div>
+
+        <!-- Flat / Street Line 1 -->
+        <div class="fg">
+          <label class="label" for="i-delivery-flat">Flat / House No. / Apartment</label>
+          <input class="inp" id="i-delivery-flat" type="text" placeholder="e.g. Flat 402, Golden Crest Apartments" value="Flat 402, Golden Crest Apartments">
+          <div class="err" id="e-delivery-flat">Please enter flat or house details</div>
+        </div>
+
+        <!-- Street / Area Line 2 -->
+        <div class="fg">
+          <label class="label" for="i-delivery-area">Street / Area / Locality</label>
+          <input class="inp" id="i-delivery-area" type="text" placeholder="e.g. Lavelle Road" value="Lavelle Road">
+          <div class="err" id="e-delivery-area">Please enter street or area details</div>
+        </div>
+
+        <!-- Pincode, City, State in grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+          <div class="fg">
+            <label class="label" for="i-delivery-pincode">Pincode</label>
+            <input class="inp" id="i-delivery-pincode" type="tel" placeholder="6-digit pincode" maxlength="6" inputmode="numeric" value="560001">
+            <div class="err" id="e-delivery-pincode">Please enter a 6-digit pincode</div>
+          </div>
+
+          <div class="fg">
+            <label class="label" for="i-delivery-city">City</label>
+            <input class="inp" id="i-delivery-city" type="text" placeholder="e.g. Bengaluru" value="Bengaluru">
+            <div class="err" id="e-delivery-city">Please enter city</div>
+          </div>
+        </div>
+
+        <div class="fg" style="margin-bottom: 12px;">
+          <label class="label" for="i-delivery-state">State</label>
+          <input class="inp" id="i-delivery-state" type="text" placeholder="e.g. Karnataka" value="Karnataka">
+          <div class="err" id="e-delivery-state">Please enter state</div>
+        </div>
+
+        <div class="gold-line" style="margin: 10px auto 20px;"></div>
+
+        <!-- Checkout Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+          <div style="text-align: center; font-size: 11.5px; font-weight: 700; color: var(--brF); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;">
+            Secure Checkout
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%;">
+            <!-- Online Payment option -->
+            <button class="co-btn co-online" onclick="submitHomeDelivery('Online')">
+              <span class="co-ico">💳</span>
+              <span>Pay Online</span>
+              <span class="co-sub">Simulate UPI/Card</span>
+            </button>
+            
+            <!-- COD option -->
+            <button class="co-btn co-p" style="background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); box-shadow: 0 8px 26px rgba(201,147,46,0.38);" onclick="submitHomeDelivery('COD')">
+              <span class="co-ico">💵</span>
+              <span style="color: var(--br);" data-i18n="co_pay_counter">Pay at Counter</span>
+              <span class="co-sub" style="color: rgba(44,24,16,0.7);" data-i18n="co_pay_store_counter">Pay at Store Counter</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="fnav">
+      <button class="btn-ghost" onclick="show('s-track-trad')">&larr; Back to Aisles</button>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SCREEN 12: MOCK PAYMENT PROCESSING
+       ============================================= -->
+  <div class="screen" id="s-processing" style="align-items:center; justify-content:center;">
+    <div class="spin" style="margin-bottom: 24px;"></div>
+    <h1 class="proc-title">Securing Your Order...</h1>
+    <p class="proc-sub">Simulating secure digital payment gateway connection</p>
+  </div>
+
+  <!-- Modular Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
