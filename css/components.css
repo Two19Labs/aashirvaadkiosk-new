@@ -381,3 +381,40 @@
   animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Premium Options Pills */
+.opt-pill {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.opt-pill:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  transform: translateY(-1.5px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.opt-pill:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.opt-pill.sel {
+  background: rgba(232, 184, 75, 0.18) !important;
+  border-color: var(--g2) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(232, 184, 75, 0.22);
+}
+
+

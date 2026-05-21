@@ -123,7 +123,7 @@ const LANG = {
         quiz_of: "of 4",
         quiz_single_select: "Single Select",
         quiz_multi_select: "Multi Select",
-        quiz_gen_plan: `Generate My Plan ${ICONS.sparkle}`,
+        quiz_gen_plan: `Create My Blend ${ICONS.sparkle}`,
 
         // Success Screen
         suc_title: "आशीर्वाद से!",
@@ -134,7 +134,11 @@ const LANG = {
         suc_ico: ICONS.check,
         other_options_title: `${ICONS.sparkle} Other Options`,
         rec_logo_sub: "Your Nutrition Plan",
-        qty_select_wt: "Choose your quantity:",
+        qty_select_wt: "Select Weight:",
+        gran_select_lbl: "Granulation:",
+        gran_fine: "Fine",
+        gran_medium: "Medium",
+        gran_coarse: "Coarse",
         co_pay_counter: "Pay at Counter",
         co_pay_store_counter: "Pay at Store Counter",
         nutr_rec_badge: "Personalized Recommendation",
@@ -147,7 +151,7 @@ const LANG = {
         chakki_badge: "Chakki Mill Processing",
         chakki_title: "Your Aata is in the Chakki!",
         chakki_status: "Grinding & Processing...",
-        chakki_subtitle: "Your custom nutritional blend is being freshly ground using our traditional stone-grill mill",
+        chakki_subtitle: "Your custom nutritional blend is being freshly ground using our traditional stone based mill",
         chakki_eta_lbl: "Estimated Wait Time",
         chakki_eta_val: "10 - 12 Minutes",
         chakki_explore_cta: "Explore Other Products in Store",
@@ -256,7 +260,7 @@ const LANG = {
         quiz_of: "4 में से",
         quiz_single_select: "एकल चयन",
         quiz_multi_select: "बहु चयन",
-        quiz_gen_plan: `मेरी योजना बनाएं ${ICONS.sparkle}`,
+        quiz_gen_plan: `मेरा मिश्रण बनाएं ${ICONS.sparkle}`,
 
         // Success Screen
         suc_title: "आशीर्वाद से!",
@@ -267,7 +271,11 @@ const LANG = {
         suc_ico: ICONS.check,
         other_options_title: `${ICONS.sparkle} अन्य विकल्प`,
         rec_logo_sub: "आपका पोषण प्लान",
-        qty_select_wt: "पसंदीदा मात्रा चुनें:",
+        qty_select_wt: "मात्रा चुनें:",
+        gran_select_lbl: "पिसाई:",
+        gran_fine: "बारीक",
+        gran_medium: "मध्यम",
+        gran_coarse: "दरदरा",
         co_pay_counter: "काउंटर पर भुगतान",
         co_pay_store_counter: "स्टोर काउंटर पर भुगतान",
         nutr_rec_badge: "व्यक्तिगत अनुशंसा",
@@ -313,6 +321,9 @@ function T(key) {
 function chooseLang(l) {
     S.lang = l;
     applyTranslations();
+    if (typeof syncTraditionalCardsUI === 'function') {
+        syncTraditionalCardsUI();
+    }
     show('s-entry');
 }
 

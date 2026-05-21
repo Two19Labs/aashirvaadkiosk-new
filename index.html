@@ -530,16 +530,26 @@
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_sharbati_desc">Premium stone-ground wheat from MP, makes softest rotis</div>
                 </div>
               </div>
-              <!-- Quantity Slider Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
-                  <span class="qty-val" id="qty-val-sharbati" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+              <!-- Quantity & Granulation Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+                <!-- Quantity selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'sharbati', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'sharbati', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'sharbati', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'sharbati', 10)">10 kg</button>
+                  </div>
                 </div>
-                <input type="range" min="1" max="25" value="5" class="qty-slider" oninput="updateCardQty(this, 'sharbati')">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
-                  <span>1 kg</span>
-                  <span>25 kg</span>
+                <!-- Granulation selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="gran_select_lbl">Granulation:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill gran-pill sel" data-val="Fine" onclick="selectGranulation(this, 'sharbati', 'Fine')" data-i18n="gran_fine">Fine</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Medium" onclick="selectGranulation(this, 'sharbati', 'Medium')" data-i18n="gran_medium">Medium</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Coarse" onclick="selectGranulation(this, 'sharbati', 'Coarse')" data-i18n="gran_coarse">Coarse</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -569,16 +579,26 @@
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_khapli_desc">Ancient Emmer wheat, high in fibre, low GI, good for diabetic health</div>
                 </div>
               </div>
-              <!-- Quantity Slider Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
-                  <span class="qty-val" id="qty-val-khapli" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+              <!-- Quantity & Granulation Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+                <!-- Quantity selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'khapli', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'khapli', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'khapli', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'khapli', 10)">10 kg</button>
+                  </div>
                 </div>
-                <input type="range" min="1" max="14" value="5" class="qty-slider" oninput="updateCardQty(this, 'khapli')">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
-                  <span>1 kg</span>
-                  <span>14 kg</span>
+                <!-- Granulation selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="gran_select_lbl">Granulation:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill gran-pill sel" data-val="Fine" onclick="selectGranulation(this, 'khapli', 'Fine')" data-i18n="gran_fine">Fine</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Medium" onclick="selectGranulation(this, 'khapli', 'Medium')" data-i18n="gran_medium">Medium</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Coarse" onclick="selectGranulation(this, 'khapli', 'Coarse')" data-i18n="gran_coarse">Coarse</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -608,16 +628,26 @@
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_lokwan_desc">Superior golden grain Lokwan wheat, yields nutritious daily rotis</div>
                 </div>
               </div>
-              <!-- Quantity Slider Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
-                  <span class="qty-val" id="qty-val-lokwan" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+              <!-- Quantity & Granulation Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+                <!-- Quantity selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'lokwan', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'lokwan', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'lokwan', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'lokwan', 10)">10 kg</button>
+                  </div>
                 </div>
-                <input type="range" min="1" max="12" value="5" class="qty-slider" oninput="updateCardQty(this, 'lokwan')">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
-                  <span>1 kg</span>
-                  <span>12 kg</span>
+                <!-- Granulation selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="gran_select_lbl">Granulation:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill gran-pill sel" data-val="Fine" onclick="selectGranulation(this, 'lokwan', 'Fine')" data-i18n="gran_fine">Fine</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Medium" onclick="selectGranulation(this, 'lokwan', 'Medium')" data-i18n="gran_medium">Medium</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Coarse" onclick="selectGranulation(this, 'lokwan', 'Coarse')" data-i18n="gran_coarse">Coarse</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -647,16 +677,26 @@
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_multigrain_desc">Power-packed blend of wheat, soy, oats, maize, and chana</div>
                 </div>
               </div>
-              <!-- Quantity Slider Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
-                  <span class="qty-val" id="qty-val-multigrain" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+              <!-- Quantity & Granulation Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+                <!-- Quantity selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'multigrain', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'multigrain', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'multigrain', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'multigrain', 10)">10 kg</button>
+                  </div>
                 </div>
-                <input type="range" min="1" max="10" value="5" class="qty-slider" oninput="updateCardQty(this, 'multigrain')">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
-                  <span>1 kg</span>
-                  <span>10 kg</span>
+                <!-- Granulation selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="gran_select_lbl">Granulation:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill gran-pill sel" data-val="Fine" onclick="selectGranulation(this, 'multigrain', 'Fine')" data-i18n="gran_fine">Fine</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Medium" onclick="selectGranulation(this, 'multigrain', 'Medium')" data-i18n="gran_medium">Medium</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Coarse" onclick="selectGranulation(this, 'multigrain', 'Coarse')" data-i18n="gran_coarse">Coarse</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -686,16 +726,26 @@
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_multimillet_desc">Gluten-free blend of ragi, jowar, bajra, and nutritious millets</div>
                 </div>
               </div>
-              <!-- Quantity Slider Wrapper -->
-              <div class="qty-slider-wrap" onclick="event.stopPropagation()">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85);" data-i18n="qty_select_wt">Select Weight:</span>
-                  <span class="qty-val" id="qty-val-multimillet" style="font-size: 16px; font-weight: 800; color: #fff;">5 kg</span>
+              <!-- Quantity & Granulation Wrapper -->
+              <div class="qty-slider-wrap" onclick="event.stopPropagation()" style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px; border-top: 1.5px solid rgba(255,255,255,0.06); padding-top: 14px; padding-bottom: 4px;">
+                <!-- Quantity selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'multimillet', 1)">1 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'multimillet', 2)">2 kg</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'multimillet', 5)">5 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'multimillet', 10)" disabled style="opacity: 0.35; cursor: not-allowed; text-decoration: line-through;" title="Exceeds store stock (8 kg left)">10 kg</button>
+                  </div>
                 </div>
-                <input type="range" min="1" max="8" value="5" class="qty-slider" oninput="updateCardQty(this, 'multimillet')">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px;">
-                  <span>1 kg</span>
-                  <span>8 kg</span>
+                <!-- Granulation selection -->
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="gran_select_lbl">Granulation:</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="opt-pill gran-pill sel" data-val="Fine" onclick="selectGranulation(this, 'multimillet', 'Fine')" data-i18n="gran_fine">Fine</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Medium" onclick="selectGranulation(this, 'multimillet', 'Medium')" data-i18n="gran_medium">Medium</button>
+                    <button type="button" class="opt-pill gran-pill" data-val="Coarse" onclick="selectGranulation(this, 'multimillet', 'Coarse')" data-i18n="gran_coarse">Coarse</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -728,7 +778,7 @@
     <!-- Navigation Footer -->
     <div class="fnav">
       <button class="btn-ghost" onclick="surveyBack('trad')" data-i18n="quiz_back">&larr; Back</button>
-      <button class="btn-sm" onclick="surveyNext('trad')" data-i18n="quiz_gen_plan">Generate My Plan &rarr;</button>
+      <button class="btn-sm" onclick="surveyNext('trad')" data-i18n="quiz_gen_plan">Create My Blend &rarr;</button>
     </div>
   </div>
 
@@ -861,7 +911,7 @@
     <!-- Navigation Footer -->
     <div class="fnav">
       <button class="btn-ghost" onclick="surveyBack('nutr')" data-i18n="quiz_back">&larr; Back</button>
-      <button class="btn-sm" onclick="surveyNext('nutr')" data-i18n="quiz_gen_plan">Generate My Plan &rarr;</button>
+      <button class="btn-sm" onclick="surveyNext('nutr')" data-i18n="quiz_gen_plan">Create My Blend &rarr;</button>
     </div>
   </div>
 
@@ -1032,7 +1082,7 @@
           <span style="display:inline-block; width:8px; height:8px; background:var(--g2); border-radius:50%; box-shadow:0 0 10px var(--g2); animation: pulse 1.5s infinite;"></span>
           <span data-i18n="chakki_status">Grinding & Processing...</span>
         </div>
-        <p style="color: var(--brF); font-size: 13px; margin-bottom: 24px; max-width: 420px; line-height: 1.55;" data-i18n="chakki_subtitle">Your custom nutritional blend is being freshly ground using our traditional stone-grill mill</p>
+        <p style="color: var(--brF); font-size: 13px; margin-bottom: 24px; max-width: 420px; line-height: 1.55;" data-i18n="chakki_subtitle">Your custom nutritional blend is being freshly ground using our traditional stone based mill</p>
 
         <!-- Progress Loading Indicator -->
         <div class="chakki-progress-container">

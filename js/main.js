@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.warn("Failed to load saved session:", e);
     }
   }
+  syncTraditionalCardsUI();
 });
 
 // =============================================
@@ -361,13 +362,71 @@ function selectTraditionalBlend(element, blendName) {
   saveState();
 }
 
-function updateCardQty(input, blendName) {
-  const val = parseInt(input.value);
-  S.blendQuantities[blendName] = val;
-  const labelEl = document.getElementById(`qty-val-${blendName}`);
-  if (labelEl) labelEl.innerText = `${val} kg`;
+function selectQty(button, blendName, value) {
+  S.blendQuantities[blendName] = value;
+  
+  // Highlight active button locally within this card's quantity container
+  const parentContainer = button.closest('div');
+  if (parentContainer) {
+    parentContainer.querySelectorAll('.qty-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  
   updateSidebarSummary();
   saveState();
+}
+
+function selectGranulation(button, blendName, value) {
+  S.blendGranulations[blendName] = value;
+  
+  // Highlight active button locally within this card's granulation container
+  const parentContainer = button.closest('div');
+  if (parentContainer) {
+    parentContainer.querySelectorAll('.gran-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  
+  updateSidebarSummary();
+  saveState();
+}
+
+function syncTraditionalCardsUI() {
+  const blends = ['sharbati', 'khapli', 'lokwan', 'multigrain', 'multimillet'];
+  blends.forEach(blend => {
+    const qty = S.blendQuantities[blend] || 5;
+    const gran = S.blendGranulations[blend] || 'Fine';
+    
+    // Find card container
+    const card = document.querySelector(`.mcq[onclick*="'${blend}'"]`);
+    if (card) {
+      // Sync card selection state
+      if (S.selectedBlends.includes(blend)) {
+        card.classList.add('sel');
+      } else {
+        card.classList.remove('sel');
+      }
+      
+      // Sync quantity preset pills
+      card.querySelectorAll('.qty-pill').forEach(btn => {
+        const val = parseInt(btn.getAttribute('data-val'));
+        if (val === qty) {
+          btn.classList.add('sel');
+        } else {
+          btn.classList.remove('sel');
+        }
+      });
+      
+      // Sync granulation pills
+      card.querySelectorAll('.gran-pill').forEach(btn => {
+        const val = btn.getAttribute('data-val');
+        if (val === gran) {
+          btn.classList.add('sel');
+        } else {
+          btn.classList.remove('sel');
+        }
+      });
+    }
+  });
 }
 
 function updateSidebarSummary() {
@@ -441,12 +500,15 @@ function updateSidebarSummary() {
 
   // 1. Add In-Store items to list
   inStoreBlends.forEach(item => {
+    const gran = S.blendGranulations[item.blend] || 'Fine';
+    const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
         <div>
           <div style="font-weight:600; color:#fff; font-size:13px;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
-          <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px;">
+          <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
             <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
+            <span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>
             <span>${S.lang === 'hi' ? '🛒 इन-स्टोर मिल पिकअप' : '🛒 In-Store Mill Pickup'}</span>
           </div>
         </div>
@@ -457,12 +519,15 @@ function updateSidebarSummary() {
 
   // 2. Add Delivery items to list
   deliveryBlends.forEach(item => {
+    const gran = S.blendGranulations[item.blend] || 'Fine';
+    const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
         <div>
           <div style="font-weight:600; color:#fff; font-size:13px;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
-          <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px;">
+          <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
             <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2; background: rgba(255,107,107,0.15); color: #ff8a8a; border-color: rgba(255,107,107,0.3);">${item.aisle}</span>
+            <span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>
             <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
           </div>
         </div>
@@ -1139,12 +1204,15 @@ function buildAndShowResults() {
       const meta = blendMetadata[blend];
       if (!meta) return;
       const qty = S.blendQuantities[blend] || 5;
+      const gran = S.blendGranulations[blend] || 'Fine';
+      const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
       
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px;">
-          <div>
-            <span style="color: #fff; font-weight: 600;">${meta.name}</span>
-            <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.2);">${meta.aisle}</span>
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span style="color: #fff; font-weight: 600;">${T('trad_blend_' + blend)}</span>
+            <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${meta.aisle}</span>
+            <span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>
           </div>
           <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${qty} kg</span>
         </div>
@@ -1195,9 +1263,14 @@ function buildAndShowResults() {
           const meta = blendMetadata[blend];
           if (!meta) return;
           const qty = S.blendQuantities[blend] || 5;
+          const gran = S.blendGranulations[blend] || 'Fine';
+          const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
           const row = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-              <span style="color: #fff; font-weight: 500;">${meta.name}</span>
+              <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                ${T('trad_blend_' + blend)}
+                <span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>
+              </span>
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${qty} kg</span>
             </div>
           `;
@@ -1360,6 +1433,13 @@ function resetSession() {
     multigrain: 5,
     multimillet: 5
   };
+  S.blendGranulations = {
+    sharbati: 'Fine',
+    khapli: 'Fine',
+    lokwan: 'Fine',
+    multigrain: 'Fine',
+    multimillet: 'Fine'
+  };
   S.nutritionGoals = [];
   S.recommendedBlend = '';
   S.chakkiActive = false;
@@ -1406,13 +1486,10 @@ function resetSession() {
   if (iDelCity) iDelCity.value = '';
   if (iDelState) iDelState.value = '';
 
-  // Reset Range Sliders in UI
-  ['sharbati', 'khapli', 'lokwan', 'multigrain', 'multimillet'].forEach(blend => {
-    const qtySlider = document.querySelector(`.mcq [oninput*="'${blend}'"]`);
-    if (qtySlider) qtySlider.value = 5;
-    const qtyVal = document.getElementById(`qty-val-${blend}`);
-    if (qtyVal) qtyVal.innerText = '5 kg';
-  });
+  // Reset custom weight and granulation UI preset button highlights
+  if (typeof syncTraditionalCardsUI === 'function') {
+    syncTraditionalCardsUI();
+  }
 
   // Reset split checkout cards in sidebar
   const unifiedCard = document.getElementById('unified-summary-card');

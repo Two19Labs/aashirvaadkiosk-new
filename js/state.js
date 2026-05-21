@@ -18,6 +18,13 @@ var S = {
     multigrain: 5,
     multimillet: 5
   },
+  blendGranulations: {
+    sharbati: 'Fine',
+    khapli: 'Fine',
+    lokwan: 'Fine',
+    multigrain: 'Fine',
+    multimillet: 'Fine'
+  },
   nutritionGoals: [],
   
   // Home Delivery State
