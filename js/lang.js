@@ -63,7 +63,7 @@ const LANG = {
         details_name_placeholder: "Enter your name",
         details_email_label: "Email (Optional)",
         details_email_placeholder: "Enter your email",
-        details_btn: `Begin Ghar Profiling ${ICONS.right}`,
+        details_btn: `Let's get started! ${ICONS.right}`,
 
         // New Survey Keys (English)
         q1_title: "Select your family size",
@@ -196,7 +196,7 @@ const LANG = {
         details_name_placeholder: "अपना नाम दर्ज करें",
         details_email_label: "ईमेल (वैकल्पिक)",
         details_email_placeholder: "अपना ईमेल दर्ज करें",
-        details_btn: `घर की प्रोफाइलिंग शुरू करें ${ICONS.right}`,
+        details_btn: `आइए शुरू करें! ${ICONS.right}`,
 
         // New Survey Keys (Hindi)
         q1_title: "अपने परिवार का आकार चुनें",

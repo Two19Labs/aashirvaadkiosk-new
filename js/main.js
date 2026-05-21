@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const iPhone = document.getElementById('i-phone');
   const iOtp = document.getElementById('i-otp');
 
-  if (iName) iName.value = "Aditya";
-  if (iPhone) iPhone.value = "7007679485";
-  if (iOtp) iOtp.value = "1234";
+  if (iName) iName.value = "";
+  if (iPhone) iPhone.value = "";
+  if (iOtp) iOtp.value = "";
 
-  S.name = "Aditya";
-  S.phone = "7007679485";
+  S.name = "";
+  S.phone = "";
 
   // Load previous session if available
   const savedSession = localStorage.getItem('ASH_KIOSK_SESSION');
@@ -234,7 +234,7 @@ function goOTP() {
 
   const otpInp = document.getElementById('i-otp');
   if (otpInp) {
-    otpInp.value = '1234';
+    otpInp.value = '';
     const eOtp = document.getElementById('e-otp');
     if (eOtp) eOtp.classList.remove('show');
   }
@@ -587,8 +587,8 @@ function goHomeDeliveryAddress() {
   const delName = document.getElementById('i-delivery-name');
   const delPhone = document.getElementById('i-delivery-phone');
   
-  if (delName) delName.value = S.name || "Aditya";
-  if (delPhone) delPhone.value = S.phone || "7007679485";
+  if (delName) delName.value = S.name || "";
+  if (delPhone) delPhone.value = S.phone || "";
   
   // Hide all error messages under s-delivery-address
   document.querySelectorAll('#s-delivery-address .err').forEach(el => el.classList.remove('show'));
@@ -1345,8 +1345,8 @@ function clearActiveSurveyUI() {
 
 function resetSession() {
   // Clear State values to default test settings
-  S.name = 'Aditya';
-  S.phone = '7007679485';
+  S.name = '';
+  S.phone = '';
   S.email = '';
   S.familySize = '';
   S.composition = [];
@@ -1368,13 +1368,13 @@ function resetSession() {
   S.isHomeDelivery = false;
   S.paymentMethod = '';
   S.deliveryAddress = {
-    name: 'Aditya',
-    phone: '7007679485',
-    flatNo: 'Flat 402, Golden Crest Apartments',
-    area: 'Lavelle Road',
-    pincode: '560001',
-    city: 'Bengaluru',
-    state: 'Karnataka'
+    name: '',
+    phone: '',
+    flatNo: '',
+    area: '',
+    pincode: '',
+    city: '',
+    state: ''
   };
   saveState();
 
@@ -1384,9 +1384,9 @@ function resetSession() {
   const iOtp = document.getElementById('i-otp');
   const dEmail = document.getElementById('d-email');
 
-  if (iName) iName.value = 'Aditya';
-  if (iPhone) iPhone.value = '7007679485';
-  if (iOtp) iOtp.value = '1234';
+  if (iName) iName.value = '';
+  if (iPhone) iPhone.value = '';
+  if (iOtp) iOtp.value = '';
   if (dEmail) dEmail.value = '';
 
   // Reset Home Delivery Inputs
@@ -1398,13 +1398,13 @@ function resetSession() {
   const iDelCity = document.getElementById('i-delivery-city');
   const iDelState = document.getElementById('i-delivery-state');
 
-  if (iDelName) iDelName.value = 'Aditya';
-  if (iDelPhone) iDelPhone.value = '7007679485';
-  if (iDelFlat) iDelFlat.value = 'Flat 402, Golden Crest Apartments';
-  if (iDelArea) iDelArea.value = 'Lavelle Road';
-  if (iDelPin) iDelPin.value = '560001';
-  if (iDelCity) iDelCity.value = 'Bengaluru';
-  if (iDelState) iDelState.value = 'Karnataka';
+  if (iDelName) iDelName.value = '';
+  if (iDelPhone) iDelPhone.value = '';
+  if (iDelFlat) iDelFlat.value = '';
+  if (iDelArea) iDelArea.value = '';
+  if (iDelPin) iDelPin.value = '';
+  if (iDelCity) iDelCity.value = '';
+  if (iDelState) iDelState.value = '';
 
   // Reset Range Sliders in UI
   ['sharbati', 'khapli', 'lokwan', 'multigrain', 'multimillet'].forEach(blend => {
