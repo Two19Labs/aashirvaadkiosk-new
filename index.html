@@ -1542,26 +1542,89 @@
           <div style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,147,46,0.25), transparent);"></div>
         </div>
 
-        <!-- Right Column: Try a Sample Card -->
+        <!-- Right Column: Try Before You Buy -->
         <div class="rec-side-col">
-          <div class="rec-card-premium" style="border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 440px; height: 100%; min-height: 380px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-            <!-- Heading -->
-            <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <svg style="width: 18px; height: 18px; color: var(--g2);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-              <span style="font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -0.2px;" data-i18n="nutr_sample_title">Not sure? Try a sample</span>
-            </div>
-            <p style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; margin-bottom: 22px; max-width: 300px;" data-i18n="nutr_sample_desc">Scan the QR code below to request a free sample pack of this blend</p>
+          <div class="rec-card-premium trial-card" style="border-radius: 24px; padding: 32px 28px; width: 100%; max-width: 440px; height: 100%; min-height: 380px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden;">
+            <!-- Decorative sparkle accents -->
+            <div class="trial-sparkle trial-sparkle-1"></div>
+            <div class="trial-sparkle trial-sparkle-2"></div>
 
-            <!-- QR Code -->
-            <div id="nutr-sample-qr" style="width: 180px; height: 180px; margin: 0 auto; border-radius: 20px; background: #ffffff; padding: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;">
-              <img src="images/sample_qr.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" alt="Try a Sample QR Code">
+            <!-- STEP 1: Phone Number Collection -->
+            <div id="trial-step-phone" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <!-- Gift icon badge -->
+              <div class="trial-icon-badge">
+                <svg style="width: 28px; height: 28px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                  <rect x="2" y="7" width="20" height="5"></rect>
+                  <line x1="12" y1="22" x2="12" y2="7"></line>
+                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                </svg>
+              </div>
+
+              <!-- Headline -->
+              <h3 class="trial-headline" data-i18n="trial_headline">Want to try before you buy?</h3>
+              <p class="trial-subtext" data-i18n="trial_subtext">Get a free sample pack link delivered to your phone — no commitment needed</p>
+
+              <!-- Phone Input -->
+              <div class="trial-input-wrap">
+                <div class="trial-prefix">+91</div>
+                <input type="tel" id="trial-phone-input" class="trial-phone-field" placeholder="Enter your mobile number" maxlength="10" pattern="[0-9]*" inputmode="numeric" autocomplete="tel">
+              </div>
+              <div class="err" id="e-trial-phone" style="text-align: center; margin-top: 6px; margin-bottom: 0;" data-i18n="trial_phone_err">Please enter a valid 10-digit phone number</div>
+
+              <!-- Get Link Button -->
+              <button class="trial-get-link-btn" id="trial-get-link-btn" onclick="submitTrialPhone()">
+                <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+                <span data-i18n="trial_get_link">Get Link</span>
+              </button>
+
+              <!-- Trust indicators -->
+              <div class="trial-trust-row">
+                <div class="trial-trust-item">
+                  <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <span data-i18n="trial_trust_1">100% Free</span>
+                </div>
+                <div class="trial-trust-item">
+                  <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span data-i18n="trial_trust_2">No Spam</span>
+                </div>
+                <div class="trial-trust-item">
+                  <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-14v4l3 3"/></svg>
+                  <span data-i18n="trial_trust_3">Instant Delivery</span>
+                </div>
+              </div>
             </div>
 
-            <p style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 14px; letter-spacing: 0.3px;" data-i18n="nutr_sample_hint">Point your phone camera at the code above</p>
+            <!-- STEP 2: QR Code Reveal -->
+            <div id="trial-step-qr" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+              <!-- Success animation check -->
+              <div class="trial-success-check">
+                <svg style="width: 32px; height: 32px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+
+              <h3 class="trial-headline" style="font-size: 20px; margin-bottom: 4px;" data-i18n="trial_success_title">Link Sent!</h3>
+              <p class="trial-subtext" style="margin-bottom: 20px;" data-i18n="trial_success_desc">Scan the QR code below or check your phone for the sample request link</p>
+
+              <!-- QR Code -->
+              <div id="nutr-sample-qr" class="trial-qr-box">
+                <img src="images/sample_qr.png" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" alt="Try a Sample QR Code">
+              </div>
+
+              <p class="trial-qr-hint" data-i18n="nutr_sample_hint">Point your phone camera at the code above</p>
+
+              <!-- Back link -->
+              <button class="trial-back-link" onclick="trialGoBack()">
+                <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span data-i18n="trial_back">Enter different number</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

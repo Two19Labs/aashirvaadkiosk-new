@@ -212,7 +212,19 @@ const LANG = {
         toast_name_req: "Please enter your name",
         toast_select_req: "Please make a selection",
         toast_limit_goals: "You can select up to 2 goals only",
-        toast_pick_blend: "Please select at least one product to continue"
+        toast_pick_blend: "Please select at least one product to continue",
+
+        // Trial Screen Keys
+        trial_headline: "Want to try before you buy?",
+        trial_subtext: "Get a free sample pack link delivered to your phone — no commitment needed",
+        trial_get_link: "Get Link",
+        trial_success_title: "Link Sent!",
+        trial_success_desc: "Scan the QR code below or check your phone for the sample request link",
+        trial_back: "Enter different number",
+        trial_trust_1: "100% Free",
+        trial_trust_2: "No Spam",
+        trial_trust_3: "Instant Delivery",
+        trial_phone_err: "Please enter a valid 10-digit phone number"
     },
     hi: {
         // Selection Screen
@@ -395,7 +407,19 @@ const LANG = {
         toast_name_req: "कृपया अपना नाम दर्ज करें",
         toast_select_req: "कृपया चयन करें",
         toast_limit_goals: "आप केवल अधिकतम 2 लक्ष्य ही चुन सकते हैं",
-        toast_pick_blend: "कृपया जारी रखने के लिए कम से कम एक उत्पाद चुनें"
+        toast_pick_blend: "कृपया जारी रखने के लिए कम से कम एक उत्पाद चुनें",
+
+        // Trial Screen Keys
+        trial_headline: "खरीदने से पहले आज़माना चाहते हैं?",
+        trial_subtext: "अपने फोन पर मुफ्त सैंपल पैक लिंक प्राप्त करें — कोई प्रतिबद्धता की आवश्यकता नहीं है",
+        trial_get_link: "लिंक प्राप्त करें",
+        trial_success_title: "लिंक भेज दिया गया!",
+        trial_success_desc: "नीचे दिए गए QR कोड को स्कैन करें या सैंपल अनुरोध लिंक के लिए अपना फोन देखें",
+        trial_back: "दूसरा नंबर दर्ज करें",
+        trial_trust_1: "100% मुफ्त",
+        trial_trust_2: "कोई स्पैम नहीं",
+        trial_trust_3: "त्वरित वितरण",
+        trial_phone_err: "कृपया एक मान्य 10-अंकीय मोबाइल नंबर दर्ज करें"
     }
 };
 

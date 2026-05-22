@@ -282,6 +282,24 @@ function setupInputRestrictions() {
       if (this.value.trim().length > 0 && err) err.classList.remove('show');
     });
   }
+
+  // Trial Phone Field
+  const trialPhoneInp = document.getElementById('trial-phone-input');
+  if (trialPhoneInp) {
+    trialPhoneInp.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      const err = document.getElementById('e-trial-phone');
+      if (this.value.length === 10 && err) {
+        err.classList.remove('show');
+      }
+    });
+    trialPhoneInp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitTrialPhone();
+      }
+    });
+  }
 }
 
 // =============================================
@@ -1738,10 +1756,83 @@ function resetSession() {
   // Clear UI Selection Borders/Colors
   clearActiveSurveyUI();
   
+  // Reset Trial Screen State
+  const trialPhone = document.getElementById('trial-phone-input');
+  if (trialPhone) trialPhone.value = '';
+  const eTrialPhone = document.getElementById('e-trial-phone');
+  if (eTrialPhone) eTrialPhone.classList.remove('show');
+  const stepPhone = document.getElementById('trial-step-phone');
+  const stepQR = document.getElementById('trial-step-qr');
+  if (stepPhone) stepPhone.style.display = 'flex';
+  if (stepQR) stepQR.style.display = 'none';
+
   if (typeof switchCategory === 'function') {
     switchCategory('atta');
   }
 
   // Navigate to Welcome Cover Page
   show('s-welcome');
+}
+
+// =============================================
+// TRIAL / SAMPLE USER FLOW
+// =============================================
+function submitTrialPhone() {
+  const phoneInp = document.getElementById('trial-phone-input');
+  const err = document.getElementById('e-trial-phone');
+  const phone = phoneInp ? phoneInp.value.trim() : '';
+
+  if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+    if (err) err.classList.add('show');
+    const msg = S.lang === 'hi' ? "कृपया 10-अंकीय मोबाइल नंबर दर्ज करें" : "Please enter a valid 10-digit phone number";
+    showToast(msg);
+    return;
+  }
+
+  if (err) err.classList.remove('show');
+
+  // Transition to step 2 (QR code reveal)
+  const stepPhone = document.getElementById('trial-step-phone');
+  const stepQR = document.getElementById('trial-step-qr');
+
+  if (stepPhone && stepQR) {
+    stepPhone.style.display = 'none';
+    stepQR.style.display = 'flex';
+
+    // Trigger animations or hints if any
+    const successCheck = stepQR.querySelector('.trial-success-check');
+    if (successCheck) {
+      successCheck.style.animation = 'none';
+      successCheck.offsetHeight; // trigger reflow
+      successCheck.style.animation = '';
+    }
+
+    const qrBox = stepQR.querySelector('.trial-qr-box');
+    if (qrBox) {
+      qrBox.style.animation = 'none';
+      qrBox.offsetHeight; // trigger reflow
+      qrBox.style.animation = '';
+    }
+  }
+}
+
+function trialGoBack() {
+  const stepPhone = document.getElementById('trial-step-phone');
+  const stepQR = document.getElementById('trial-step-qr');
+  const phoneInp = document.getElementById('trial-phone-input');
+  const err = document.getElementById('e-trial-phone');
+
+  if (stepPhone && stepQR) {
+    stepQR.style.display = 'none';
+    stepPhone.style.display = 'flex';
+  }
+
+  if (phoneInp) {
+    phoneInp.value = '';
+    phoneInp.focus();
+  }
+
+  if (err) {
+    err.classList.remove('show');
+  }
 }
