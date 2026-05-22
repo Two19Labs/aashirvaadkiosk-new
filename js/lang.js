@@ -87,13 +87,13 @@ const LANG = {
         trad_blend_sharbati: "100% Sharbati Atta",
         trad_blend_sharbati_desc: "Premium stone-ground wheat from MP, makes softest rotis",
         trad_blend_khapli: "100% Khapli Atta",
-        trad_blend_khapli_desc: "Ancient Emmer wheat, high in fibre, low GI, good for diabetic health",
+        trad_blend_khapli_desc: "Ancient Emmer wheat, high in fibre, low GI, good for health",
         trad_blend_lokwan: "100% Lokwan Atta",
         trad_blend_lokwan_desc: "Superior golden grain Lokwan wheat, yields nutritious daily rotis",
         trad_blend_multigrain: "Multigrain Atta",
-        trad_blend_multigrain_desc: "Power-packed blend of wheat, soy, oats, maize, and chana",
+        trad_blend_multigrain_desc: "Blend of Bajra, Rahi, Amaranth, Oats Flour, Barley and Jowar",
         trad_blend_multimillet: "Multi Millet Atta",
-        trad_blend_multimillet_desc: "Gluten-free blend of ragi, jowar, bajra, and nutritious millets",
+        trad_blend_multimillet_desc: "Blend of wheat, foxtail, kodo, little millet and proso millet",
 
         // Categories
         cat_atta: "Atta",
@@ -121,7 +121,7 @@ const LANG = {
 
         // Oil Products
         trad_blend_yellow_mustard_oil: "Yellow Mustard Oil",
-        trad_blend_yellow_mustard_oil_desc: "Cold-pressed Svasti Yellow Mustard Oil with sharp aroma",
+        trad_blend_yellow_mustard_oil_desc: "Cold-pressed Yellow Mustard Oil with sharp aroma",
         trad_blend_groundnut_oil: "Groundnut Oil",
         trad_blend_groundnut_oil_desc: "100% pure cold-pressed groundnut oil, ideal for cooking",
         trad_blend_coconut_oil: "Coconut Oil",
@@ -132,6 +132,8 @@ const LANG = {
         trad_blend_desi_cow_ghee_desc: "Slow-cooked cow ghee with rich granular texture and aroma",
         trad_blend_buffalo_ghee: "Buffalo Ghee",
         trad_blend_buffalo_ghee_desc: "Pure premium buffalo ghee, high in fat and rich flavor",
+        trad_blend_a2_cow_ghee_bilona: "A2 Cow Ghee Bilona",
+        trad_blend_a2_cow_ghee_bilona_desc: "Pure A2 cow ghee hand-churned using the traditional bilona method",
 
         // Salt Products
         trad_blend_iodized_salt: "Iodized Salt",
@@ -216,14 +218,11 @@ const LANG = {
 
         // Trial Screen Keys
         trial_headline: "Want to try before you buy?",
-        trial_subtext: "Get a free sample pack link delivered to your phone — no commitment needed",
+        trial_subtext: "Get a sample at our tasting section in store",
         trial_get_link: "Get Link",
         trial_success_title: "Link Sent!",
         trial_success_desc: "Scan the QR code below or check your phone for the sample request link",
         trial_back: "Enter different number",
-        trial_trust_1: "100% Free",
-        trial_trust_2: "No Spam",
-        trial_trust_3: "Instant Delivery",
         trial_phone_err: "Please enter a valid 10-digit phone number",
         trial_left_text: "3/3 Trials Left",
         suc_explore_more: "Explore More Products",
@@ -286,13 +285,13 @@ const LANG = {
         trad_blend_sharbati: "100% शरबती आटा",
         trad_blend_sharbati_desc: "मध्य प्रदेश का प्रीमियम पत्थर से पिसा हुआ गेहूं, सबसे नरम रोटियां बनाता है",
         trad_blend_khapli: "100% खापली आटा",
-        trad_blend_khapli_desc: "प्राचीन एमेर गेहूं, फाइबर से भरपूर, कम ग्लाइसेमिक सूचकांक, मधुमेह रोगियों के लिए उत्तम",
+        trad_blend_khapli_desc: "प्राचीन एमेर गेहूं, फाइबर से भरपूर, कम ग्लाइसेमिक सूचकांक, स्वास्थ्य के लिए उत्तम",
         trad_blend_lokwan: "100% लोकवान आटा",
         trad_blend_lokwan_desc: "उत्कृष्ट सुनहरे दाने वाला लोकवान गेहूं, पौष्टिक दैनिक रोटियां देता है",
         trad_blend_multigrain: "मल्टीग्रेन आटा",
-        trad_blend_multigrain_desc: "गेहूं, सोया, जई, मक्का और चने का शक्तिशाली पौष्टिक मिश्रण",
+        trad_blend_multigrain_desc: "बाजरा, रागी, राजगिरा, ओट्स आटा, जौ और ज्वार का मिश्रण",
         trad_blend_multimillet: "मल्टी मिलेट आटा",
-        trad_blend_multimillet_desc: "रागी, ज्वार, बाजरा और पौष्टिक बाजरा का लस मुक्त स्वस्थ मिश्रण",
+        trad_blend_multimillet_desc: "गेहूं, फॉक्सटेल, कोदो, छोटी कंगनी और प्रोसो बाजरा का मिश्रण",
 
         // Categories
         cat_atta: "आटा",
@@ -331,6 +330,8 @@ const LANG = {
         trad_blend_desi_cow_ghee_desc: "दानेदार बनावट और बेहतरीन महक वाला धीमी आंच पर पका गाय का घी",
         trad_blend_buffalo_ghee: "भैंस का घी",
         trad_blend_buffalo_ghee_desc: "शुद्ध प्रीमियम भैंस का घी, भरपूर वसा और उत्तम स्वाद",
+        trad_blend_a2_cow_ghee_bilona: "A2 गाय घी बिलोना",
+        trad_blend_a2_cow_ghee_bilona_desc: "पारंपरिक बिलोना विधि से हाथ से मथा गया शुद्ध A2 गाय का घी",
 
         // Salt Products
         trad_blend_iodized_salt: "आयोडीन युक्त नमक",
@@ -415,14 +416,11 @@ const LANG = {
 
         // Trial Screen Keys
         trial_headline: "खरीदने से पहले आज़माना चाहते हैं?",
-        trial_subtext: "अपने फोन पर मुफ्त सैंपल पैक लिंक प्राप्त करें — कोई प्रतिबद्धता की आवश्यकता नहीं है",
+        trial_subtext: "हमारे स्टोर के टेस्टिंग सेक्शन में सैंपल प्राप्त करें",
         trial_get_link: "लिंक प्राप्त करें",
         trial_success_title: "लिंक भेज दिया गया!",
         trial_success_desc: "नीचे दिए गए QR कोड को स्कैन करें या सैंपल अनुरोध लिंक के लिए अपना फोन देखें",
         trial_back: "दूसरा नंबर दर्ज करें",
-        trial_trust_1: "100% मुफ्त",
-        trial_trust_2: "कोई स्पैम नहीं",
-        trial_trust_3: "त्वरित वितरण",
         trial_phone_err: "कृपया एक मान्य 10-अंकीय मोबाइल नंबर दर्ज करें",
         trial_left_text: "3/3 ट्रायल शेष",
         suc_explore_more: "और उत्पाद देखें",

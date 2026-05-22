@@ -23,6 +23,7 @@ const BLEND_METADATA = {
   
   desi_cow_ghee: { name: 'Desi Cow Ghee', nameHi: 'देशी गाय का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
   buffalo_ghee: { name: 'Buffalo Ghee', nameHi: 'भैंस का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
+  a2_cow_ghee_bilona: { name: 'A2 Cow Ghee Bilona', nameHi: 'A2 गाय घी बिलोना', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
   
   iodized_salt: { name: 'Iodized Salt', nameHi: 'आयोडीन युक्त नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
   black_salt: { name: 'Black Salt', nameHi: 'काला नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
@@ -107,14 +108,6 @@ function selectNutrQuantity(button, val) {
   }
 
   saveState();
-}
-
-function unlockCategories() {
-  S.attasOnlyLocked = false;
-  saveState();
-  switchCategory('pulses');
-  const msg = S.lang === 'hi' ? "अन्य श्रेणियां अनलॉक हो गई हैं!" : "Other categories unlocked successfully!";
-  showToast(msg);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -506,6 +499,37 @@ function selectTraditionalBlend(element, blendName) {
   saveState();
 }
 
+/**
+ * Remove a blend from the cart directly from the order summary sidebar.
+ */
+function removeBlendFromCart(blendName) {
+  const idx = S.selectedBlends.indexOf(blendName);
+  if (idx === -1) return;
+
+  S.selectedBlends.splice(idx, 1);
+
+  // Reset weight back to category default and granulation to Fine
+  const meta = BLEND_METADATA[blendName];
+  const defaultQty = meta ? getCategoryDefaultQty(meta.category) : 5;
+  S.blendQuantities[blendName] = defaultQty;
+  S.blendGranulations[blendName] = 'Fine';
+
+  // Un-select and resync the matching product card
+  const card = document.querySelector(`.mcq[onclick*="'${blendName}'"]`);
+  if (card) {
+    card.classList.remove('sel');
+    card.querySelectorAll('.qty-pill').forEach(btn => {
+      btn.classList.toggle('sel', String(btn.getAttribute('data-val')) === String(defaultQty));
+    });
+    card.querySelectorAll('.gran-pill').forEach(btn => {
+      btn.classList.toggle('sel', btn.getAttribute('data-val') === 'Fine');
+    });
+  }
+
+  updateSidebarSummary();
+  saveState();
+}
+
 function selectQty(button, blendName, value) {
   S.blendQuantities[blendName] = value;
   
@@ -549,7 +573,7 @@ function syncTraditionalCardsUI() {
     'toor_dal', 'masoor_dal', 'arhar_dal',
     'turmeric', 'jeera_powder', 'garam_masala',
     'yellow_mustard_oil', 'groundnut_oil', 'coconut_oil',
-    'desi_cow_ghee', 'buffalo_ghee',
+    'desi_cow_ghee', 'buffalo_ghee', 'a2_cow_ghee_bilona',
     'iodized_salt', 'black_salt', 'pink_salt'
   ];
   blends.forEach(blend => {
@@ -598,17 +622,17 @@ function syncTraditionalCardsUI() {
 function switchCategory(category) {
   S.activeCategory = category;
   
-  // Highlight active tab and manage locked visibility
+  // Highlight active tab and manage visibility
   document.querySelectorAll('.cat-tab').forEach(tab => {
     const cat = tab.getAttribute('data-cat');
-    // Skip the unlock button (no data-cat) — handled separately
     if (!cat) return;
 
-    if (S.attasOnlyLocked && cat !== 'atta') {
-      tab.style.display = 'none';
-    } else {
-      tab.style.display = '';
-    }
+    let hidden = false;
+    // Traditional track shows Atta only until the user explores other products
+    if (S.attasOnlyLocked && cat !== 'atta') hidden = true;
+    // After "Explore Other Products", Atta is no longer shown
+    if (S.attaHidden && cat === 'atta') hidden = true;
+    tab.style.display = hidden ? 'none' : '';
 
     if (cat === category) {
       tab.classList.add('active');
@@ -626,16 +650,6 @@ function switchCategory(category) {
     }
   });
 
-  // Manage visibility of the inline unlock button
-  const unlockCard = document.getElementById('unlock-categories-card');
-  if (unlockCard) {
-    if (S.attasOnlyLocked) {
-      unlockCard.style.display = 'flex';
-    } else {
-      unlockCard.style.display = 'none';
-    }
-  }
-  
   saveState();
 }
 
@@ -720,13 +734,14 @@ function updateSidebarSummary() {
           <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
             <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
             ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
-            <span>${S.lang === 'hi' ? '🛒 इन-स्टोर मिल पिकअप' : '🛒 In-Store Mill Pickup'}</span>
+            <span>${S.lang === 'hi' ? '🛒 इन-स्टोर पिकअप' : '🛒 In-Store Pickup'}</span>
           </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
           <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif; white-space: nowrap; flex-shrink: 0;">${formatQty(item.qty)}</div>
           <div style="font-size: 11px; font-weight: 700; color: var(--g2); font-family: 'DM Sans', sans-serif;">₹${getProductMRP(item.blend, item.qty)}</div>
         </div>
+        <button type="button" onclick="removeBlendFromCart('${item.blend}')" title="Remove" style="flex-shrink:0; margin-left:8px; width:24px; height:24px; border-radius:50%; border:1px solid rgba(255,107,107,0.4); background:rgba(255,107,107,0.12); color:#ff8a8a; font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
       </div>
     `;
   });
@@ -749,6 +764,7 @@ function updateSidebarSummary() {
           <div style="font-weight:700; color:#ff8a8a; background:rgba(255,107,107,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(255,107,107,0.24); font-size: 13px; font-family:'DM Sans', sans-serif; white-space: nowrap; flex-shrink: 0;">${formatQty(item.qty)}</div>
           <div style="font-size: 11px; font-weight: 700; color: #ff8a8a; font-family: 'DM Sans', sans-serif;">₹${getProductMRP(item.blend, item.qty)}</div>
         </div>
+        <button type="button" onclick="removeBlendFromCart('${item.blend}')" title="Remove" style="flex-shrink:0; margin-left:8px; width:24px; height:24px; border-radius:50%; border:1px solid rgba(255,107,107,0.4); background:rgba(255,107,107,0.12); color:#ff8a8a; font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
       </div>
     `;
   });
@@ -1064,6 +1080,7 @@ function surveyNext(currentStep) {
 
       if (S.selectionTrack === 'traditional') {
         S.attasOnlyLocked = true;
+        S.attaHidden = false;
         updateSidebarSummary();
         switchCategory('atta');
         show('s-track-trad');
@@ -1330,12 +1347,13 @@ function nutrRecProceed() {
 
 function exploreOtherProducts() {
   S.attasOnlyLocked = false;
+  S.attaHidden = true;
   S.selectionTrack = 'traditional';
   saveState();
   updateSidebarSummary();
   applyTranslations();
   if (typeof switchCategory === 'function') {
-    switchCategory('atta');
+    switchCategory('pulses');
   }
   show('s-track-trad');
 }
@@ -1760,6 +1778,7 @@ function resetSession() {
     coconut_oil: '1l',
     desi_cow_ghee: '1l',
     buffalo_ghee: '1l',
+    a2_cow_ghee_bilona: '1l',
     iodized_salt: '1kg',
     black_salt: '1kg',
     pink_salt: '1kg'
@@ -1781,6 +1800,7 @@ function resetSession() {
     coconut_oil: 'Fine',
     desi_cow_ghee: 'Fine',
     buffalo_ghee: 'Fine',
+    a2_cow_ghee_bilona: 'Fine',
     iodized_salt: 'Fine',
     black_salt: 'Fine',
     pink_salt: 'Fine'
@@ -1792,7 +1812,8 @@ function resetSession() {
   S.nutrGranulation = 'Fine';
   S.nutrQuantity = 5;
   S.attasOnlyLocked = false;
-  
+  S.attaHidden = false;
+
   // Reset Home Delivery State
   S.isHomeDelivery = false;
   S.paymentMethod = '';

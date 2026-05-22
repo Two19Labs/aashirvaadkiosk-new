@@ -28,6 +28,7 @@ var S = {
     coconut_oil: '1l',
     desi_cow_ghee: '1l',
     buffalo_ghee: '1l',
+    a2_cow_ghee_bilona: '1l',
     iodized_salt: '1kg',
     black_salt: '1kg',
     pink_salt: '1kg'
@@ -49,6 +50,7 @@ var S = {
     coconut_oil: 'Fine',
     desi_cow_ghee: 'Fine',
     buffalo_ghee: 'Fine',
+    a2_cow_ghee_bilona: 'Fine',
     iodized_salt: 'Fine',
     black_salt: 'Fine',
     pink_salt: 'Fine'
@@ -84,7 +86,8 @@ var S = {
   nutrBaseWheat: 'Sharbati',
   nutrGranulation: 'Fine',
   nutrQuantity: 5,
-  attasOnlyLocked: false
+  attasOnlyLocked: false,
+  attaHidden: false
 };
 
 function saveState() {
