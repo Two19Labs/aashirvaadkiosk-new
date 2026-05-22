@@ -55,9 +55,46 @@ function formatQty(qty) {
   return qty;
 }
 
+// Centralized MRP lookup table — keyed by product, then by weight option.
+// Atta weights are numeric (kg); all other categories use the weight string.
+const PRODUCT_PRICES = {
+  sharbati:    { 1: 117, 2: 234, 5: 445, 10: 890 },
+  lokwan:      { 1: 110, 2: 220, 5: 530, 10: 1060 },
+  khapli:      { 1: 255, 2: 510, 5: 1245, 10: 2490 },
+  multigrain:  { 1: 127, 2: 254, 5: 605, 10: 1210 },
+  multimillet: { 1: 127, 2: 254, 5: 605, 10: 1210 },
+
+  toor_dal:   { '500g': 98, '1kg': 195 },
+  masoor_dal: { '500g': 70, '1kg': 140 },
+  arhar_dal:  { '500g': 98, '1kg': 195 },
+
+  turmeric:     { '50g': 22, '100g': 44, '250g': 110 },
+  jeera_powder: { '50g': 55, '100g': 110, '250g': 275 },
+  garam_masala: { '50g': 95, '100g': 190, '250g': 475 },
+
+  yellow_mustard_oil: { '250ml': 150, '500ml': 300, '1l': 600, '5l': 3000 },
+  coconut_oil:        { '250ml': 300, '500ml': 600, '1l': 1200, '5l': 6000 },
+  groundnut_oil:      { '250ml': 150, '500ml': 300, '1l': 600, '5l': 3000 },
+
+  desi_cow_ghee:      { '250ml': 500, '500ml': 1000, '1l': 2000 },
+  buffalo_ghee:       { '250ml': 355, '500ml': 710, '1l': 1420 },
+  a2_cow_ghee_bilona: { '250ml': 675, '500ml': 1350, '1l': 2700 },
+
+  iodized_salt: { '250g': 8, '500g': 15, '1kg': 30 },
+  black_salt:   { '250g': 15, '500g': 30, '1kg': 60 },
+  pink_salt:    { '250g': 33, '500g': 65, '1kg': 130 },
+
+  // Custom nutritional blend — flat functional-atta pricing
+  custom_blend: { 1: 233, 2: 466, 5: 1165, 10: 2330 }
+};
+
 function getProductMRP(productName, qty) {
-  // Centralized price lookup, currently returning 100 rupees placeholder everywhere
-  return 100;
+  const table = PRODUCT_PRICES[productName];
+  if (table) {
+    const key = (typeof qty === 'number') ? qty : String(qty).toLowerCase();
+    if (table[key] != null) return table[key];
+  }
+  return 100; // fallback placeholder
 }
 
 function getCategoryDefaultQty(category) {
