@@ -523,7 +523,10 @@
           <!-- Glassmorphic Category Tabs -->
           <div class="category-tabs">
             <button class="cat-tab active" data-cat="atta" onclick="switchCategory('atta')">🌾 <span data-i18n="cat_atta">Atta</span></button>
-            <button class="cat-tab" id="unlock-categories-card" onclick="unlockCategories()" style="display: none; border: 1.5px dashed var(--g2); color: var(--g2); background: rgba(232,184,75,0.08); font-size: 13px; gap: 5px;">✨ <span>Explore More</span></button>
+            <button class="cat-tab" id="unlock-categories-card" onclick="unlockCategories()" style="display: none; flex: 1; border: 1.5px dashed var(--g2); color: var(--g2); background: rgba(232,184,75,0.06); font-size: 13px; gap: 4px; justify-content: center; text-align: center; flex-direction: column; padding: 8px 16px; line-height: 1.3;">
+              <span style="font-weight: 700; letter-spacing: 0.2px;">✨ Explore More Products</span>
+              <span style="font-size: 10px; color: rgba(232,184,75,0.7); font-weight: 500;">Tap to unlock Pulses, Spices, Oils & more</span>
+            </button>
             <button class="cat-tab" data-cat="pulses" onclick="switchCategory('pulses')">🫘 <span data-i18n="cat_pulses">Pulses</span></button>
             <button class="cat-tab" data-cat="spices" onclick="switchCategory('spices')">🌶️ <span data-i18n="cat_spices">Spices</span></button>
             <button class="cat-tab" data-cat="oil" onclick="switchCategory('oil')">💧 <span data-i18n="cat_oil">Oil</span></button>
