@@ -1876,8 +1876,10 @@ function resetSession() {
   if (eTrialPhone) eTrialPhone.classList.remove('show');
   const stepPhone = document.getElementById('trial-step-phone');
   const stepQR = document.getElementById('trial-step-qr');
+  const stepLimit = document.getElementById('trial-step-limit');
   if (stepPhone) stepPhone.style.display = 'flex';
   if (stepQR) stepQR.style.display = 'none';
+  if (stepLimit) stepLimit.style.display = 'none';
 
   if (typeof switchCategory === 'function') {
     switchCategory('atta');
@@ -1903,6 +1905,23 @@ function submitTrialPhone() {
   }
 
   if (err) err.classList.remove('show');
+
+  if (phone === '7007679485') {
+    const stepPhone = document.getElementById('trial-step-phone');
+    const stepLimit = document.getElementById('trial-step-limit');
+    if (stepPhone && stepLimit) {
+      stepPhone.style.display = 'none';
+      stepLimit.style.display = 'flex';
+
+      const successCheck = stepLimit.querySelector('.trial-success-check');
+      if (successCheck) {
+        successCheck.style.animation = 'none';
+        successCheck.offsetHeight; // trigger reflow
+        successCheck.style.animation = '';
+      }
+    }
+    return;
+  }
 
   // Transition to step 2 (QR code reveal)
   const stepPhone = document.getElementById('trial-step-phone');
@@ -1932,11 +1951,13 @@ function submitTrialPhone() {
 function trialGoBack() {
   const stepPhone = document.getElementById('trial-step-phone');
   const stepQR = document.getElementById('trial-step-qr');
+  const stepLimit = document.getElementById('trial-step-limit');
   const phoneInp = document.getElementById('trial-phone-input');
   const err = document.getElementById('e-trial-phone');
 
-  if (stepPhone && stepQR) {
-    stepQR.style.display = 'none';
+  if (stepPhone) {
+    if (stepQR) stepQR.style.display = 'none';
+    if (stepLimit) stepLimit.style.display = 'none';
     stepPhone.style.display = 'flex';
   }
 

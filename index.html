@@ -1706,6 +1706,27 @@
                 <span data-i18n="trial_back">Enter different number</span>
               </button>
             </div>
+
+            <!-- STEP 3: Out of Trials Warning -->
+            <div id="trial-step-limit" style="display: none; flex-direction: column; align-items: center; width: 100%; text-align: center;">
+              <!-- Danger/Warning badge -->
+              <div class="trial-success-check" style="background: rgba(235, 94, 40, 0.15); border-color: #eb5e28; animation: trialBadgePulse 3s ease-in-out infinite;">
+                <svg style="width: 32px; height: 32px; color: #eb5e28;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+
+              <h3 class="trial-headline" style="font-size: 20px; margin-bottom: 4px;" data-i18n="trial_limit_title">Free Trials Limit</h3>
+              <p class="trial-subtext" style="margin-bottom: 24px; color: #eb5e28; font-weight: 600;" data-i18n="trial_limit_desc">You're out of free trials!</p>
+
+              <!-- Back link -->
+              <button class="trial-back-link" onclick="trialGoBack()">
+                <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span data-i18n="trial_back">Enter different number</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1822,6 +1843,9 @@
         <div class="ref-code" id="ref-code" style="font-size:36px; font-weight:700; color:#fff; letter-spacing:4px;">ASH-000000</div>
         <div style="font-size:11px; color:var(--brF); margin-top:6px;" data-i18n="suc_ref_note">Share this code at the counter</div>
       </div>
+      
+      <!-- Explore more products option -->
+      <button class="btn-ghost" onclick="exploreOtherProducts()" style="margin-bottom: 14px; width: 100%;" data-i18n="suc_explore_more">Explore More Products</button>
       
       <!-- Restart button -->
       <button class="btn" onclick="resetSession()" data-i18n="suc_reset">Start New Session</button>

@@ -959,7 +959,7 @@
 }
 
 /* Step transition animation */
-#trial-step-phone, #trial-step-qr {
+#trial-step-phone, #trial-step-qr, #trial-step-limit {
   animation: trialStepIn 0.4s ease-out;
 }
 

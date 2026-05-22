@@ -225,7 +225,10 @@ const LANG = {
         trial_trust_2: "No Spam",
         trial_trust_3: "Instant Delivery",
         trial_phone_err: "Please enter a valid 10-digit phone number",
-        trial_left_text: "3/3 Trials Left"
+        trial_left_text: "3/3 Trials Left",
+        suc_explore_more: "Explore More Products",
+        trial_limit_title: "Free Trials Limit",
+        trial_limit_desc: "You're out of free trials!"
     },
     hi: {
         // Selection Screen
@@ -421,7 +424,10 @@ const LANG = {
         trial_trust_2: "कोई स्पैम नहीं",
         trial_trust_3: "त्वरित वितरण",
         trial_phone_err: "कृपया एक मान्य 10-अंकीय मोबाइल नंबर दर्ज करें",
-        trial_left_text: "3/3 ट्रायल शेष"
+        trial_left_text: "3/3 ट्रायल शेष",
+        suc_explore_more: "और उत्पाद देखें",
+        trial_limit_title: "ट्रायल सीमा समाप्त",
+        trial_limit_desc: "आपके मुफ़्त ट्रायल समाप्त हो चुके हैं!"
     }
 };
 
