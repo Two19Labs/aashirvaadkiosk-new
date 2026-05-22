@@ -523,22 +523,12 @@
           <!-- Glassmorphic Category Tabs -->
           <div class="category-tabs">
             <button class="cat-tab active" data-cat="atta" onclick="switchCategory('atta')">🌾 <span data-i18n="cat_atta">Atta</span></button>
+            <button class="cat-tab" id="unlock-categories-card" onclick="unlockCategories()" style="display: none; border: 1.5px dashed var(--g2); color: var(--g2); background: rgba(232,184,75,0.08); font-size: 13px; gap: 5px;">✨ <span>Explore More</span></button>
             <button class="cat-tab" data-cat="pulses" onclick="switchCategory('pulses')">🫘 <span data-i18n="cat_pulses">Pulses</span></button>
             <button class="cat-tab" data-cat="spices" onclick="switchCategory('spices')">🌶️ <span data-i18n="cat_spices">Spices</span></button>
             <button class="cat-tab" data-cat="oil" onclick="switchCategory('oil')">💧 <span data-i18n="cat_oil">Oil</span></button>
             <button class="cat-tab" data-cat="ghee" onclick="switchCategory('ghee')">🍯 <span data-i18n="cat_ghee">Ghee</span></button>
             <button class="cat-tab" data-cat="salt" onclick="switchCategory('salt')">🧂 <span data-i18n="cat_salt">Salt</span></button>
-          </div>
-
-          <!-- Unlock other products callout card (compact, near tabs) -->
-          <div id="unlock-categories-card" style="display: none; background: linear-gradient(135deg, rgba(232,184,75,0.08) 0%, rgba(201,147,46,0.04) 100%); border: 1.5px dashed var(--g2); border-radius: 14px; padding: 12px 16px; text-align: left; margin-bottom: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); width: 100%; display: none;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
-              <div style="flex: 1; min-width: 180px;">
-                <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; letter-spacing: -0.2px;">✨ Explore More Healthy Products</div>
-                <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin: 0; line-height: 1.4;">Unlock Pulses, Spices, Oils, Ghee &amp; Salts!</p>
-              </div>
-              <button type="button" class="btn" style="height: 36px; font-size: 12px; border-radius: 10px; padding: 0 18px; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); font-weight: 700; border: none; cursor: pointer; white-space: nowrap; flex-shrink: 0;" onclick="unlockCategories()">Explore Now →</button>
-            </div>
           </div>
 
           <div class="mcq-grid g1" style="max-width: 100%; gap: 14px;">

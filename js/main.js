@@ -556,6 +556,9 @@ function switchCategory(category) {
   // Highlight active tab and manage locked visibility
   document.querySelectorAll('.cat-tab').forEach(tab => {
     const cat = tab.getAttribute('data-cat');
+    // Skip the unlock button (no data-cat) — handled separately
+    if (!cat) return;
+
     if (S.attasOnlyLocked && cat !== 'atta') {
       tab.style.display = 'none';
     } else {
@@ -578,11 +581,11 @@ function switchCategory(category) {
     }
   });
 
-  // Manage visibility of the unlock card
+  // Manage visibility of the inline unlock button
   const unlockCard = document.getElementById('unlock-categories-card');
   if (unlockCard) {
-    if (S.attasOnlyLocked && category === 'atta') {
-      unlockCard.style.display = 'block';
+    if (S.attasOnlyLocked) {
+      unlockCard.style.display = 'flex';
     } else {
       unlockCard.style.display = 'none';
     }
