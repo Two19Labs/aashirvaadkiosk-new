@@ -23,9 +23,25 @@
   <div class="toast" id="toast"></div>
 
   <!-- =============================================
+       SCREEN 0: WELCOME COVER
+       ============================================= -->
+  <div class="screen active" id="s-welcome" style="align-items:center; justify-content:center; text-align:center;">
+    <div style="padding:40px 24px; width: 100%; max-width: 600px; display:flex; flex-direction:column; align-items:center; justify-content:center; margin: auto;">
+      <img src="images/logo.png" alt="Aashirvaad Logo" style="width:180px; height:auto; margin-bottom:36px; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3)); animation: pulse 3s infinite;">
+      <h1 style="font-size:36px; font-weight:800; color:#fff; line-height:1.25; margin-bottom:14px; text-shadow:0 4px 16px rgba(0,0,0,0.3); letter-spacing:-0.5px; font-family: 'DM Sans', sans-serif;">What would your family like today?</h1>
+      <p style="font-family:'Noto Sans Devanagari', sans-serif; font-size:24px; color:var(--g2); margin-bottom:48px; font-weight:500; text-shadow:0 2px 8px rgba(0,0,0,0.2);">आज आपका परिवार क्या पसंद करेगा?</p>
+      <div class="gold-line" style="margin:0 auto 40px; width: 120px; height: 2px;"></div>
+      <button class="btn" onclick="show('s-lang')" style="max-width:320px; font-size:16px; font-weight:700; height:60px; background:linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color:var(--br); border:none; box-shadow:0 10px 30px rgba(232,184,75,0.35); text-transform:uppercase; letter-spacing:1px; border-radius:30px; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span>Tap here to get started!</span>
+        <svg style="width:18px; height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================================
        SCREEN 1: LANGUAGE SELECT
        ============================================= -->
-  <div class="screen active" id="s-lang" style="align-items:center; justify-content:center;">
+  <div class="screen" id="s-lang" style="align-items:center; justify-content:center;">
     <div style="text-align:center; padding:40px 24px; width: 100%; max-width: 500px;">
       <!-- Branding Title -->
       <div style="font-size:48px; font-weight:700; color:var(--g2); margin-bottom:4px; letter-spacing:0.5px; text-shadow: 0 4px 12px rgba(0,0,0,0.3);">Aashirvaad</div>
@@ -534,7 +550,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 01</span>
-                    <span class="stock-badge in-stock">25 kg left in store</span>
+                    <span class="stock-badge in-stock">25 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_sharbati">100% Sharbati Atta</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_sharbati_desc">Premium stone-ground wheat from MP, makes softest rotis</div>
@@ -583,7 +599,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 02</span>
-                    <span class="stock-badge in-stock">14 kg left in store</span>
+                    <span class="stock-badge in-stock">14 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_khapli">100% Khapli Atta</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_khapli_desc">Ancient Emmer wheat, high in fibre, low GI, good for diabetic health</div>
@@ -632,7 +648,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 03</span>
-                    <span class="stock-badge in-stock">12 kg left in store</span>
+                    <span class="stock-badge in-stock">12 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_lokwan">100% Lokwan Atta</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_lokwan_desc">Superior golden grain Lokwan wheat, yields nutritious daily rotis</div>
@@ -730,7 +746,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 05</span>
-                    <span class="stock-badge in-stock">8 kg left in store</span>
+                    <span class="stock-badge in-stock">8 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_multimillet">Multi Millet Atta</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_multimillet_desc">Gluten-free blend of ragi, jowar, bajra, and nutritious millets</div>
@@ -760,6 +776,13 @@
               </div>
             </div>
 
+            <!-- Unlock other products callout card -->
+            <div id="unlock-categories-card" style="display: none; background: linear-gradient(135deg, rgba(232,184,75,0.08) 0%, rgba(201,147,46,0.04) 100%); border: 1.5px dashed var(--g2); border-radius: 20px; padding: 24px; text-align: center; margin-top: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%;">
+              <div style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.2px;">Explore More Healthy Products</div>
+              <p style="font-size: 12.5px; color: rgba(255,255,255,0.65); margin-bottom: 16px; line-height: 1.5; max-width: 420px; margin-left: auto; margin-right: auto;">Unlock and discover other premium, nutrition-packed Aashirvaad products including high-protein Pulses, pure Spices, premium Oils &amp; Ghee, and mineral Salts!</p>
+              <button type="button" class="btn" style="height: 46px; font-size: 14px; border-radius: 12px; max-width: 260px; margin: 0 auto; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); font-weight: 700; border: none; cursor: pointer;" onclick="unlockCategories()">Explore Other Products</button>
+            </div>
+
             <!-- PULSES (Aisle 06) -->
             <!-- 6. Toor Dal -->
             <div class="mcq" onclick="selectTraditionalBlend(this, 'toor_dal')" data-category="pulses" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%; display: none;">
@@ -777,7 +800,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 06</span>
-                    <span class="stock-badge in-stock">18 kg left in store</span>
+                    <span class="stock-badge in-stock">18 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_toor_dal">Toor Dal</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_toor_dal_desc">Premium unpolished split pigeon peas, rich in protein</div>
@@ -787,10 +810,8 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'toor_dal', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'toor_dal', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'toor_dal', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'toor_dal', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500g" onclick="selectQty(this, 'toor_dal', '500g')">500 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1kg" onclick="selectQty(this, 'toor_dal', '1kg')">1 kg</button>
                   </div>
                 </div>
               </div>
@@ -812,7 +833,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 06</span>
-                    <span class="stock-badge in-stock">22 kg left in store</span>
+                    <span class="stock-badge in-stock">22 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_masoor_dal">Masoor Dal</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_masoor_dal_desc">Nutritious red split lentils, quick to cook and delicious</div>
@@ -822,10 +843,8 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'masoor_dal', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'masoor_dal', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'masoor_dal', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'masoor_dal', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500g" onclick="selectQty(this, 'masoor_dal', '500g')">500 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1kg" onclick="selectQty(this, 'masoor_dal', '1kg')">1 kg</button>
                   </div>
                 </div>
               </div>
@@ -847,7 +866,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 06</span>
-                    <span class="stock-badge in-stock">15 kg left in store</span>
+                    <span class="stock-badge in-stock">15 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_arhar_dal">Arhar Dal</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_arhar_dal_desc">Traditional split yellow pigeon peas, ideal for daily meals</div>
@@ -857,10 +876,8 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'arhar_dal', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'arhar_dal', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'arhar_dal', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'arhar_dal', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500g" onclick="selectQty(this, 'arhar_dal', '500g')">500 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1kg" onclick="selectQty(this, 'arhar_dal', '1kg')">1 kg</button>
                   </div>
                 </div>
               </div>
@@ -883,7 +900,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 07</span>
-                    <span class="stock-badge in-stock">12 kg left in store</span>
+                    <span class="stock-badge in-stock">12 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_turmeric">Turmeric</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_turmeric_desc">High-curcumin golden turmeric powder, rich in flavor and immunity</div>
@@ -893,10 +910,9 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'turmeric', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'turmeric', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'turmeric', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'turmeric', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="50g" onclick="selectQty(this, 'turmeric', '50g')">50 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="100g" onclick="selectQty(this, 'turmeric', '100g')">100 g</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250g" onclick="selectQty(this, 'turmeric', '250g')">250 g</button>
                   </div>
                 </div>
               </div>
@@ -918,7 +934,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 07</span>
-                    <span class="stock-badge in-stock">10 kg left in store</span>
+                    <span class="stock-badge in-stock">10 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_jeera_powder">Jeera Powder</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_jeera_powder_desc">Aromatic dry-roasted cumin powder, perfect seasoning for dishes</div>
@@ -928,10 +944,9 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'jeera_powder', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'jeera_powder', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'jeera_powder', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'jeera_powder', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="50g" onclick="selectQty(this, 'jeera_powder', '50g')">50 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="100g" onclick="selectQty(this, 'jeera_powder', '100g')">100 g</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250g" onclick="selectQty(this, 'jeera_powder', '250g')">250 g</button>
                   </div>
                 </div>
               </div>
@@ -953,7 +968,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 07</span>
-                    <span class="stock-badge in-stock">8 kg left in store</span>
+                    <span class="stock-badge in-stock">8 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_garam_masala">Garam Masala</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_garam_masala_desc">Authentic Indian spice blend, adds rich flavor to recipes</div>
@@ -963,10 +978,9 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'garam_masala', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'garam_masala', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'garam_masala', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'garam_masala', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="50g" onclick="selectQty(this, 'garam_masala', '50g')">50 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="100g" onclick="selectQty(this, 'garam_masala', '100g')">100 g</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250g" onclick="selectQty(this, 'garam_masala', '250g')">250 g</button>
                   </div>
                 </div>
               </div>
@@ -987,7 +1001,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 08</span>
-                    <span class="stock-badge in-stock">15 kg left in store</span>
+                    <span class="stock-badge in-stock">15 bottles left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_yellow_mustard_oil">Yellow Mustard Oil</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_yellow_mustard_oil_desc">Cold-pressed pure yellow mustard oil, robust pungent aroma</div>
@@ -997,10 +1011,10 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'yellow_mustard_oil', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'yellow_mustard_oil', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'yellow_mustard_oil', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'yellow_mustard_oil', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250ml" onclick="selectQty(this, 'yellow_mustard_oil', '250ml')">250 ml</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500ml" onclick="selectQty(this, 'yellow_mustard_oil', '500ml')">500 ml</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1l" onclick="selectQty(this, 'yellow_mustard_oil', '1l')">1 L</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="5l" onclick="selectQty(this, 'yellow_mustard_oil', '5l')">5 L</button>
                   </div>
                 </div>
               </div>
@@ -1020,7 +1034,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 08</span>
-                    <span class="stock-badge in-stock">12 kg left in store</span>
+                    <span class="stock-badge in-stock">12 bottles left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_groundnut_oil">Groundnut Oil</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_groundnut_oil_desc">100% pure filtered groundnut oil, ideal for daily deep frying</div>
@@ -1030,10 +1044,10 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'groundnut_oil', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'groundnut_oil', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'groundnut_oil', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'groundnut_oil', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250ml" onclick="selectQty(this, 'groundnut_oil', '250ml')">250 ml</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500ml" onclick="selectQty(this, 'groundnut_oil', '500ml')">500 ml</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1l" onclick="selectQty(this, 'groundnut_oil', '1l')">1 L</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="5l" onclick="selectQty(this, 'groundnut_oil', '5l')">5 L</button>
                   </div>
                 </div>
               </div>
@@ -1053,7 +1067,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 08</span>
-                    <span class="stock-badge in-stock">9 kg left in store</span>
+                    <span class="stock-badge in-stock">9 bottles left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_coconut_oil">Coconut Oil</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_coconut_oil_desc">100% pure edible coconut oil, made from sun-dried copras</div>
@@ -1063,10 +1077,10 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'coconut_oil', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'coconut_oil', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'coconut_oil', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'coconut_oil', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250ml" onclick="selectQty(this, 'coconut_oil', '250ml')">250 ml</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500ml" onclick="selectQty(this, 'coconut_oil', '500ml')">500 ml</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1l" onclick="selectQty(this, 'coconut_oil', '1l')">1 L</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="5l" onclick="selectQty(this, 'coconut_oil', '5l')">5 L</button>
                   </div>
                 </div>
               </div>
@@ -1088,7 +1102,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 09</span>
-                    <span class="stock-badge in-stock">14 kg left in store</span>
+                    <span class="stock-badge in-stock">14 bottles left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_desi_cow_ghee">Desi Cow Ghee</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_desi_cow_ghee_desc">Slow-cooked cow ghee with rich granular texture and aroma</div>
@@ -1098,10 +1112,9 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'desi_cow_ghee', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'desi_cow_ghee', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'desi_cow_ghee', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'desi_cow_ghee', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250ml" onclick="selectQty(this, 'desi_cow_ghee', '250ml')">250 ml</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500ml" onclick="selectQty(this, 'desi_cow_ghee', '500ml')">500 ml</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1l" onclick="selectQty(this, 'desi_cow_ghee', '1l')">1 L</button>
                   </div>
                 </div>
               </div>
@@ -1122,20 +1135,19 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 09</span>
-                    <span class="stock-badge in-stock">11 kg left in store</span>
+                    <span class="stock-badge in-stock">11 bottles left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_buffalo_ghee">Buffalo Ghee</div>
-                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_buffalo_ghee_desc">Pure buffalo milk ghee with classic white texture and rich taste</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_buffalo_ghee_desc">Pure premium buffalo ghee, high in fat and rich flavor</div>
                 </div>
               </div>
               <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'buffalo_ghee', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'buffalo_ghee', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'buffalo_ghee', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'buffalo_ghee', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250ml" onclick="selectQty(this, 'buffalo_ghee', '250ml')">250 ml</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500ml" onclick="selectQty(this, 'buffalo_ghee', '500ml')">500 ml</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1l" onclick="selectQty(this, 'buffalo_ghee', '1l')">1 L</button>
                   </div>
                 </div>
               </div>
@@ -1161,20 +1173,19 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 10</span>
-                    <span class="stock-badge in-stock">25 kg left in store</span>
+                    <span class="stock-badge in-stock">25 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_iodized_salt">Iodized Salt</div>
-                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_iodized_salt_desc">Pure vacuum evaporated iodized salt, guarantees clean taste</div>
+                  <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_iodized_salt_desc">Solar evaporated pure iodized salt for daily wellness</div>
                 </div>
               </div>
               <div class="qty-slider-wrap" onclick="event.stopPropagation()">
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'iodized_salt', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'iodized_salt', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'iodized_salt', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'iodized_salt', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250g" onclick="selectQty(this, 'iodized_salt', '250g')">250 g</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500g" onclick="selectQty(this, 'iodized_salt', '500g')">500 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1kg" onclick="selectQty(this, 'iodized_salt', '1kg')">1 kg</button>
                   </div>
                 </div>
               </div>
@@ -1199,7 +1210,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 10</span>
-                    <span class="stock-badge in-stock">15 kg left in store</span>
+                    <span class="stock-badge in-stock">15 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_black_salt">Black Salt</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_black_salt_desc">Naturally sourced tangy black salt, perfect for chaats</div>
@@ -1209,10 +1220,9 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'black_salt', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'black_salt', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'black_salt', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'black_salt', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250g" onclick="selectQty(this, 'black_salt', '250g')">250 g</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500g" onclick="selectQty(this, 'black_salt', '500g')">500 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1kg" onclick="selectQty(this, 'black_salt', '1kg')">1 kg</button>
                   </div>
                 </div>
               </div>
@@ -1237,7 +1247,7 @@
                 <div style="flex: 1; padding-right: 28px;">
                   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                     <span class="aisle-tag">Aisle 10</span>
-                    <span class="stock-badge in-stock">20 kg left in store</span>
+                    <span class="stock-badge in-stock">20 packets left in store</span>
                   </div>
                   <div class="lbl" style="font-size: 15px; font-weight: 700;" data-i18n="trad_blend_pink_salt">Himalayan Pink Salt</div>
                   <div class="sub" style="font-size: 12px; line-height: 1.45; margin-top: 4px;" data-i18n="trad_blend_pink_salt_desc">Premium mineral-rich pink rock salt, excellent for overall health</div>
@@ -1247,10 +1257,9 @@
                 <div>
                   <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 0.5px;" data-i18n="qty_select_wt">Select Weight:</div>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="opt-pill qty-pill" data-val="1" onclick="selectQty(this, 'pink_salt', 1)">1 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="2" onclick="selectQty(this, 'pink_salt', 2)">2 kg</button>
-                    <button type="button" class="opt-pill qty-pill sel" data-val="5" onclick="selectQty(this, 'pink_salt', 5)">5 kg</button>
-                    <button type="button" class="opt-pill qty-pill" data-val="10" onclick="selectQty(this, 'pink_salt', 10)">10 kg</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="250g" onclick="selectQty(this, 'pink_salt', '250g')">250 g</button>
+                    <button type="button" class="opt-pill qty-pill" data-val="500g" onclick="selectQty(this, 'pink_salt', '500g')">500 g</button>
+                    <button type="button" class="opt-pill qty-pill sel" data-val="1kg" onclick="selectQty(this, 'pink_salt', '1kg')">1 kg</button>
                   </div>
                 </div>
               </div>
@@ -1418,7 +1427,7 @@
     <!-- Navigation Footer -->
     <div class="fnav">
       <button class="btn-ghost" onclick="surveyBack('nutr')" data-i18n="quiz_back">&larr; Back</button>
-      <button class="btn-sm" onclick="surveyNext('nutr')" data-i18n="quiz_gen_plan">Create My Blend &rarr;</button>
+      <button class="btn-sm" onclick="surveyNext('nutr')" data-i18n="quiz_next">Next &rarr;</button>
     </div>
   </div>
 
@@ -1487,6 +1496,38 @@
 
             <!-- Nutritional Highlight Strip -->
             <div id="nutr-rec-highlights" style="margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+
+            <!-- Custom Grinding & Quantity Selection -->
+            <div style="margin-top: 18px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; display: flex; flex-direction: column; gap: 14px; text-align: left;">
+              <!-- Base Wheat Selection -->
+              <div>
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 6px; letter-spacing: 0.5px;">Base Wheat:</div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="opt-pill nutr-base-pill sel" data-val="Sharbati" onclick="selectNutrBaseWheat(this, 'Sharbati')">Sharbati</button>
+                  <button type="button" class="opt-pill nutr-base-pill" data-val="Khapli" onclick="selectNutrBaseWheat(this, 'Khapli')">Khapli</button>
+                  <button type="button" class="opt-pill nutr-base-pill" data-val="Lokwan" onclick="selectNutrBaseWheat(this, 'Lokwan')">Lokwan</button>
+                </div>
+              </div>
+              <!-- Granulation Selection -->
+              <div>
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 6px; letter-spacing: 0.5px;">Granulation:</div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="opt-pill nutr-gran-pill sel" data-val="Fine" onclick="selectNutrGranulation(this, 'Fine')">Fine</button>
+                  <button type="button" class="opt-pill nutr-gran-pill" data-val="Medium" onclick="selectNutrGranulation(this, 'Medium')">Medium</button>
+                  <button type="button" class="opt-pill nutr-gran-pill" data-val="Coarse" onclick="selectNutrGranulation(this, 'Coarse')">Coarse</button>
+                </div>
+              </div>
+              <!-- Quantity Selection -->
+              <div>
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 6px; letter-spacing: 0.5px;">Quantity:</div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="opt-pill nutr-qty-pill" data-val="1" onclick="selectNutrQuantity(this, 1)">1 kg</button>
+                  <button type="button" class="opt-pill qty-pill nutr-qty-pill" data-val="2" onclick="selectNutrQuantity(this, 2)">2 kg</button>
+                  <button type="button" class="opt-pill qty-pill nutr-qty-pill sel" data-val="5" onclick="selectNutrQuantity(this, 5)">5 kg</button>
+                  <button type="button" class="opt-pill qty-pill nutr-qty-pill" data-val="10" onclick="selectNutrQuantity(this, 10)">10 kg</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Proceed Button -->

@@ -2,6 +2,109 @@
 // COORDINATION & INTERACTION LOGIC
 // =============================================
 
+const BLEND_METADATA = {
+  sharbati: { name: '100% Sharbati Atta', nameHi: '100% शरबती आटा', aisle: 'Aisle 01', type: 'instore', category: 'atta' },
+  khapli: { name: '100% Khapli Atta', nameHi: '100% खापली आटा', aisle: 'Aisle 02', type: 'instore', category: 'atta' },
+  lokwan: { name: '100% Lokwan Atta', nameHi: '100% लोकवान आटा', aisle: 'Aisle 03', type: 'instore', category: 'atta' },
+  multigrain: { name: 'Multigrain Atta', nameHi: 'मल्टीग्रेन आटा', aisle: 'Aisle 04', type: 'delivery', category: 'atta' },
+  multimillet: { name: 'Multi Millet Atta', nameHi: 'मल्टी मिलेट आटा', aisle: 'Aisle 05', type: 'instore', category: 'atta' },
+  
+  toor_dal: { name: 'Toor Dal', nameHi: 'तूर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
+  masoor_dal: { name: 'Masoor Dal', nameHi: 'मसूर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
+  arhar_dal: { name: 'Arhar Dal', nameHi: 'अरहर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
+  
+  turmeric: { name: 'Turmeric Powder', nameHi: 'हल्दी पाउडर', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
+  jeera_powder: { name: 'Jeera Powder', nameHi: 'जीरा पाउडर', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
+  garam_masala: { name: 'Garam Masala', nameHi: 'गरम मसाला', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
+  
+  yellow_mustard_oil: { name: 'Yellow Mustard Oil', nameHi: 'पीला सरसों का तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
+  groundnut_oil: { name: 'Groundnut Oil', nameHi: 'मूंगफली का तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
+  coconut_oil: { name: 'Coconut Oil', nameHi: 'नारियल तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
+  
+  desi_cow_ghee: { name: 'Desi Cow Ghee', nameHi: 'देशी गाय का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
+  buffalo_ghee: { name: 'Buffalo Ghee', nameHi: 'भैंस का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
+  
+  iodized_salt: { name: 'Iodized Salt', nameHi: 'आयोडीन युक्त नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
+  black_salt: { name: 'Black Salt', nameHi: 'काला नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
+  pink_salt: { name: 'Himalayan Pink Salt', nameHi: 'हिमालयन पिंक साल्ट', aisle: 'Aisle 10', type: 'instore', category: 'salt' }
+};
+
+function parseQtyToKg(qty) {
+  if (typeof qty === 'number') return qty;
+  if (!qty) return 0;
+  const s = String(qty).toLowerCase();
+  const val = parseFloat(s);
+  if (isNaN(val)) return 0;
+  if (s.endsWith('g') && !s.endsWith('kg')) return val / 1000;
+  if (s.endsWith('ml')) return val / 1000; // treat 1ml ≈ 1g for weight calculations
+  if (s.endsWith('l') || s.endsWith('kg')) return val;
+  return val;
+}
+
+function formatQty(qty) {
+  if (typeof qty === 'number') return qty + ' kg';
+  if (!qty) return '';
+  const s = String(qty).toLowerCase();
+  const val = parseFloat(s);
+  if (isNaN(val)) return qty;
+  if (s.endsWith('g') && !s.endsWith('kg')) return val + ' g';
+  if (s.endsWith('ml')) return val + ' ml';
+  if (s.endsWith('l') && !s.endsWith('ml')) return val + ' L';
+  if (s.endsWith('kg')) return val + ' kg';
+  return qty;
+}
+
+function getCategoryDefaultQty(category) {
+  switch (category) {
+    case 'pulses': return '1kg';
+    case 'spices': return '100g';
+    case 'oil': return '1l';
+    case 'ghee': return '1l';
+    case 'salt': return '1kg';
+    case 'atta':
+    default:
+      return 5;
+  }
+}
+
+function selectNutrBaseWheat(button, val) {
+  S.nutrBaseWheat = val;
+  const parent = button.closest('div');
+  if (parent) {
+    parent.querySelectorAll('.nutr-base-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  saveState();
+}
+
+function selectNutrGranulation(button, val) {
+  S.nutrGranulation = val;
+  const parent = button.closest('div');
+  if (parent) {
+    parent.querySelectorAll('.nutr-gran-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  saveState();
+}
+
+function selectNutrQuantity(button, val) {
+  S.nutrQuantity = parseInt(val);
+  const parent = button.closest('div');
+  if (parent) {
+    parent.querySelectorAll('.nutr-qty-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  saveState();
+}
+
+function unlockCategories() {
+  S.attasOnlyLocked = false;
+  saveState();
+  switchCategory('pulses');
+  const msg = S.lang === 'hi' ? "अन्य श्रेणियां अनलॉक हो गई हैं!" : "Other categories unlocked successfully!";
+  showToast(msg);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize app
   applyTranslations();
@@ -25,18 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const parsed = JSON.parse(savedSession);
       if (parsed.lang) S.lang = parsed.lang;
-      if (parsed.name) {
-        if (iName) iName.value = parsed.name;
-        S.name = parsed.name;
-      }
-      if (parsed.phone) {
-        if (iPhone) iPhone.value = parsed.phone;
-        S.phone = parsed.phone;
-      }
-      if (parsed.email) {
-        document.getElementById('d-email').value = parsed.email;
-        S.email = parsed.email;
-      }
       applyTranslations();
     } catch (e) {
       console.warn("Failed to load saved session:", e);
@@ -349,13 +440,15 @@ function selectTraditionalBlend(element, blendName) {
     S.selectedBlends.splice(idx, 1);
     element.classList.remove('sel');
     
-    // Reset weight back to 5 kg and granulation to Fine upon deselection
-    S.blendQuantities[blendName] = 5;
+    // Reset weight back to category default and granulation to Fine upon deselection
+    const meta = BLEND_METADATA[blendName];
+    const defaultQty = meta ? getCategoryDefaultQty(meta.category) : 5;
+    S.blendQuantities[blendName] = defaultQty;
     S.blendGranulations[blendName] = 'Fine';
     
-    // Sync the local card pills to their default values (5 kg and Fine)
+    // Sync the local card pills to their default values
     element.querySelectorAll('.qty-pill').forEach(btn => {
-      if (parseInt(btn.getAttribute('data-val')) === 5) {
+      if (String(btn.getAttribute('data-val')) === String(defaultQty)) {
         btn.classList.add('sel');
       } else {
         btn.classList.remove('sel');
@@ -436,8 +529,8 @@ function syncTraditionalCardsUI() {
       
       // Sync quantity preset pills
       card.querySelectorAll('.qty-pill').forEach(btn => {
-        const val = parseInt(btn.getAttribute('data-val'));
-        if (val === qty) {
+        const val = btn.getAttribute('data-val');
+        if (String(val) === String(qty)) {
           btn.classList.add('sel');
         } else {
           btn.classList.remove('sel');
@@ -460,9 +553,16 @@ function syncTraditionalCardsUI() {
 function switchCategory(category) {
   S.activeCategory = category;
   
-  // Highlight active tab
+  // Highlight active tab and manage locked visibility
   document.querySelectorAll('.cat-tab').forEach(tab => {
-    if (tab.getAttribute('data-cat') === category) {
+    const cat = tab.getAttribute('data-cat');
+    if (S.attasOnlyLocked && cat !== 'atta') {
+      tab.style.display = 'none';
+    } else {
+      tab.style.display = '';
+    }
+
+    if (cat === category) {
       tab.classList.add('active');
     } else {
       tab.classList.remove('active');
@@ -477,6 +577,16 @@ function switchCategory(category) {
       card.style.display = 'none';
     }
   });
+
+  // Manage visibility of the unlock card
+  const unlockCard = document.getElementById('unlock-categories-card');
+  if (unlockCard) {
+    if (S.attasOnlyLocked && category === 'atta') {
+      unlockCard.style.display = 'block';
+    } else {
+      unlockCard.style.display = 'none';
+    }
+  }
   
   saveState();
 }
@@ -500,48 +610,21 @@ function updateSidebarSummary() {
 
   let inStoreBlends = [];
   let deliveryBlends = [];
-  let inStoreTotalWeight = S.chakkiActive ? 10 : 0;
+  let inStoreTotalWeight = S.chakkiActive ? parseQtyToKg(S.nutrQuantity) : 0;
   let deliveryTotalWeight = 0;
 
-  const blendMetadata = {
-    sharbati: { name: '100% Sharbati Atta', nameHi: '100% शरबती आटा', aisle: 'Aisle 01', type: 'instore', category: 'atta' },
-    khapli: { name: '100% Khapli Atta', nameHi: '100% खापली आटा', aisle: 'Aisle 02', type: 'instore', category: 'atta' },
-    lokwan: { name: '100% Lokwan Atta', nameHi: '100% लोकवान आटा', aisle: 'Aisle 03', type: 'instore', category: 'atta' },
-    multigrain: { name: 'Multigrain Atta', nameHi: 'मल्टीग्रेन आटा', aisle: 'Aisle 04', type: 'delivery', category: 'atta' },
-    multimillet: { name: 'Multi Millet Atta', nameHi: 'मल्टी मिलेट आटा', aisle: 'Aisle 05', type: 'instore', category: 'atta' },
-    
-    toor_dal: { name: 'Toor Dal', nameHi: 'तूर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
-    masoor_dal: { name: 'Masoor Dal', nameHi: 'मसूर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
-    arhar_dal: { name: 'Arhar Dal', nameHi: 'अरहर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
-    
-    turmeric: { name: 'Turmeric Powder', nameHi: 'हल्दी पाउडर', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
-    jeera_powder: { name: 'Jeera Powder', nameHi: 'जीरा पाउडर', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
-    garam_masala: { name: 'Garam Masala', nameHi: 'गरम मसाला', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
-    
-    yellow_mustard_oil: { name: 'Yellow Mustard Oil', nameHi: 'पीला सरसों का तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
-    groundnut_oil: { name: 'Groundnut Oil', nameHi: 'मूंगफली का तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
-    coconut_oil: { name: 'Coconut Oil', nameHi: 'नारियल तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
-    
-    desi_cow_ghee: { name: 'Desi Cow Ghee', nameHi: 'देशी गाय का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
-    buffalo_ghee: { name: 'Buffalo Ghee', nameHi: 'भैंस का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
-    
-    iodized_salt: { name: 'Iodized Salt', nameHi: 'आयोडीन युक्त नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
-    black_salt: { name: 'Black Salt', nameHi: 'काला नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
-    pink_salt: { name: 'Himalayan Pink Salt', nameHi: 'हिमालयन पिंक साल्ट', aisle: 'Aisle 10', type: 'instore', category: 'salt' }
-  };
-
   S.selectedBlends.forEach(blend => {
-    const meta = blendMetadata[blend];
+    const meta = BLEND_METADATA[blend];
     if (!meta) return;
 
-    const qty = S.blendQuantities[blend] || 5;
+    const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
 
     if (meta.type === 'instore') {
       inStoreBlends.push({ blend, qty, ...meta });
-      inStoreTotalWeight += qty;
+      inStoreTotalWeight += parseQtyToKg(qty);
     } else {
       deliveryBlends.push({ blend, qty, ...meta });
-      deliveryTotalWeight += qty;
+      deliveryTotalWeight += parseQtyToKg(qty);
     }
   });
 
@@ -564,7 +647,7 @@ function updateSidebarSummary() {
             <span style="font-weight:600;">⚙️ ${S.lang === 'hi' ? 'चक्की में पिस रहा है' : 'Grinding in Chakki...'}</span>
           </div>
         </div>
-        <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif;">10 kg</div>
+        <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</div>
       </div>
     `;
   }
@@ -583,7 +666,7 @@ function updateSidebarSummary() {
             <span>${S.lang === 'hi' ? '🛒 इन-स्टोर मिल पिकअप' : '🛒 In-Store Mill Pickup'}</span>
           </div>
         </div>
-        <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif;">${item.qty} kg</div>
+        <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif;">${formatQty(item.qty)}</div>
       </div>
     `;
   });
@@ -602,7 +685,7 @@ function updateSidebarSummary() {
             <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
           </div>
         </div>
-        <div style="font-weight:700; color:#ff8a8a; background:rgba(255,107,107,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(255,107,107,0.24); font-size: 13px; font-family:'DM Sans', sans-serif;">${item.qty} kg</div>
+        <div style="font-weight:700; color:#ff8a8a; background:rgba(255,107,107,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(255,107,107,0.24); font-size: 13px; font-family:'DM Sans', sans-serif;">${formatQty(item.qty)}</div>
       </div>
     `;
   });
@@ -613,11 +696,11 @@ function updateSidebarSummary() {
     weightHTML = `
       <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgba(255,255,255,0.7); margin-bottom: 4px;">
         <span>${S.lang === 'hi' ? 'पिकअप वजन (इन-स्टोर):' : 'Pickup Weight (In-Store):'}</span>
-        <span style="font-weight:600; color:#fff; font-family:'DM Sans', sans-serif;">${inStoreTotalWeight} kg</span>
+        <span style="font-weight:600; color:#fff; font-family:'DM Sans', sans-serif;">${formatQty(inStoreTotalWeight)}</span>
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: rgba(255,255,255,0.7);">
         <span>${S.lang === 'hi' ? 'डिलीवरी वजन (होम डिलीवरी):' : 'Delivery Weight (Home Delivery):'}</span>
-        <span style="font-weight:600; color:#ff8a8a; font-family:'DM Sans', sans-serif;">${deliveryTotalWeight} kg</span>
+        <span style="font-weight:600; color:#ff8a8a; font-family:'DM Sans', sans-serif;">${formatQty(deliveryTotalWeight)}</span>
       </div>
     `;
   } else {
@@ -629,7 +712,7 @@ function updateSidebarSummary() {
     weightHTML = `
       <div style="display: flex; justify-content: space-between; font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500;">
         <span>${labelText}</span>
-        <span style="color: ${colorValue}; font-size: 15.5px; font-weight: 700; font-family:'DM Sans', sans-serif;">${totalW} kg</span>
+        <span style="color: ${colorValue}; font-size: 15.5px; font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(totalW)}</span>
       </div>
     `;
   }
@@ -723,8 +806,8 @@ function goHomeDeliveryAddress() {
   const delName = document.getElementById('i-delivery-name');
   const delPhone = document.getElementById('i-delivery-phone');
   
-  if (delName) delName.value = S.name || "";
-  if (delPhone) delPhone.value = S.phone || "";
+  if (delName) delName.value = "";
+  if (delPhone) delPhone.value = "";
   
   // Hide all error messages under s-delivery-address
   document.querySelectorAll('#s-delivery-address .err').forEach(el => el.classList.remove('show'));
@@ -1100,6 +1183,31 @@ function showNutrRecommendation() {
   const nameEl = document.getElementById('nutr-rec-name');
   if (nameEl) nameEl.textContent = blendName;
 
+  // Highlight active grinding pills in UI from state
+  document.querySelectorAll('.nutr-base-pill').forEach(btn => {
+    if (btn.getAttribute('data-val') === S.nutrBaseWheat) {
+      btn.classList.add('sel');
+    } else {
+      btn.classList.remove('sel');
+    }
+  });
+
+  document.querySelectorAll('.nutr-gran-pill').forEach(btn => {
+    if (btn.getAttribute('data-val') === S.nutrGranulation) {
+      btn.classList.add('sel');
+    } else {
+      btn.classList.remove('sel');
+    }
+  });
+
+  document.querySelectorAll('.nutr-qty-pill').forEach(btn => {
+    if (parseInt(btn.getAttribute('data-val')) === S.nutrQuantity) {
+      btn.classList.add('sel');
+    } else {
+      btn.classList.remove('sel');
+    }
+  });
+
   // Render goal tags
   const goalsEl = document.getElementById('nutr-rec-goals');
   if (goalsEl) {
@@ -1143,10 +1251,18 @@ function nutrRecProceed() {
 }
 
 function exploreOtherProducts() {
+  if (S.nutritionGoals && S.nutritionGoals.includes('protein')) {
+    S.attasOnlyLocked = true;
+  } else {
+    S.attasOnlyLocked = false;
+  }
   S.selectionTrack = 'traditional';
   saveState();
   updateSidebarSummary();
   applyTranslations();
+  if (typeof switchCategory === 'function') {
+    switchCategory('atta');
+  }
   show('s-track-trad');
 }
 
@@ -1222,35 +1338,9 @@ function buildAndShowResults() {
   // Compile Recommendation selection / dynamic receipt
   let recLabel = '';
   let detailsHTML = '';
-  const blendMetadata = {
-    sharbati: { name: '100% Sharbati Atta', nameHi: '100% शरबती आटा', aisle: 'Aisle 01', type: 'instore', category: 'atta' },
-    khapli: { name: '100% Khapli Atta', nameHi: '100% खापली आटा', aisle: 'Aisle 02', type: 'instore', category: 'atta' },
-    lokwan: { name: '100% Lokwan Atta', nameHi: '100% लोकवान आटा', aisle: 'Aisle 03', type: 'instore', category: 'atta' },
-    multigrain: { name: 'Multigrain Atta', nameHi: 'मल्टीग्रेन आटा', aisle: 'Aisle 04', type: 'delivery', category: 'atta' },
-    multimillet: { name: 'Multi Millet Atta', nameHi: 'मल्टी मिलेट आटा', aisle: 'Aisle 05', type: 'instore', category: 'atta' },
-    
-    toor_dal: { name: 'Toor Dal', nameHi: 'तूर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
-    masoor_dal: { name: 'Masoor Dal', nameHi: 'मसूर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
-    arhar_dal: { name: 'Arhar Dal', nameHi: 'अरहर दाल', aisle: 'Aisle 06', type: 'instore', category: 'pulses' },
-    
-    turmeric: { name: 'Turmeric Powder', nameHi: 'हल्दी पाउडर', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
-    jeera_powder: { name: 'Jeera Powder', nameHi: 'जीरा पाउडर', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
-    garam_masala: { name: 'Garam Masala', nameHi: 'गरम मसाला', aisle: 'Aisle 07', type: 'instore', category: 'spices' },
-    
-    yellow_mustard_oil: { name: 'Yellow Mustard Oil', nameHi: 'पीला सरसों का तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
-    groundnut_oil: { name: 'Groundnut Oil', nameHi: 'मूंगफली का तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
-    coconut_oil: { name: 'Coconut Oil', nameHi: 'नारियल तेल', aisle: 'Aisle 08', type: 'instore', category: 'oil' },
-    
-    desi_cow_ghee: { name: 'Desi Cow Ghee', nameHi: 'देशी गाय का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
-    buffalo_ghee: { name: 'Buffalo Ghee', nameHi: 'भैंस का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
-    
-    iodized_salt: { name: 'Iodized Salt', nameHi: 'आयोडीन युक्त नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
-    black_salt: { name: 'Black Salt', nameHi: 'काला नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
-    pink_salt: { name: 'Himalayan Pink Salt', nameHi: 'हिमालयन पिंक साल्ट', aisle: 'Aisle 10', type: 'instore', category: 'salt' }
-  };
 
-  const hasInStoreItems = S.selectedBlends.some(blend => blendMetadata[blend] && blendMetadata[blend].type === 'instore') || S.chakkiActive;
-  const hasDeliveryItems = S.selectedBlends.some(blend => blendMetadata[blend] && blendMetadata[blend].type === 'delivery');
+  const hasInStoreItems = S.selectedBlends.some(blend => BLEND_METADATA[blend] && BLEND_METADATA[blend].type === 'instore') || S.chakkiActive;
+  const hasDeliveryItems = S.selectedBlends.some(blend => BLEND_METADATA[blend] && BLEND_METADATA[blend].type === 'delivery');
 
   let fulfillmentMessage = '';
   if (S.lang === 'hi') {
@@ -1278,23 +1368,24 @@ function buildAndShowResults() {
   if (S.selectionTrack === 'traditional') {
     // Prepend custom grinding blend if active in Chakki
     if (S.chakkiActive) {
+      const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
       const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.2);">
           <div>
-            <span style="color: #fff; font-weight: 700;">🌾 ${customBlendName}</span>
+            <span style="color: #fff; font-weight: 700;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
             <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
             <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
           </div>
-          <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">10 kg</span>
+          <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</span>
         </div>
       `;
     }
 
     S.selectedBlends.forEach(blend => {
-      const meta = blendMetadata[blend];
+      const meta = BLEND_METADATA[blend];
       if (!meta) return;
-      const qty = S.blendQuantities[blend] || 5;
+      const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
       const gran = S.blendGranulations[blend] || 'Fine';
       const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
       
@@ -1305,17 +1396,19 @@ function buildAndShowResults() {
             <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${meta.aisle}</span>
             ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
           </div>
-          <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${qty} kg</span>
+          <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(qty)}</span>
         </div>
       `;
     });
   } else {
     recLabel = S.nutritionGoals.map(goal => T(`nutr_goal_${goal}`)).join(' + ');
     const blendName = S.recommendedBlend || recLabel;
+    const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
+    const fullBlendNameLabel = `${blendName} (${S.nutrBaseWheat}, ${localizedGranulation})`;
     detailsHTML = `
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${labels.rec}:</span>
-        <span style="color: #fff; font-weight: bold; text-align: right;">${blendName}</span>
+        <span style="color: #fff; font-weight: bold; text-align: right;">${fullBlendNameLabel}</span>
       </div>
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${S.lang === 'hi' ? "चुने हुए लक्ष्य:" : "Selected Goals:"}</span>
@@ -1323,7 +1416,7 @@ function buildAndShowResults() {
       </div>
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${S.lang === 'hi' ? "वजन:" : "Weight:"}</span>
-        <span style="color: #fff; font-weight: bold; text-align: right; font-family:'DM Sans', sans-serif;">10 kg</span>
+        <span style="color: #fff; font-weight: bold; text-align: right; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</span>
       </div>
       <div style="display: flex; justify-content: space-between; padding-top: 4px; gap: 14px; align-items: center;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">📍 ${S.lang === 'hi' ? "पिकअप स्थान:" : "Pickup Location:"}</span>
@@ -1341,19 +1434,20 @@ function buildAndShowResults() {
 
       if (S.selectionTrack === 'traditional') {
         if (S.chakkiActive) {
+          const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
           const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
           storePickupItemsHTML += `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
-              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">10 kg</span>
+              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</span>
             </div>
           `;
         }
 
         S.selectedBlends.forEach(blend => {
-          const meta = blendMetadata[blend];
+          const meta = BLEND_METADATA[blend];
           if (!meta) return;
-          const qty = S.blendQuantities[blend] || 5;
+          const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
           const gran = S.blendGranulations[blend] || 'Fine';
           const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
           const row = `
@@ -1362,7 +1456,7 @@ function buildAndShowResults() {
                 ${T('trad_blend_' + blend)}
                 ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
               </span>
-              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${qty} kg</span>
+              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(qty)}</span>
             </div>
           `;
           if (meta.type === 'delivery') {
@@ -1373,19 +1467,21 @@ function buildAndShowResults() {
         });
       } else {
         if (S.chakkiActive) {
+          const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
           const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
           storePickupItemsHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
-              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">10 kg</span>
+              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</span>
             </div>
           `;
         }
         
+        const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
         homeDeliveryItemsHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-            <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'}</span>
-            <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">10 kg</span>
+            <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
+            <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</span>
           </div>
         `;
       }
@@ -1522,20 +1618,20 @@ function resetSession() {
     lokwan: 5,
     multigrain: 5,
     multimillet: 5,
-    toor_dal: 5,
-    masoor_dal: 5,
-    arhar_dal: 5,
-    turmeric: 5,
-    jeera_powder: 5,
-    garam_masala: 5,
-    yellow_mustard_oil: 5,
-    groundnut_oil: 5,
-    coconut_oil: 5,
-    desi_cow_ghee: 5,
-    buffalo_ghee: 5,
-    iodized_salt: 5,
-    black_salt: 5,
-    pink_salt: 5
+    toor_dal: '1kg',
+    masoor_dal: '1kg',
+    arhar_dal: '1kg',
+    turmeric: '100g',
+    jeera_powder: '100g',
+    garam_masala: '100g',
+    yellow_mustard_oil: '1l',
+    groundnut_oil: '1l',
+    coconut_oil: '1l',
+    desi_cow_ghee: '1l',
+    buffalo_ghee: '1l',
+    iodized_salt: '1kg',
+    black_salt: '1kg',
+    pink_salt: '1kg'
   };
   S.blendGranulations = {
     sharbati: 'Fine',
@@ -1561,6 +1657,10 @@ function resetSession() {
   S.nutritionGoals = [];
   S.recommendedBlend = '';
   S.chakkiActive = false;
+  S.nutrBaseWheat = 'Sharbati';
+  S.nutrGranulation = 'Fine';
+  S.nutrQuantity = 5;
+  S.attasOnlyLocked = false;
   
   // Reset Home Delivery State
   S.isHomeDelivery = false;
@@ -1609,6 +1709,20 @@ function resetSession() {
     syncTraditionalCardsUI();
   }
 
+  // Reset custom milling selectors in recommendation card to match state defaults
+  document.querySelectorAll('.nutr-base-pill').forEach(btn => {
+    if (btn.getAttribute('data-val') === 'Sharbati') btn.classList.add('sel');
+    else btn.classList.remove('sel');
+  });
+  document.querySelectorAll('.nutr-gran-pill').forEach(btn => {
+    if (btn.getAttribute('data-val') === 'Fine') btn.classList.add('sel');
+    else btn.classList.remove('sel');
+  });
+  document.querySelectorAll('.nutr-qty-pill').forEach(btn => {
+    if (String(btn.getAttribute('data-val')) === '5') btn.classList.add('sel');
+    else btn.classList.remove('sel');
+  });
+
   // Reset split checkout cards in sidebar
   const unifiedCard = document.getElementById('unified-summary-card');
   const emptyCard = document.getElementById('empty-summary-card');
@@ -1628,6 +1742,6 @@ function resetSession() {
     switchCategory('atta');
   }
 
-  // Navigate to Language
-  show('s-lang');
+  // Navigate to Welcome Cover Page
+  show('s-welcome');
 }

@@ -155,7 +155,7 @@ const LANG = {
         nutr_goal_heart: "Balanced eating for heart wellness",
 
         // Results screen keys
-        res_summary_title: "Profiling Completed!",
+        res_summary_title: "Completed!",
         res_summary_desc: "We have configured your custom Aashirvaad profile successfully.",
         res_family_size: "Family Size",
         res_family_comp: "Family Composition",
@@ -169,7 +169,7 @@ const LANG = {
         quiz_of: "of 4",
         quiz_single_select: "Single Select",
         quiz_multi_select: "Multi Select",
-        quiz_gen_plan: `Create My Blend ${ICONS.sparkle}`,
+        quiz_gen_plan: `Place Order ${ICONS.sparkle}`,
 
         // Success Screen
         suc_title: "आशीर्वाद से!",
@@ -338,7 +338,7 @@ const LANG = {
         nutr_goal_heart: "हृदय स्वास्थ्य के लिए संतुलित भोजन",
 
         // Results screen keys
-        res_summary_title: "प्रोफाइलिंग पूर्ण!",
+        res_summary_title: "पूर्ण!",
         res_summary_desc: "हमने आपका आशीर्वाद प्रोफाइल सफलतापूर्वक अनुकूलित कर लिया है।",
         res_family_size: "परिवार का आकार",
         res_family_comp: "परिवार की संरचना",
@@ -352,7 +352,7 @@ const LANG = {
         quiz_of: "4 में से",
         quiz_single_select: "एकल चयन",
         quiz_multi_select: "बहु चयन",
-        quiz_gen_plan: `मेरा मिश्रण बनाएं ${ICONS.sparkle}`,
+        quiz_gen_plan: `ऑर्डर करें ${ICONS.sparkle}`,
 
         // Success Screen
         suc_title: "आशीर्वाद से!",

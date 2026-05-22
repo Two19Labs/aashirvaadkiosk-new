@@ -17,20 +17,20 @@ var S = {
     lokwan: 5,
     multigrain: 5,
     multimillet: 5,
-    toor_dal: 5,
-    masoor_dal: 5,
-    arhar_dal: 5,
-    turmeric: 5,
-    jeera_powder: 5,
-    garam_masala: 5,
-    yellow_mustard_oil: 5,
-    groundnut_oil: 5,
-    coconut_oil: 5,
-    desi_cow_ghee: 5,
-    buffalo_ghee: 5,
-    iodized_salt: 5,
-    black_salt: 5,
-    pink_salt: 5
+    toor_dal: '1kg',
+    masoor_dal: '1kg',
+    arhar_dal: '1kg',
+    turmeric: '100g',
+    jeera_powder: '100g',
+    garam_masala: '100g',
+    yellow_mustard_oil: '1l',
+    groundnut_oil: '1l',
+    coconut_oil: '1l',
+    desi_cow_ghee: '1l',
+    buffalo_ghee: '1l',
+    iodized_salt: '1kg',
+    black_salt: '1kg',
+    pink_salt: '1kg'
   },
   blendGranulations: {
     sharbati: 'Fine',
@@ -80,7 +80,11 @@ var S = {
   cats: [],
   qty: { atta: 8 },
   qtySet: false,
-  chakkiActive: false
+  chakkiActive: false,
+  nutrBaseWheat: 'Sharbati',
+  nutrGranulation: 'Fine',
+  nutrQuantity: 5,
+  attasOnlyLocked: false
 };
 
 function saveState() {
