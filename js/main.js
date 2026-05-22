@@ -33,9 +33,9 @@ const BLEND_METADATA = {
 const PRODUCT_IMAGES = {
   sharbati: 'images/sharbati.png',
   khapli: 'images/khapli.png',
-  lokwan: 'images/sharbati.png', // fallback to sharbati
-  multigrain: 'images/sharbati.png', // fallback to sharbati
-  multimillet: 'images/sharbati.png', // fallback to sharbati
+  lokwan: 'images/lokwan.png',
+  multigrain: 'images/multigrain.png',
+  multimillet: 'images/multimillet.png',
 
   toor_dal: 'images/toor_dal.png',
   masoor_dal: 'images/masoor_dal.png',
@@ -555,6 +555,9 @@ function getNutrBlendImage() {
   if (base === 'khapli') {
     return PRODUCT_IMAGES.khapli;
   }
+  if (base === 'lokwan') {
+    return PRODUCT_IMAGES.lokwan;
+  }
   return PRODUCT_IMAGES.sharbati;
 }
 
@@ -827,6 +830,9 @@ function updateSidebarSummary() {
   const genBtn = document.querySelector('#s-track-trad .fnav .btn-sm');
 
   if (!unifiedCard || !emptyCard) return;
+
+  // Keep the trial card's product picker in sync with the cart
+  renderTrialProductPicker();
 
   if (S.selectedBlends.length === 0 && !S.chakkiActive) {
     unifiedCard.style.display = 'none';
@@ -1269,6 +1275,7 @@ function surveyNext(currentStep) {
         S.attaHidden = false;
         updateSidebarSummary();
         switchCategory('atta');
+        showTrialSelectStep();
         saveState();
         show('s-track-trad');
       } else {
@@ -1574,6 +1581,7 @@ function exploreOtherProducts() {
   if (typeof switchCategory === 'function') {
     switchCategory('pulses');
   }
+  showTrialSelectStep();
   show('s-track-trad');
 }
 
@@ -2212,6 +2220,97 @@ function resetSession() {
 // =============================================
 // TRIAL / SAMPLE USER FLOW
 // =============================================
+
+/**
+ * Populate the Traditional-page trial card's product picker from the cart.
+ */
+function renderTrialProductPicker() {
+  const list = document.querySelector('#s-track-trad .trial-product-list');
+  if (!list) return;
+
+  // Drop any trial selections no longer in the cart
+  S.trialSelections = (S.trialSelections || []).filter(b => S.selectedBlends.includes(b));
+
+  if (S.selectedBlends.length === 0) {
+    list.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.55); padding:10px 0; line-height:1.5;">${T('trial_select_empty')}</div>`;
+    return;
+  }
+
+  list.innerHTML = S.selectedBlends.map(blend => {
+    const sel = S.trialSelections.includes(blend);
+    const name = T('trad_blend_' + blend);
+    return `
+      <button type="button" class="trial-product-pick${sel ? ' sel' : ''}" onclick="toggleTrialProduct(this, '${blend}')"
+        style="display:flex; align-items:center; gap:10px; width:100%; padding:10px 12px; border-radius:10px; cursor:pointer; text-align:left;
+               border:1.5px solid ${sel ? 'var(--g2)' : 'rgba(255,255,255,0.15)'};
+               background:${sel ? 'rgba(232,184,75,0.14)' : 'rgba(0,0,0,0.18)'}; color:#fff; transition:all 0.15s;">
+        <span style="flex-shrink:0; width:18px; height:18px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+              border:1.5px solid ${sel ? 'var(--g2)' : 'rgba(255,255,255,0.3)'}; background:${sel ? 'var(--g2)' : 'transparent'}; color:var(--br);">${sel ? '✓' : ''}</span>
+        <span style="font-size:13px; font-weight:600;">${name}</span>
+      </button>`;
+  }).join('');
+}
+
+/**
+ * Toggle a product in the trial selection set.
+ */
+function toggleTrialProduct(btn, blend) {
+  const idx = S.trialSelections.indexOf(blend);
+  if (idx > -1) {
+    S.trialSelections.splice(idx, 1);
+  } else {
+    S.trialSelections.push(blend);
+  }
+  saveState();
+  renderTrialProductPicker();
+}
+
+/**
+ * Advance the Traditional trial card from product selection to phone entry.
+ */
+function trialContinueToPhone(btn) {
+  if (!S.trialSelections || S.trialSelections.length === 0) {
+    showToast(S.lang === 'hi' ? "कृपया कम से कम एक उत्पाद चुनें" : "Please select at least one product to try");
+    return;
+  }
+  const card = btn ? btn.closest('.trial-card') : null;
+  if (!card) return;
+  const stepSelect = card.querySelector('.trial-step-select');
+  const stepPhone = card.querySelector('.trial-step-phone');
+  if (stepSelect) stepSelect.style.display = 'none';
+  if (stepPhone) stepPhone.style.display = 'flex';
+}
+
+/**
+ * Go back from phone entry to the product picker.
+ */
+function trialBackToSelect(btn) {
+  const card = btn ? btn.closest('.trial-card') : null;
+  if (!card) return;
+  const stepSelect = card.querySelector('.trial-step-select');
+  const stepPhone = card.querySelector('.trial-step-phone');
+  const err = card.querySelector('.trial-err-phone');
+  if (err) err.classList.remove('show');
+  if (stepPhone) stepPhone.style.display = 'none';
+  if (stepSelect) stepSelect.style.display = 'flex';
+}
+
+/**
+ * Reset the Traditional trial card back to its product-selection step.
+ */
+function showTrialSelectStep() {
+  const card = document.querySelector('#s-track-trad .trial-card');
+  if (!card) return;
+  const sel = card.querySelector('.trial-step-select');
+  const ph = card.querySelector('.trial-step-phone');
+  const qr = card.querySelector('.trial-step-qr');
+  const lim = card.querySelector('.trial-step-limit');
+  if (sel) sel.style.display = 'flex';
+  if (ph) ph.style.display = 'none';
+  if (qr) qr.style.display = 'none';
+  if (lim) lim.style.display = 'none';
+}
+
 function submitTrialPhone(btn) {
   const card = btn ? btn.closest('.trial-card') : document.querySelector('.trial-card');
   if (!card) return;

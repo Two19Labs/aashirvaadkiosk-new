@@ -228,6 +228,10 @@ const LANG = {
         // Trial Screen Keys
         trial_headline: "Want to try before you buy?",
         trial_subtext: "Get a sample at our tasting section in store",
+        trial_select_subtext: "Select the products you'd like to sample",
+        trial_continue: "Continue",
+        trial_change_products: "Change products",
+        trial_select_empty: "Add products to your order to sample them",
         trial_get_link: "Get Link",
         trial_success_title: "Link Sent!",
         trial_success_desc: "Scan the QR code below or check your phone for the sample request link",
@@ -435,6 +439,10 @@ const LANG = {
         // Trial Screen Keys
         trial_headline: "खरीदने से पहले आज़माना चाहते हैं?",
         trial_subtext: "हमारे स्टोर के टेस्टिंग सेक्शन में सैंपल प्राप्त करें",
+        trial_select_subtext: "जिन उत्पादों का सैंपल लेना चाहते हैं उन्हें चुनें",
+        trial_continue: "आगे बढ़ें",
+        trial_change_products: "उत्पाद बदलें",
+        trial_select_empty: "सैंपल लेने के लिए अपने ऑर्डर में उत्पाद जोड़ें",
         trial_get_link: "लिंक प्राप्त करें",
         trial_success_title: "लिंक भेज दिया गया!",
         trial_success_desc: "नीचे दिए गए QR कोड को स्कैन करें या सैंपल अनुरोध लिंक के लिए अपना फोन देखें",

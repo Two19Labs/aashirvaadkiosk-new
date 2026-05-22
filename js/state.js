@@ -87,7 +87,8 @@ var S = {
   nutrGranulation: 'Fine',
   nutrQuantity: 5,
   attasOnlyLocked: false,
-  attaHidden: false
+  attaHidden: false,
+  trialSelections: []
 };
 
 function saveState() {

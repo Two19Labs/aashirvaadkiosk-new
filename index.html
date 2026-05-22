@@ -671,7 +671,7 @@
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Product Image Slot -->
                 <div style="width: 80px; height: 80px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
-                  <img src="images/sharbati.png" alt="100% Lokwan Atta" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img src="images/lokwan.png" alt="100% Lokwan Atta" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <!-- Text details -->
                 <div style="flex: 1; padding-right: 28px;">
@@ -717,7 +717,7 @@
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Product Image Slot -->
                 <div style="width: 80px; height: 80px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
-                  <img src="images/sharbati.png" alt="Multigrain Atta" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img src="images/multigrain.png" alt="Multigrain Atta" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <!-- Text details -->
                 <div style="flex: 1; padding-right: 28px;">
@@ -763,7 +763,7 @@
                 <div class="chk" style="top: 50%; transform: translateY(-50%); right: 20px;">&#10003;</div>
                 <!-- Product Image Slot -->
                 <div style="width: 80px; height: 80px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
-                  <img src="images/sharbati.png" alt="Multi Millet Atta" style="width: 100%; height: 100%; object-fit: contain;">
+                  <img src="images/multimillet.png" alt="Multi Millet Atta" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <!-- Text details -->
                 <div style="flex: 1; padding-right: 28px;">
@@ -1335,8 +1335,22 @@
             <div class="trial-sparkle trial-sparkle-1"></div>
             <div class="trial-sparkle trial-sparkle-2"></div>
 
+            <!-- STEP 0: Product Selection (Traditional page only) -->
+            <div class="trial-step-select" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <h3 class="trial-headline" data-i18n="trial_headline">Want to try before you buy?</h3>
+              <p class="trial-subtext" data-i18n="trial_select_subtext">Select the products you'd like to sample</p>
+
+              <!-- Cart-product checklist, populated by renderTrialProductPicker() -->
+              <div class="trial-product-list" style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin: 14px 0 4px;"></div>
+
+              <button class="trial-get-link-btn" onclick="trialContinueToPhone(this)">
+                <span data-i18n="trial_continue">Continue</span>
+                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
             <!-- STEP 1: Phone Number Collection -->
-            <div class="trial-step-phone" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <div class="trial-step-phone" style="display: none; flex-direction: column; align-items: center; width: 100%;">
 
               <!-- Headline -->
               <h3 class="trial-headline" data-i18n="trial_headline">Want to try before you buy?</h3>
@@ -1356,6 +1370,12 @@
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                 </svg>
                 <span data-i18n="trial_get_link">Get Link</span>
+              </button>
+
+              <!-- Back to product selection -->
+              <button class="trial-back-link" onclick="trialBackToSelect(this)">
+                <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span data-i18n="trial_change_products">Change products</span>
               </button>
 
             </div>
