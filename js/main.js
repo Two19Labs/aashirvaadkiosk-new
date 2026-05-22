@@ -1400,6 +1400,34 @@ function proceedToBilling() {
   buildAndShowResults();
 }
 
+/**
+ * Render a mock (decorative) barcode into #ref-barcode, deterministically
+ * derived from the order reference code so it looks tied to the order.
+ */
+function renderBarcode(code) {
+  const el = document.getElementById('ref-barcode');
+  if (!el) return;
+
+  // Seed a simple PRNG from the code string
+  let seed = 0;
+  for (let i = 0; i < code.length; i++) {
+    seed = (seed * 31 + code.charCodeAt(i)) >>> 0;
+  }
+  function rand() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  let bars = '';
+  const count = 64;
+  for (let i = 0; i < count; i++) {
+    const w = 1 + Math.floor(rand() * 4); // 1-4px wide
+    const isBar = i % 2 === 0;
+    bars += `<div style="width:${w}px; background:${isBar ? '#111' : '#fff'};"></div>`;
+  }
+  el.innerHTML = bars;
+}
+
 // =============================================
 function buildAndShowResults() {
   const refCode = "ASH-" + Math.floor(100000 + Math.random() * 900000);
@@ -1409,6 +1437,9 @@ function buildAndShowResults() {
   if (refEl) {
     refEl.innerText = S.isHomeDelivery ? deliveryCode : refCode;
   }
+
+  // Render a mock barcode derived from the reference code
+  renderBarcode(refEl ? refEl.innerText : refCode);
 
   // Personalize Headline based on delivery
   const headline = document.getElementById('suc-headline');
