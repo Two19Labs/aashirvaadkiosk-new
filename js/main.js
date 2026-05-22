@@ -1258,20 +1258,20 @@ const GOAL_TO_VARIANT = {
   keto:       'Keto'
 };
 
-// Consumer-facing names for a single wellness selection (no internal product names).
+// Single-selection product names — exact functional variant names from Sheet1 (column A).
 const WELLNESS_SINGLE_NAMES = {
-  'Protein':         { en: 'Everyday Protein Atta',        hi: 'एवरीडे प्रोटीन आटा' },
-  'Iron':            { en: 'Daily Vitality Atta',          hi: 'डेली वाइटैलिटी आटा' },
-  'Low GI':          { en: 'Smart Sugar Balance Atta',     hi: 'स्मार्ट शुगर बैलेंस आटा' },
-  'Calcium':         { en: 'Bone Strength Atta',           hi: 'बोन स्ट्रेंथ आटा' },
-  'Vitamin':         { en: 'Complete Nutrition Atta',      hi: 'कम्प्लीट न्यूट्रिशन आटा' },
-  'High Fibre':      { en: 'Digestive Balance Atta',       hi: 'डाइजेस्टिव बैलेंस आटा' },
-  'Strength+':       { en: 'Daily Strength & Energy Atta', hi: 'डेली स्ट्रेंथ एनर्जी आटा' },
-  'Low Calorie':     { en: 'Lighter Everyday Atta',        hi: 'लाइटर एवरीडे आटा' },
-  'Low Carb':        { en: 'Smart Lower-Carb Atta',        hi: 'स्मार्ट लोअर-कार्ब आटा' },
-  'Low Cholesterol': { en: 'Heart Wellness Atta',          hi: 'हार्ट वेलनेस आटा' },
-  'Gluten Free':     { en: 'Gluten-Free Lifestyle Atta',   hi: 'ग्लूटेन-फ्री लाइफस्टाइल आटा' },
-  'Keto':            { en: 'Keto-Friendly Atta',           hi: 'कीटो-फ्रेंडली आटा' }
+  'Protein':         'Protein Atta',
+  'Iron':            'Iron Atta',
+  'Low GI':          'Low GI Atta',
+  'Calcium':         'Calcium Atta',
+  'Vitamin':         'Vitamin Atta',
+  'High Fibre':      'High Fibre Atta',
+  'Strength+':       'Strength+ (Zn Mg K Blend)',
+  'Low Calorie':     'Low Calorie Atta',
+  'Low Carb':        'Low Carb Atta',
+  'Low Cholesterol': 'Low Cholesterol Atta',
+  'Gluten Free':     'Gluten Free Atta',
+  'Keto':            'Keto Atta'
 };
 
 // Resolve the recommended product/blend name from the current selection.
@@ -1279,8 +1279,7 @@ function getWellnessRecommendation() {
   const goals = S.nutritionGoals;
   if (goals.length === 1) {
     const v = GOAL_TO_VARIANT[goals[0]];
-    const n = WELLNESS_SINGLE_NAMES[v];
-    return n ? (S.lang === 'hi' ? n.hi : n.en) : (v + ' Atta');
+    return WELLNESS_SINGLE_NAMES[v] || (v + ' Atta');
   }
   return getRecommendedBlend(goals[0], goals[1]);
 }
