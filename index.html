@@ -530,6 +530,17 @@
             <button class="cat-tab" data-cat="salt" onclick="switchCategory('salt')">🧂 <span data-i18n="cat_salt">Salt</span></button>
           </div>
 
+          <!-- Unlock other products callout card (compact, near tabs) -->
+          <div id="unlock-categories-card" style="display: none; background: linear-gradient(135deg, rgba(232,184,75,0.08) 0%, rgba(201,147,46,0.04) 100%); border: 1.5px dashed var(--g2); border-radius: 14px; padding: 12px 16px; text-align: left; margin-bottom: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); width: 100%; display: none;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 180px;">
+                <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; letter-spacing: -0.2px;">✨ Explore More Healthy Products</div>
+                <p style="font-size: 11px; color: rgba(255,255,255,0.6); margin: 0; line-height: 1.4;">Unlock Pulses, Spices, Oils, Ghee &amp; Salts!</p>
+              </div>
+              <button type="button" class="btn" style="height: 36px; font-size: 12px; border-radius: 10px; padding: 0 18px; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); font-weight: 700; border: none; cursor: pointer; white-space: nowrap; flex-shrink: 0;" onclick="unlockCategories()">Explore Now →</button>
+            </div>
+          </div>
+
           <div class="mcq-grid g1" style="max-width: 100%; gap: 14px;">
             <!-- 1. Sharbati Atta (Aisle 01) -->
             <div class="mcq" onclick="selectTraditionalBlend(this, 'sharbati')" data-category="atta" style="display: flex; flex-direction: column; gap: 10px; align-items: stretch; justify-content: flex-start; text-align: left; padding: 16px 20px; min-height: auto; width: 100%;">
@@ -776,12 +787,7 @@
               </div>
             </div>
 
-            <!-- Unlock other products callout card -->
-            <div id="unlock-categories-card" style="display: none; background: linear-gradient(135deg, rgba(232,184,75,0.08) 0%, rgba(201,147,46,0.04) 100%); border: 1.5px dashed var(--g2); border-radius: 20px; padding: 24px; text-align: center; margin-top: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 100%;">
-              <div style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.2px;">Explore More Healthy Products</div>
-              <p style="font-size: 12.5px; color: rgba(255,255,255,0.65); margin-bottom: 16px; line-height: 1.5; max-width: 420px; margin-left: auto; margin-right: auto;">Unlock and discover other premium, nutrition-packed Aashirvaad products including high-protein Pulses, pure Spices, premium Oils &amp; Ghee, and mineral Salts!</p>
-              <button type="button" class="btn" style="height: 46px; font-size: 14px; border-radius: 12px; max-width: 260px; margin: 0 auto; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); font-weight: 700; border: none; cursor: pointer;" onclick="unlockCategories()">Explore Other Products</button>
-            </div>
+
 
             <!-- PULSES (Aisle 06) -->
             <!-- 6. Toor Dal -->
