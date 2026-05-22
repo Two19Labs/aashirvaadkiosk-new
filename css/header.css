@@ -22,12 +22,8 @@
 .logo-wrap { display: flex; align-items: center; gap: 16px; }
 
 .logo-img {
-  height: 40px; width: auto; max-width: 160px;
+  height: 56px; width: auto; max-width: 160px;
   object-fit: contain;
-  background: #fff;
-  padding: 5px 8px;
-  border-radius: 8px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.3);
   flex-shrink: 0;
   display: block;
 }
