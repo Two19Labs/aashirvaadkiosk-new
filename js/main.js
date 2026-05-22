@@ -76,9 +76,9 @@ const PRODUCT_PRICES = {
   coconut_oil:        { '250ml': 300, '500ml': 600, '1l': 1200, '5l': 6000 },
   groundnut_oil:      { '250ml': 150, '500ml': 300, '1l': 600, '5l': 3000 },
 
-  desi_cow_ghee:      { '250ml': 500, '500ml': 1000, '1l': 2000 },
-  buffalo_ghee:       { '250ml': 355, '500ml': 710, '1l': 1420 },
-  a2_cow_ghee_bilona: { '250ml': 675, '500ml': 1350, '1l': 2700 },
+  desi_cow_ghee:      { '250ml': 500, '500ml': 1000, '1l': 2000, '5l': 10000 },
+  buffalo_ghee:       { '250ml': 355, '500ml': 710, '1l': 1420, '5l': 7100 },
+  a2_cow_ghee_bilona: { '250ml': 675, '500ml': 1350, '1l': 2700, '5l': 13500 },
 
   iodized_salt: { '250g': 8, '500g': 15, '1kg': 30 },
   black_salt:   { '250g': 15, '500g': 30, '1kg': 60 },
