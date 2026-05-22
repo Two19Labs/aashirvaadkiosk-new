@@ -466,4 +466,24 @@
   box-shadow: 0 4px 16px rgba(232, 184, 75, 0.26);
 }
 
+/* =============================================
+   DYNAMIC CARD MRP TEXT COLOR RULES
+   ============================================= */
+.mcq .mrp-tag-wrap span {
+  transition: color 0.22s ease-in-out, opacity 0.22s ease-in-out;
+}
+.mcq .mrp-tag-wrap span:first-child {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+.mcq .mrp-value {
+  color: #1a1a1a !important;
+}
+
+.mcq.sel .mrp-tag-wrap span:first-child {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+.mcq.sel .mrp-value {
+  color: var(--g2) !important;
+}
+
 
