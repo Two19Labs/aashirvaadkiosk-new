@@ -224,7 +224,8 @@ const LANG = {
         trial_trust_1: "100% Free",
         trial_trust_2: "No Spam",
         trial_trust_3: "Instant Delivery",
-        trial_phone_err: "Please enter a valid 10-digit phone number"
+        trial_phone_err: "Please enter a valid 10-digit phone number",
+        trial_left_text: "3/3 Trials Left"
     },
     hi: {
         // Selection Screen
@@ -419,7 +420,8 @@ const LANG = {
         trial_trust_1: "100% मुफ्त",
         trial_trust_2: "कोई स्पैम नहीं",
         trial_trust_3: "त्वरित वितरण",
-        trial_phone_err: "कृपया एक मान्य 10-अंकीय मोबाइल नंबर दर्ज करें"
+        trial_phone_err: "कृपया एक मान्य 10-अंकीय मोबाइल नंबर दर्ज करें",
+        trial_left_text: "3/3 ट्रायल शेष"
     }
 };
 
