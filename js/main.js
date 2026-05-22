@@ -30,6 +30,36 @@ const BLEND_METADATA = {
   pink_salt: { name: 'Himalayan Pink Salt', nameHi: 'हिमालयन पिंक साल्ट', aisle: 'Aisle 10', type: 'instore', category: 'salt' }
 };
 
+const PRODUCT_IMAGES = {
+  sharbati: 'images/sharbati.png',
+  khapli: 'images/khapli.png',
+  lokwan: 'images/sharbati.png', // fallback to sharbati
+  multigrain: 'images/sharbati.png', // fallback to sharbati
+  multimillet: 'images/sharbati.png', // fallback to sharbati
+
+  toor_dal: 'images/toor_dal.png',
+  masoor_dal: 'images/masoor_dal.png',
+  arhar_dal: 'images/arhar_dal.png',
+
+  turmeric: 'images/turmeric.png',
+  jeera_powder: 'images/jeera_powder.png',
+  garam_masala: 'images/garam_masala.png',
+
+  yellow_mustard_oil: 'images/yellow_mustard_oil.png',
+  groundnut_oil: 'images/groundnut_oil.png',
+  coconut_oil: 'images/coconut_oil.png',
+
+  desi_cow_ghee: 'images/desi_cow_ghee.png',
+  buffalo_ghee: 'images/buffalo_ghee.png',
+  a2_cow_ghee_bilona: 'images/a2_cow_ghee_bilona.png',
+
+  iodized_salt: 'images/iodized_salt.png',
+  black_salt: 'images/black_salt.png',
+  pink_salt: 'images/pink_salt.png',
+
+  custom_blend: 'images/nutritional.png'
+};
+
 function parseQtyToKg(qty) {
   if (typeof qty === 'number') return qty;
   if (!qty) return 0;
@@ -117,6 +147,13 @@ function selectNutrBaseWheat(button, val) {
     parent.querySelectorAll('.nutr-base-pill').forEach(btn => btn.classList.remove('sel'));
   }
   button.classList.add('sel');
+  
+  // Dynamic image swapping on the Nutritional recommendation card (#nutr-rec-img)
+  const imgEl = document.querySelector('#nutr-rec-img img');
+  if (imgEl) {
+    imgEl.src = getNutrBlendImage();
+  }
+
   saveState();
 }
 
@@ -325,12 +362,12 @@ function setupInputRestrictions() {
     });
   }
 
-  // Trial Phone Field
-  const trialPhoneInp = document.getElementById('trial-phone-input');
-  if (trialPhoneInp) {
+  // Trial Phone Field — there can be more than one trial card on the page
+  document.querySelectorAll('.trial-phone-input').forEach(function(trialPhoneInp) {
     trialPhoneInp.addEventListener('input', function() {
       this.value = this.value.replace(/[^0-9]/g, '');
-      const err = document.getElementById('e-trial-phone');
+      const card = this.closest('.trial-card');
+      const err = card ? card.querySelector('.trial-err-phone') : null;
       if (this.value.length === 10 && err) {
         err.classList.remove('show');
       }
@@ -338,10 +375,11 @@ function setupInputRestrictions() {
     trialPhoneInp.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
-        submitTrialPhone();
+        const card = this.closest('.trial-card');
+        submitTrialPhone(card ? card.querySelector('.trial-get-link-btn') : null);
       }
     });
-  }
+  });
 }
 
 // =============================================
@@ -506,6 +544,19 @@ const WELLNESS_SECTION = {
   digestive: 1, strength: 1, lighter: 1, lowcarb: 1, heart: 1,
   glutenfree: 2, keto: 2
 };
+
+function getNutrBlendImage() {
+  const goals = S.nutritionGoals || [];
+  const isSpecialty = goals.some(g => WELLNESS_SECTION[g] === 2);
+  if (isSpecialty) {
+    return PRODUCT_IMAGES.custom_blend;
+  }
+  const base = (S.nutrBaseWheat || '').toLowerCase();
+  if (base === 'khapli') {
+    return PRODUCT_IMAGES.khapli;
+  }
+  return PRODUCT_IMAGES.sharbati;
+}
 
 function toggleWellnessOption(element, key) {
   if (element.classList.contains('disabled')) return;
@@ -823,13 +874,19 @@ function updateSidebarSummary() {
     const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(232,184,75,0.08); padding: 8px 12px; border-radius: 12px; border: 1.5px solid rgba(232,184,75,0.3); box-shadow: 0 4px 12px rgba(232,184,75,0.06);">
-        <div style="flex: 1; padding-right: 8px;">
-          <div style="font-weight:700; color:#fff; font-size:13px; display:flex; align-items:center; gap:6px;">
-            <span style="color:var(--g2);">🌾</span> ${customBlendName}
+        <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
+          <!-- Product image thumbnail -->
+          <div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
-          <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px;">
-            <span class="aisle-tag" style="background:rgba(232,184,75,0.15); color:var(--g2); border-color:rgba(232,184,75,0.3); padding: 1px 6px; font-size: 9px; line-height: 1.2;">Chakki Mill</span>
-            <span style="font-weight:600;">⚙️ ${S.lang === 'hi' ? 'चक्की में पिस रहा है' : 'Grinding in Chakki...'}</span>
+          <div style="flex: 1;">
+            <div style="font-weight:700; color:#fff; font-size:13px; display:flex; align-items:center; gap:6px;">
+              ${customBlendName}
+            </div>
+            <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px;">
+              <span class="aisle-tag" style="background:rgba(232,184,75,0.15); color:var(--g2); border-color:rgba(232,184,75,0.3); padding: 1px 6px; font-size: 9px; line-height: 1.2;">Chakki Mill</span>
+              <span style="font-weight:600;">⚙️ ${S.lang === 'hi' ? 'चक्की में पिस रहा है' : 'Grinding in Chakki...'}</span>
+            </div>
           </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
@@ -844,14 +901,22 @@ function updateSidebarSummary() {
   inStoreBlends.forEach(item => {
     const gran = S.blendGranulations[item.blend] || 'Fine';
     const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+    const imgUrl = PRODUCT_IMAGES[item.blend] || 'images/sharbati.png';
+    const displayName = S.lang === 'hi' ? item.nameHi : item.name;
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
-        <div style="flex: 1; padding-right: 8px;">
-          <div style="font-weight:600; color:#fff; font-size:13px;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
-          <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
-            <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
-            ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
-            <span>${S.lang === 'hi' ? '🛒 इन-स्टोर पिकअप' : '🛒 In-Store Pickup'}</span>
+        <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
+          <!-- Product image thumbnail -->
+          <div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight:600; color:#fff; font-size:13px;">${displayName}</div>
+            <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
+              <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
+              ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
+              <span>${S.lang === 'hi' ? '🛒 इन-स्टोर पिकअप' : '🛒 In-Store Pickup'}</span>
+            </div>
           </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
@@ -867,14 +932,22 @@ function updateSidebarSummary() {
   deliveryBlends.forEach(item => {
     const gran = S.blendGranulations[item.blend] || 'Fine';
     const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+    const imgUrl = PRODUCT_IMAGES[item.blend] || 'images/sharbati.png';
+    const displayName = S.lang === 'hi' ? item.nameHi : item.name;
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
-        <div style="flex: 1; padding-right: 8px;">
-          <div style="font-weight:600; color:#fff; font-size:13px;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
-          <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
-            <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2; background: rgba(255,107,107,0.15); color: #ff8a8a; border-color: rgba(255,107,107,0.3);">${item.aisle}</span>
-            ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
-            <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
+        <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
+          <!-- Product image thumbnail -->
+          <div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight:600; color:#fff; font-size:13px;">${displayName}</div>
+            <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
+              <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2; background: rgba(255,107,107,0.15); color: #ff8a8a; border-color: rgba(255,107,107,0.3);">${item.aisle}</span>
+              ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
+              <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
+            </div>
           </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
@@ -1427,6 +1500,12 @@ function showNutrRecommendation() {
     S.nutrBaseWheat = 'Sharbati';
   }
 
+  // Set recommendation image src dynamically
+  const imgEl = document.querySelector('#nutr-rec-img img');
+  if (imgEl) {
+    imgEl.src = getNutrBlendImage();
+  }
+
   // Highlight active grinding pills in UI from state
   document.querySelectorAll('.nutr-base-pill').forEach(btn => {
     btn.classList.toggle('sel', btn.getAttribute('data-val') === S.nutrBaseWheat);
@@ -1651,10 +1730,16 @@ function buildAndShowResults() {
       const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.2);">
-          <div>
-            <span style="color: #fff; font-weight: 700;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
-            <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
-            <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+            <!-- Thumbnail -->
+            <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+              <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div>
+              <span style="color: #fff; font-weight: 700;">${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
+              <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
+              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
+            </div>
           </div>
           <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
             <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
@@ -1671,13 +1756,21 @@ function buildAndShowResults() {
       const gran = S.blendGranulations[blend] || 'Fine';
       const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
       const price = getProductMRP(blend, qty);
+      const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
+      const displayName = T('trad_blend_' + blend);
       
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px;">
-          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-            <span style="color: #fff; font-weight: 600;">${T('trad_blend_' + blend)}</span>
-            <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${meta.aisle}</span>
-            ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+            <!-- Thumbnail -->
+            <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+              <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span style="color: #fff; font-weight: 600;">${displayName}</span>
+              <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${meta.aisle}</span>
+              ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+            </div>
           </div>
           <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
             <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
@@ -1701,9 +1794,14 @@ function buildAndShowResults() {
     const fullBlendNameLabel = `${blendName} ${baseGranLabel(localizedGranulation)}`;
     const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
     detailsHTML = `
-      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px; align-items: center;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${labels.rec}:</span>
-        <span style="color: #fff; font-weight: bold; text-align: right;">${fullBlendNameLabel}</span>
+        <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
+          <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+            <img src="${PRODUCT_IMAGES.custom_blend}" alt="${blendName}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span style="color: #fff; font-weight: bold; text-align: right;">${fullBlendNameLabel}</span>
+        </div>
       </div>
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${S.lang === 'hi' ? "चुने हुए लक्ष्य:" : "Selected Goals:"}</span>
@@ -1738,7 +1836,13 @@ function buildAndShowResults() {
           const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
           storePickupItemsHTML += `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                <!-- Thumbnail -->
+                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                  <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              </div>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1754,12 +1858,21 @@ function buildAndShowResults() {
           const gran = S.blendGranulations[blend] || 'Fine';
           const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
           const price = getProductMRP(blend, qty);
+          const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
+          const displayName = T('trad_blend_' + blend);
+          
           const row = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-              <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                ${T('trad_blend_' + blend)}
-                ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
-              </span>
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                <!-- Thumbnail -->
+                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                  <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  ${displayName}
+                  ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+                </span>
+              </div>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${price}</span>
@@ -1779,7 +1892,13 @@ function buildAndShowResults() {
           const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
           storePickupItemsHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                <!-- Thumbnail -->
+                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                  <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              </div>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1792,7 +1911,13 @@ function buildAndShowResults() {
         const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
         homeDeliveryItemsHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-            <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} ${baseGranLabel(localizedGranulation)}</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+              <!-- Thumbnail -->
+              <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                <img src="${getNutrBlendImage()}" alt="${recLabel || 'Custom Nutritional Atta'}" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} ${baseGranLabel(localizedGranulation)}</span>
+            </div>
             <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
               <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${recPrice}</span>
@@ -2062,17 +2187,19 @@ function resetSession() {
   // Clear UI Selection Borders/Colors
   clearActiveSurveyUI();
   
-  // Reset Trial Screen State
-  const trialPhone = document.getElementById('trial-phone-input');
-  if (trialPhone) trialPhone.value = '';
-  const eTrialPhone = document.getElementById('e-trial-phone');
-  if (eTrialPhone) eTrialPhone.classList.remove('show');
-  const stepPhone = document.getElementById('trial-step-phone');
-  const stepQR = document.getElementById('trial-step-qr');
-  const stepLimit = document.getElementById('trial-step-limit');
-  if (stepPhone) stepPhone.style.display = 'flex';
-  if (stepQR) stepQR.style.display = 'none';
-  if (stepLimit) stepLimit.style.display = 'none';
+  // Reset Trial Card State (every trial card on the page)
+  document.querySelectorAll('.trial-card').forEach(function(card) {
+    const trialPhone = card.querySelector('.trial-phone-input');
+    if (trialPhone) trialPhone.value = '';
+    const eTrialPhone = card.querySelector('.trial-err-phone');
+    if (eTrialPhone) eTrialPhone.classList.remove('show');
+    const stepPhone = card.querySelector('.trial-step-phone');
+    const stepQR = card.querySelector('.trial-step-qr');
+    const stepLimit = card.querySelector('.trial-step-limit');
+    if (stepPhone) stepPhone.style.display = 'flex';
+    if (stepQR) stepQR.style.display = 'none';
+    if (stepLimit) stepLimit.style.display = 'none';
+  });
 
   if (typeof switchCategory === 'function') {
     switchCategory('atta');
@@ -2085,9 +2212,12 @@ function resetSession() {
 // =============================================
 // TRIAL / SAMPLE USER FLOW
 // =============================================
-function submitTrialPhone() {
-  const phoneInp = document.getElementById('trial-phone-input');
-  const err = document.getElementById('e-trial-phone');
+function submitTrialPhone(btn) {
+  const card = btn ? btn.closest('.trial-card') : document.querySelector('.trial-card');
+  if (!card) return;
+
+  const phoneInp = card.querySelector('.trial-phone-input');
+  const err = card.querySelector('.trial-err-phone');
   const phone = phoneInp ? phoneInp.value.trim() : '';
 
   if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
@@ -2100,8 +2230,8 @@ function submitTrialPhone() {
   if (err) err.classList.remove('show');
 
   if (phone === '7007679485') {
-    const stepPhone = document.getElementById('trial-step-phone');
-    const stepLimit = document.getElementById('trial-step-limit');
+    const stepPhone = card.querySelector('.trial-step-phone');
+    const stepLimit = card.querySelector('.trial-step-limit');
     if (stepPhone && stepLimit) {
       stepPhone.style.display = 'none';
       stepLimit.style.display = 'flex';
@@ -2117,8 +2247,8 @@ function submitTrialPhone() {
   }
 
   // Transition to step 2 (QR code reveal)
-  const stepPhone = document.getElementById('trial-step-phone');
-  const stepQR = document.getElementById('trial-step-qr');
+  const stepPhone = card.querySelector('.trial-step-phone');
+  const stepQR = card.querySelector('.trial-step-qr');
 
   if (stepPhone && stepQR) {
     stepPhone.style.display = 'none';
@@ -2141,12 +2271,15 @@ function submitTrialPhone() {
   }
 }
 
-function trialGoBack() {
-  const stepPhone = document.getElementById('trial-step-phone');
-  const stepQR = document.getElementById('trial-step-qr');
-  const stepLimit = document.getElementById('trial-step-limit');
-  const phoneInp = document.getElementById('trial-phone-input');
-  const err = document.getElementById('e-trial-phone');
+function trialGoBack(btn) {
+  const card = btn ? btn.closest('.trial-card') : document.querySelector('.trial-card');
+  if (!card) return;
+
+  const stepPhone = card.querySelector('.trial-step-phone');
+  const stepQR = card.querySelector('.trial-step-qr');
+  const stepLimit = card.querySelector('.trial-step-limit');
+  const phoneInp = card.querySelector('.trial-phone-input');
+  const err = card.querySelector('.trial-err-phone');
 
   if (stepPhone) {
     if (stepQR) stepQR.style.display = 'none';
