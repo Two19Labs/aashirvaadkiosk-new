@@ -309,7 +309,7 @@
 /* =============================================
    SUCCESS SCREEN
    ============================================= */
-#s-success { align-items: center; justify-content: center; }
+/* Removed centering to allow natural scrolling on success screen */
 
 .suc-box { text-align: center; max-width: 440px; padding: 32px; }
 .suc-ico { font-size: 78px; margin-bottom: 18px; }
