@@ -481,7 +481,23 @@ function toggleComposition(element, ageGroup) {
  * Handle Q3: Select Atta Journey Track (Single-Select)
  */
 // =============================================
-// QUESTION 3 — PERSONALIZED WELLNESS SELECTION
+// QUESTION 3 — TRACK SELECTION (traditional vs nutritional)
+// =============================================
+function selectTrack(element, track) {
+  S.selectionTrack = track;
+
+  const parent = element.closest('.mcq-grid');
+  if (parent) {
+    parent.querySelectorAll('.mcq').forEach(card => card.classList.remove('sel'));
+  }
+  element.classList.add('sel');
+
+  const err = document.getElementById('e-q3');
+  if (err) err.classList.remove('show');
+}
+
+// =============================================
+// QUESTION 4 — PERSONALIZED WELLNESS SELECTION
 // =============================================
 // Section 1: pick exactly 1 or 2.  Section 2: pick exactly 1.
 // Sections 1 and 2 can never be combined.
@@ -515,7 +531,7 @@ function toggleWellnessOption(element, key) {
   }
 
   refreshWellnessUI();
-  const err = document.getElementById('e-q3');
+  const err = document.getElementById('e-nutr');
   if (err && S.nutritionGoals.length > 0) err.classList.remove('show');
   saveState();
 }
@@ -526,7 +542,7 @@ function refreshWellnessUI() {
   const s1 = goals.filter(g => WELLNESS_SECTION[g] === 1);
   const s2 = goals.filter(g => WELLNESS_SECTION[g] === 2);
 
-  document.querySelectorAll('#s-q3 .wellness-opt').forEach(card => {
+  document.querySelectorAll('#s-q4-nutr .wellness-opt').forEach(card => {
     const key = card.getAttribute('data-key');
     const section = WELLNESS_SECTION[key];
     const selected = goals.indexOf(key) > -1;
@@ -550,7 +566,7 @@ function refreshWellnessUI() {
 
 // Sync card .sel state from S.nutritionGoals (used when (re)entering Q3).
 function syncWellnessUI() {
-  document.querySelectorAll('#s-q3 .wellness-opt').forEach(card => {
+  document.querySelectorAll('#s-q4-nutr .wellness-opt').forEach(card => {
     const key = card.getAttribute('data-key');
     card.classList.toggle('sel', S.nutritionGoals.indexOf(key) > -1);
   });
@@ -1161,22 +1177,33 @@ function surveyNext(currentStep) {
         showToast(T('toast_select_req'));
         return;
       }
-      syncWellnessUI();
       show('s-q3');
       break;
 
     case 'q3':
-      if (S.nutritionGoals.length === 0) {
+      if (!S.selectionTrack) {
         const err = document.getElementById('e-q3');
         if (err) err.classList.add('show');
         showToast(T('toast_select_req'));
         return;
       }
-      S.selectionTrack = 'nutrition';
       S.selectedBlend = '';
       S.selectedBlends = [];
-      saveState();
-      showNutrRecommendation();
+
+      if (S.selectionTrack === 'traditional') {
+        // Option 1 → straight to the traditional store page
+        S.attasOnlyLocked = true;
+        S.attaHidden = false;
+        updateSidebarSummary();
+        switchCategory('atta');
+        saveState();
+        show('s-track-trad');
+      } else {
+        // Option 2 → personalized wellness selection (Q4)
+        saveState();
+        syncWellnessUI();
+        show('s-q4-nutr');
+      }
       break;
 
     case 'trad':
@@ -1203,10 +1230,6 @@ function surveyNext(currentStep) {
         const err = document.getElementById('e-nutr');
         if (err) err.classList.add('show');
         showToast(T('toast_select_req'));
-        return;
-      }
-      if (S.nutritionGoals.length < 2) {
-        showToast(S.lang === 'hi' ? "कृपया 2 लक्ष्य चुनें" : "Please select exactly 2 goals");
         return;
       }
       saveState();
