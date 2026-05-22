@@ -546,19 +546,7 @@ const WELLNESS_SECTION = {
 };
 
 function getNutrBlendImage() {
-  const goals = S.nutritionGoals || [];
-  const isSpecialty = goals.some(g => WELLNESS_SECTION[g] === 2);
-  if (isSpecialty) {
-    return PRODUCT_IMAGES.custom_blend;
-  }
-  const base = (S.nutrBaseWheat || '').toLowerCase();
-  if (base === 'khapli') {
-    return PRODUCT_IMAGES.khapli;
-  }
-  if (base === 'lokwan') {
-    return PRODUCT_IMAGES.lokwan;
-  }
-  return PRODUCT_IMAGES.sharbati;
+  return PRODUCT_IMAGES.custom_blend;
 }
 
 function toggleWellnessOption(element, key) {
