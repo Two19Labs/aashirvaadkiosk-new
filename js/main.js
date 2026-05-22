@@ -992,6 +992,7 @@ function surveyNext(currentStep) {
       document.querySelectorAll('#s-q4-nutr .mcq').forEach(el => el.classList.remove('sel'));
 
       if (S.selectionTrack === 'traditional') {
+        S.attasOnlyLocked = true;
         updateSidebarSummary();
         switchCategory('atta');
         show('s-track-trad');
@@ -1251,11 +1252,7 @@ function nutrRecProceed() {
 }
 
 function exploreOtherProducts() {
-  if (S.nutritionGoals && S.nutritionGoals.includes('protein')) {
-    S.attasOnlyLocked = true;
-  } else {
-    S.attasOnlyLocked = false;
-  }
+  S.attasOnlyLocked = false;
   S.selectionTrack = 'traditional';
   saveState();
   updateSidebarSummary();
