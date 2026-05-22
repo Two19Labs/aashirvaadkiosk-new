@@ -159,6 +159,27 @@
   box-shadow: 0 10px 32px rgba(191,16,26,0.48), 0 0 0 1px rgba(201,147,46,0.3);
 }
 
+.mcq.disabled {
+  opacity: 0.34;
+  filter: grayscale(0.75);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* Wellness selection section grouping */
+.wellness-group { width: 100%; max-width: 720px; margin: 0 auto; }
+.wellness-group-label {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--g2);
+  margin: 18px 0 12px;
+}
+.wellness-group-label::after {
+  content: ""; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(201,147,46,0.35), transparent);
+}
+.wellness-group.is-locked { opacity: 0.6; }
+
 .mcq .ico {
   font-size: 34px; margin-bottom: 8px;
   line-height: 1; display: block;

@@ -480,17 +480,81 @@ function toggleComposition(element, ageGroup) {
 /**
  * Handle Q3: Select Atta Journey Track (Single-Select)
  */
-function selectTrack(element, track) {
-  S.selectionTrack = track;
+// =============================================
+// QUESTION 3 — PERSONALIZED WELLNESS SELECTION
+// =============================================
+// Section 1: pick exactly 1 or 2.  Section 2: pick exactly 1.
+// Sections 1 and 2 can never be combined.
+const WELLNESS_SECTION = {
+  protein: 1, iron: 1, sugar: 1, calcium: 1, complete: 1,
+  digestive: 1, strength: 1, lighter: 1, lowcarb: 1, heart: 1,
+  glutenfree: 2, keto: 2
+};
 
-  const parent = element.closest('.mcq-grid');
-  if (parent) {
-    parent.querySelectorAll('.mcq').forEach(card => card.classList.remove('sel'));
+function toggleWellnessOption(element, key) {
+  if (element.classList.contains('disabled')) return;
+  const section = WELLNESS_SECTION[key];
+  const idx = S.nutritionGoals.indexOf(key);
+
+  if (idx > -1) {
+    // Deselect
+    S.nutritionGoals.splice(idx, 1);
+    element.classList.remove('sel');
+  } else {
+    // Select — validate against the selection rules
+    const s1 = S.nutritionGoals.filter(g => WELLNESS_SECTION[g] === 1);
+    const s2 = S.nutritionGoals.filter(g => WELLNESS_SECTION[g] === 2);
+    if (section === 1) {
+      if (s2.length > 0) { showToast(T('toast_wellness_mix')); return; }
+      if (s1.length >= 2) { showToast(T('toast_limit_goals')); return; }
+    } else {
+      if (s1.length > 0 || s2.length > 0) { showToast(T('toast_wellness_mix')); return; }
+    }
+    S.nutritionGoals.push(key);
+    element.classList.add('sel');
   }
-  element.classList.add('sel');
 
+  refreshWellnessUI();
   const err = document.getElementById('e-q3');
-  if (err) err.classList.remove('show');
+  if (err && S.nutritionGoals.length > 0) err.classList.remove('show');
+  saveState();
+}
+
+// Enable/disable every option card to reflect the current selection state.
+function refreshWellnessUI() {
+  const goals = S.nutritionGoals;
+  const s1 = goals.filter(g => WELLNESS_SECTION[g] === 1);
+  const s2 = goals.filter(g => WELLNESS_SECTION[g] === 2);
+
+  document.querySelectorAll('#s-q3 .wellness-opt').forEach(card => {
+    const key = card.getAttribute('data-key');
+    const section = WELLNESS_SECTION[key];
+    const selected = goals.indexOf(key) > -1;
+    let disabled = false;
+
+    if (!selected) {
+      if (section === 1) {
+        if (s2.length > 0 || s1.length >= 2) disabled = true;
+      } else {
+        if (s1.length > 0 || s2.length > 0) disabled = true;
+      }
+    }
+    card.classList.toggle('disabled', disabled);
+  });
+
+  const g1 = document.getElementById('wellness-group-1');
+  const g2 = document.getElementById('wellness-group-2');
+  if (g1) g1.classList.toggle('is-locked', s2.length > 0);
+  if (g2) g2.classList.toggle('is-locked', s1.length > 0);
+}
+
+// Sync card .sel state from S.nutritionGoals (used when (re)entering Q3).
+function syncWellnessUI() {
+  document.querySelectorAll('#s-q3 .wellness-opt').forEach(card => {
+    const key = card.getAttribute('data-key');
+    card.classList.toggle('sel', S.nutritionGoals.indexOf(key) > -1);
+  });
+  refreshWellnessUI();
 }
 
 function selectTraditionalBlend(element, blendName) {
@@ -1097,33 +1161,22 @@ function surveyNext(currentStep) {
         showToast(T('toast_select_req'));
         return;
       }
+      syncWellnessUI();
       show('s-q3');
       break;
 
     case 'q3':
-      if (!S.selectionTrack) {
+      if (S.nutritionGoals.length === 0) {
         const err = document.getElementById('e-q3');
         if (err) err.classList.add('show');
         showToast(T('toast_select_req'));
         return;
       }
-
-      // Reset nested selections on navigation
+      S.selectionTrack = 'nutrition';
       S.selectedBlend = '';
       S.selectedBlends = [];
-      S.nutritionGoals = [];
-      document.querySelectorAll('#s-track-trad .mcq').forEach(el => el.classList.remove('sel'));
-      document.querySelectorAll('#s-q4-nutr .mcq').forEach(el => el.classList.remove('sel'));
-
-      if (S.selectionTrack === 'traditional') {
-        S.attasOnlyLocked = true;
-        S.attaHidden = false;
-        updateSidebarSummary();
-        switchCategory('atta');
-        show('s-track-trad');
-      } else {
-        show('s-q4-nutr');
-      }
+      saveState();
+      showNutrRecommendation();
       break;
 
     case 'trad':
@@ -1191,16 +1244,51 @@ function surveyBack(currentStep) {
 // =============================================
 // Each Q4 goal key maps to a functional variant key used in the blend combo lookup.
 const GOAL_TO_VARIANT = {
-  protein:     'Protein',
-  strength:    'Strength+',
-  digestive:   'High Fibre',
-  sugar:       'Low GI',
-  lighter:     'Low Calorie',
-  complete:    'Vitamin',
-  vitamin:     'Calcium',
-  alternative: 'Gluten Free',
-  heart:       'Low Cholesterol'
+  protein:    'Protein',
+  iron:       'Iron',
+  sugar:      'Low GI',
+  calcium:    'Calcium',
+  complete:   'Vitamin',
+  digestive:  'High Fibre',
+  strength:   'Strength+',
+  lighter:    'Low Calorie',
+  lowcarb:    'Low Carb',
+  heart:      'Low Cholesterol',
+  glutenfree: 'Gluten Free',
+  keto:       'Keto'
 };
+
+// Consumer-facing names for a single wellness selection (no internal product names).
+const WELLNESS_SINGLE_NAMES = {
+  'Protein':         { en: 'Everyday Protein Atta',        hi: 'एवरीडे प्रोटीन आटा' },
+  'Iron':            { en: 'Daily Vitality Atta',          hi: 'डेली वाइटैलिटी आटा' },
+  'Low GI':          { en: 'Smart Sugar Balance Atta',     hi: 'स्मार्ट शुगर बैलेंस आटा' },
+  'Calcium':         { en: 'Bone Strength Atta',           hi: 'बोन स्ट्रेंथ आटा' },
+  'Vitamin':         { en: 'Complete Nutrition Atta',      hi: 'कम्प्लीट न्यूट्रिशन आटा' },
+  'High Fibre':      { en: 'Digestive Balance Atta',       hi: 'डाइजेस्टिव बैलेंस आटा' },
+  'Strength+':       { en: 'Daily Strength & Energy Atta', hi: 'डेली स्ट्रेंथ एनर्जी आटा' },
+  'Low Calorie':     { en: 'Lighter Everyday Atta',        hi: 'लाइटर एवरीडे आटा' },
+  'Low Carb':        { en: 'Smart Lower-Carb Atta',        hi: 'स्मार्ट लोअर-कार्ब आटा' },
+  'Low Cholesterol': { en: 'Heart Wellness Atta',          hi: 'हार्ट वेलनेस आटा' },
+  'Gluten Free':     { en: 'Gluten-Free Lifestyle Atta',   hi: 'ग्लूटेन-फ्री लाइफस्टाइल आटा' },
+  'Keto':            { en: 'Keto-Friendly Atta',           hi: 'कीटो-फ्रेंडली आटा' }
+};
+
+// Resolve the recommended product/blend name from the current selection.
+function getWellnessRecommendation() {
+  const goals = S.nutritionGoals;
+  if (goals.length === 1) {
+    const v = GOAL_TO_VARIANT[goals[0]];
+    const n = WELLNESS_SINGLE_NAMES[v];
+    return n ? (S.lang === 'hi' ? n.hi : n.en) : (v + ' Atta');
+  }
+  return getRecommendedBlend(goals[0], goals[1]);
+}
+
+// Build a "(Base Wheat, Granulation)" label, omitting base wheat for specialty flows.
+function baseGranLabel(gran) {
+  return S.nutrBaseWheat ? `(${S.nutrBaseWheat}, ${gran})` : `(${gran})`;
+}
 
 // =============================================
 // 51-ENTRY BLEND COMBINATION LOOKUP TABLE
@@ -1296,11 +1384,9 @@ const VARIANT_HIGHLIGHTS = {
  * Build and display the nutritional recommendation screen
  */
 function showNutrRecommendation() {
-  const goalA = S.nutritionGoals[0];
-  const goalB = S.nutritionGoals[1];
-  const blendName = getRecommendedBlend(goalA, goalB);
-  const variantA = GOAL_TO_VARIANT[goalA];
-  const variantB = GOAL_TO_VARIANT[goalB];
+  const goals = S.nutritionGoals;
+  const variants = goals.map(g => GOAL_TO_VARIANT[g]);
+  const blendName = getWellnessRecommendation();
 
   // Store the recommended blend name in state for later use
   S.recommendedBlend = blendName;
@@ -1309,29 +1395,25 @@ function showNutrRecommendation() {
   const nameEl = document.getElementById('nutr-rec-name');
   if (nameEl) nameEl.textContent = blendName;
 
+  // Base Wheat selection is hidden for specialty (Gluten Free / Keto) flows
+  const isSpecialty = goals.some(g => WELLNESS_SECTION[g] === 2);
+  const baseBlock = document.getElementById('nutr-base-wheat-block');
+  if (baseBlock) baseBlock.style.display = isSpecialty ? 'none' : '';
+  if (isSpecialty) {
+    S.nutrBaseWheat = '';
+  } else if (!S.nutrBaseWheat) {
+    S.nutrBaseWheat = 'Sharbati';
+  }
+
   // Highlight active grinding pills in UI from state
   document.querySelectorAll('.nutr-base-pill').forEach(btn => {
-    if (btn.getAttribute('data-val') === S.nutrBaseWheat) {
-      btn.classList.add('sel');
-    } else {
-      btn.classList.remove('sel');
-    }
+    btn.classList.toggle('sel', btn.getAttribute('data-val') === S.nutrBaseWheat);
   });
-
   document.querySelectorAll('.nutr-gran-pill').forEach(btn => {
-    if (btn.getAttribute('data-val') === S.nutrGranulation) {
-      btn.classList.add('sel');
-    } else {
-      btn.classList.remove('sel');
-    }
+    btn.classList.toggle('sel', btn.getAttribute('data-val') === S.nutrGranulation);
   });
-
   document.querySelectorAll('.nutr-qty-pill').forEach(btn => {
-    if (parseInt(btn.getAttribute('data-val')) === S.nutrQuantity) {
-      btn.classList.add('sel');
-    } else {
-      btn.classList.remove('sel');
-    }
+    btn.classList.toggle('sel', parseInt(btn.getAttribute('data-val')) === S.nutrQuantity);
   });
 
   // Sync MRP display on recommendation page
@@ -1340,10 +1422,10 @@ function showNutrRecommendation() {
     mrpEl.innerText = '₹' + getProductMRP('custom_blend', S.nutrQuantity);
   }
 
-  // Render goal tags
+  // Render goal tags (consumer-facing wellness statements)
   const goalsEl = document.getElementById('nutr-rec-goals');
   if (goalsEl) {
-    goalsEl.innerHTML = [goalA, goalB].map(g => {
+    goalsEl.innerHTML = goals.map(g => {
       const goalLabel = T('nutr_goal_' + g);
       return `<span style="display: inline-flex; align-items: center; gap: 5px; background: rgba(201,147,46,0.12); border: 1px solid rgba(201,147,46,0.22); padding: 5px 14px; border-radius: 20px; font-size: 11.5px; font-weight: 600; color: var(--g2);">${goalLabel}</span>`;
     }).join('');
@@ -1352,7 +1434,7 @@ function showNutrRecommendation() {
   // Render nutritional highlight chips
   const highlightsEl = document.getElementById('nutr-rec-highlights');
   if (highlightsEl) {
-    const variants = [variantA, variantB];
+    highlightsEl.style.gridTemplateColumns = variants.length === 1 ? '1fr' : '1fr 1fr';
     highlightsEl.innerHTML = variants.map(v => {
       const h = VARIANT_HIGHLIGHTS[v] || { icon: '🌾', label: v, labelHi: v };
       const label = S.lang === 'hi' ? h.labelHi : h.label;
@@ -1361,7 +1443,6 @@ function showNutrRecommendation() {
           <span style="font-size: 20px;">${h.icon}</span>
           <div>
             <div style="font-size: 12px; font-weight: 700; color: #fff;">${label}</div>
-            <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px;">${v} Atta</div>
           </div>
         </div>
       `;
@@ -1549,7 +1630,7 @@ function buildAndShowResults() {
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.2);">
           <div>
-            <span style="color: #fff; font-weight: 700;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
+            <span style="color: #fff; font-weight: 700;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
             <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
             <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
           </div>
@@ -1595,7 +1676,7 @@ function buildAndShowResults() {
     recLabel = S.nutritionGoals.map(goal => T(`nutr_goal_${goal}`)).join(' + ');
     const blendName = S.recommendedBlend || recLabel;
     const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-    const fullBlendNameLabel = `${blendName} (${S.nutrBaseWheat}, ${localizedGranulation})`;
+    const fullBlendNameLabel = `${blendName} ${baseGranLabel(localizedGranulation)}`;
     const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
     detailsHTML = `
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
@@ -1635,7 +1716,7 @@ function buildAndShowResults() {
           const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
           storePickupItemsHTML += `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1676,7 +1757,7 @@ function buildAndShowResults() {
           const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
           storePickupItemsHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1689,7 +1770,7 @@ function buildAndShowResults() {
         const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
         homeDeliveryItemsHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-            <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
+            <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} ${baseGranLabel(localizedGranulation)}</span>
             <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
               <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${recPrice}</span>
@@ -1816,8 +1897,9 @@ function buildAndShowResults() {
 // =============================================
 
 function clearActiveSurveyUI() {
-  document.querySelectorAll('.mcq').forEach(el => el.classList.remove('sel'));
+  document.querySelectorAll('.mcq').forEach(el => el.classList.remove('sel', 'disabled'));
   document.querySelectorAll('.err').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.wellness-group').forEach(el => el.classList.remove('is-locked'));
 }
 
 function resetSession() {
