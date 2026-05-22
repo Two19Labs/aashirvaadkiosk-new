@@ -289,7 +289,7 @@ const LANG = {
         trad_blend_lokwan: "100% लोकवान आटा",
         trad_blend_lokwan_desc: "उत्कृष्ट सुनहरे दाने वाला लोकवान गेहूं, पौष्टिक दैनिक रोटियां देता है",
         trad_blend_multigrain: "मल्टीग्रेन आटा",
-        trad_blend_multigrain_desc: "बाजरा, रागी, राजगिरा, ओट्स आटा, जौ और ज्वार का मिश्रण",
+        trad_blend_multigrain_desc: "बाजरा, रही, राजगिरा, ओट्स आटा, जौ और ज्वार का मिश्रण",
         trad_blend_multimillet: "मल्टी मिलेट आटा",
         trad_blend_multimillet_desc: "गेहूं, फॉक्सटेल, कोदो, छोटी कंगनी और प्रोसो बाजरा का मिश्रण",
 
