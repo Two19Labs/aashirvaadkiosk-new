@@ -1937,155 +1937,112 @@ function buildAndShowResults() {
 
   const hasNutrBlend = (S.nutritionGoals && S.nutritionGoals.length > 0);
   let totalPrice = 0;
-  if (S.selectionTrack === 'traditional') {
-    if (hasNutrBlend) {
-      totalPrice += getProductMRP('custom_blend', S.nutrQuantity);
-    }
-    S.selectedBlends.forEach(blend => {
-      const meta = BLEND_METADATA[blend];
-      if (!meta) return;
-      const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
-      totalPrice += getProductMRP(blend, qty);
-    });
-  } else {
+  
+  if (hasNutrBlend) {
     totalPrice += getProductMRP('custom_blend', S.nutrQuantity);
   }
+  S.selectedBlends.forEach(blend => {
+    const meta = BLEND_METADATA[blend];
+    if (!meta) return;
+    const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
+    totalPrice += getProductMRP(blend, qty);
+  });
 
-  if (S.selectionTrack === 'traditional') {
-    // Prepend custom recommended blend if configured in nutrition track
-    if (hasNutrBlend) {
-      const isChakki = S.nutrFulfillment === 'chakki';
-      const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-      const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
-      const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
-      
-      const badgeText = isChakki 
-        ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
-        : (S.lang === 'hi' ? 'स्टोर काउंटर' : 'Store Counter');
-      const statusText = isChakki
-        ? (S.lang === 'hi' ? '⚙️ चक्की में' : '⚙️ Grinding')
-        : (S.lang === 'hi' ? '🛒 पिकअप' : '🛒 Pickup');
-      const backgroundStyle = isChakki
-        ? 'background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.2); border-radius: 8px;'
-        : '';
-      const textStyleColor = isChakki
-        ? 'color: var(--g2);'
-        : 'color: rgba(255,255,255,0.85);';
-
-      detailsHTML += `
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
-          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-            <!-- Thumbnail -->
-            <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-              <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
-            </div>
-            <div>
-              <span style="color: #fff; font-weight: 700;">${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
-              <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${badgeText}</span>
-              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">${statusText}</span>
-            </div>
-          </div>
-          <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-            <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
-            <span style="font-size: 11px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    S.selectedBlends.forEach(blend => {
-      const meta = BLEND_METADATA[blend];
-      if (!meta) return;
-      const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
-      const gran = S.blendGranulations[blend] || 'Fine';
-      const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
-      const price = getProductMRP(blend, qty);
-      const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
-      const displayName = T('trad_blend_' + blend);
-      
-      const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
-      const aisleLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
-        ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
-        : meta.aisle;
-      const statusLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
-        ? (S.lang === 'hi' ? '⚙️ चक्की में' : '⚙️ Grinding')
-        : (S.lang === 'hi' ? '🛒 पिकअप' : '🛒 Pickup');
-      const backgroundStyle = meta.category === 'atta' && itemFulfillment === 'chakki'
-        ? 'background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.2); border-radius: 8px;'
-        : '';
-      const textStyleColor = meta.category === 'atta' && itemFulfillment === 'chakki'
-        ? 'color: var(--g2);'
-        : 'color: rgba(255,255,255,0.85);';
-      
-      detailsHTML += `
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
-          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-            <!-- Thumbnail -->
-            <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-              <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
-            </div>
-            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-              <span style="color: #fff; font-weight: 600;">${displayName}</span>
-              <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${aisleLabel}</span>
-              ${(blend === 'multigrain' || blend === 'multimillet') ? `<span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${(S.blendBases && S.blendBases[blend]) || 'Sharbati'} Base</span>` : ''}
-              ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
-              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600;">${statusLabel}</span>
-            </div>
-          </div>
-          <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-            <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
-            <span style="font-size: 11px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${price}</span>
-          </div>
-        </div>
-      `;
-    });
-
-    // Append total price to detailsHTML
-    detailsHTML += `
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px dashed rgba(232,184,75,0.2); padding-top: 10px; margin-top: 10px; font-size: 13.5px; font-weight: 700;">
-        <span style="color: var(--g2);">${S.lang === 'hi' ? 'कुल मूल्य (MRP):' : 'Total Amount (MRP):'}</span>
-        <span style="color: var(--g2); font-size: 15.5px; font-weight: 800; font-family:'DM Sans', sans-serif; white-space: nowrap;">₹${totalPrice}</span>
-      </div>
-    `;
-  } else {
-    recLabel = S.nutritionGoals.map(goal => T(`nutr_goal_${goal}`)).join(' + ');
-    const blendName = S.recommendedBlend || recLabel;
+  // Prepend custom recommended blend if it exists
+  if (hasNutrBlend) {
+    const isChakki = S.nutrFulfillment === 'chakki';
     const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-    const fullBlendNameLabel = `${blendName} ${baseGranLabel(localizedGranulation)}`;
-    const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
+    const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
+    const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
     
-    const pickupLocationLabel = S.nutrFulfillment === 'chakki'
-      ? (S.lang === 'hi' ? "चक्की काउंटर" : "Chakki Mill Counter")
-      : (S.lang === 'hi' ? "स्टोर काउंटर" : "Store Counter");
-      
-    detailsHTML = `
-      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px; align-items: center;">
-        <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${labels.rec}:</span>
-        <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
-          <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-            <img src="${PRODUCT_IMAGES.custom_blend}" alt="${blendName}" style="width: 100%; height: 100%; object-fit: contain;">
+    const badgeText = isChakki 
+      ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
+      : (S.lang === 'hi' ? 'स्टोर काउंटर' : 'Store Counter');
+    const statusText = isChakki
+      ? (S.lang === 'hi' ? '⚙️ चक्की में' : '⚙️ Grinding')
+      : (S.lang === 'hi' ? '🛒 पिकअप' : '🛒 Pickup');
+    const backgroundStyle = isChakki
+      ? 'background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.2); border-radius: 8px;'
+      : '';
+    const textStyleColor = isChakki
+      ? 'color: var(--g2);'
+      : 'color: rgba(255,255,255,0.85);';
+
+    detailsHTML += `
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+          <!-- Thumbnail -->
+          <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+            <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
-          <span style="color: #fff; font-weight: bold; text-align: right;">${fullBlendNameLabel}</span>
+          <div>
+            <span style="color: #fff; font-weight: 700;">${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
+            <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${badgeText}</span>
+            <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">${statusText}</span>
+          </div>
         </div>
-      </div>
-      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
-        <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${S.lang === 'hi' ? "चुने हुए लक्ष्य:" : "Selected Goals:"}</span>
-        <span style="color: rgba(255,255,255,0.8); font-size: 12px; text-align: right;">${recLabel}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
-        <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${S.lang === 'hi' ? "वजन:" : "Weight:"}</span>
-        <span style="color: #fff; font-weight: bold; text-align: right; font-family:'DM Sans', sans-serif;">${formatQty(S.nutrQuantity)}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px; align-items: center;">
-        <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">📍 ${S.lang === 'hi' ? "पिकअप स्थान:" : "Pickup Location:"}</span>
-        <span class="stock-badge in-stock" style="font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 12px; background: rgba(232,184,75,0.15); color: var(--g2); border: 1px solid rgba(232,184,75,0.3);">${pickupLocationLabel}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; padding-top: 10px; margin-top: 10px; font-size: 13.5px; font-weight: 700; border-top: 1.5px dashed rgba(232,184,75,0.2);">
-        <span style="color: var(--g2);">${S.lang === 'hi' ? 'कुल मूल्य (MRP):' : 'Total Amount (MRP):'}</span>
-        <span style="color: var(--g2); font-size: 15.5px; font-weight: 800; font-family:'DM Sans', sans-serif; white-space: nowrap;">₹${recPrice}</span>
+        <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+          <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
+        </div>
       </div>
     `;
   }
+
+  S.selectedBlends.forEach(blend => {
+    const meta = BLEND_METADATA[blend];
+    if (!meta) return;
+    const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
+    const gran = S.blendGranulations[blend] || 'Fine';
+    const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+    const price = getProductMRP(blend, qty);
+    const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
+    const displayName = T('trad_blend_' + blend);
+    
+    const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
+    const aisleLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
+      ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
+      : meta.aisle;
+    const statusLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
+      ? (S.lang === 'hi' ? '⚙️ चक्की में' : '⚙️ Grinding')
+      : (S.lang === 'hi' ? '🛒 पिकअप' : '🛒 Pickup');
+    const backgroundStyle = meta.category === 'atta' && itemFulfillment === 'chakki'
+      ? 'background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.2); border-radius: 8px;'
+      : '';
+    const textStyleColor = meta.category === 'atta' && itemFulfillment === 'chakki'
+      ? 'color: var(--g2);'
+      : 'color: rgba(255,255,255,0.85);';
+    
+    detailsHTML += `
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+          <!-- Thumbnail -->
+          <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+            <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span style="color: #fff; font-weight: 600;">${displayName}</span>
+            <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${aisleLabel}</span>
+            ${(blend === 'multigrain' || blend === 'multimillet') ? `<span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${(S.blendBases && S.blendBases[blend]) || 'Sharbati'} Base</span>` : ''}
+            ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+            <span style="font-size: 9.5px; color: var(--g2); font-weight: 600;">${statusLabel}</span>
+          </div>
+        </div>
+        <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+          <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${price}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  // Append total price to detailsHTML
+  detailsHTML += `
+    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px dashed rgba(232,184,75,0.2); padding-top: 10px; margin-top: 10px; font-size: 13.5px; font-weight: 700;">
+      <span style="color: var(--g2);">${S.lang === 'hi' ? 'कुल मूल्य (MRP):' : 'Total Amount (MRP):'}</span>
+      <span style="color: var(--g2); font-size: 15.5px; font-weight: 800; font-family:'DM Sans', sans-serif; white-space: nowrap;">₹${totalPrice}</span>
+    </div>
+  `;
 
   // Inject a beautiful HTML summary recap box inside s-success
   const descEl = document.getElementById('suc-desc');
@@ -2094,97 +2051,19 @@ function buildAndShowResults() {
       let homeDeliveryItemsHTML = '';
       let storePickupItemsHTML = '';
 
-      if (S.selectionTrack === 'traditional') {
-        if (hasNutrBlend) {
-          const isChakki = S.nutrFulfillment === 'chakki';
-          const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-          const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
-          const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
-          storePickupItemsHTML += `
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: ${isChakki ? 'rgba(232,184,75,0.06)' : 'transparent'}; padding: 4px 8px; border-radius: 6px; ${isChakki ? 'border: 1px solid rgba(232,184,75,0.2);' : ''}">
-              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-                <!-- Thumbnail -->
-                <div style="width: 32px; height: 32px; border-radius: 6px; border: ${isChakki ? '1px solid rgba(232,184,75,0.3)' : '1px solid rgba(255,255,255,0.15)'}; background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                  <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
-              </div>
-              <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-                <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
-                <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
-              </div>
-            </div>
-          `;
-        }
-
-        S.selectedBlends.forEach(blend => {
-          const meta = BLEND_METADATA[blend];
-          if (!meta) return;
-          const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
-          const gran = S.blendGranulations[blend] || 'Fine';
-          const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
-          const price = getProductMRP(blend, qty);
-          const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
-          const displayName = T('trad_blend_' + blend);
-          const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
-          const suffix = meta.category === 'atta' && itemFulfillment === 'chakki'
-            ? (S.lang === 'hi' ? ' (चक्की पिसान)' : ' (Chakki Grinding)')
-            : '';
-          const row = `
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-                <!-- Thumbnail -->
-                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                  <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
-                <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                  ${displayName}${suffix}
-                  ${(blend === 'multigrain' || blend === 'multimillet') ? `<span style="font-size: 9px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${(S.blendBases && S.blendBases[blend]) || 'Sharbati'} Base</span>` : ''}
-                  ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
-                </span>
-              </div>
-              <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-                <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
-                <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${price}</span>
-              </div>
-            </div>
-          `;
-          if (meta.type === 'delivery') {
-            homeDeliveryItemsHTML += row;
-          } else {
-            storePickupItemsHTML += row;
-          }
-        });
-      } else {
+      if (hasNutrBlend) {
         const isChakki = S.nutrFulfillment === 'chakki';
         const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
         const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
         const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
-        
-        storePickupItemsHTML = `
+        storePickupItemsHTML += `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: ${isChakki ? 'rgba(232,184,75,0.06)' : 'transparent'}; padding: 4px 8px; border-radius: 6px; ${isChakki ? 'border: 1px solid rgba(232,184,75,0.2);' : ''}">
             <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
               <!-- Thumbnail -->
               <div style="width: 32px; height: 32px; border-radius: 6px; border: ${isChakki ? '1px solid rgba(232,184,75,0.3)' : '1px solid rgba(255,255,255,0.15)'}; background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                 <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
               </div>
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
-            </div>
-            <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
-              <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
-            </div>
-          </div>
-        `;
-        
-        homeDeliveryItemsHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-            <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-              <!-- Thumbnail -->
-              <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                <img src="${getNutrBlendImage()}" alt="${recLabel || 'Custom Nutritional Atta'}" style="width: 100%; height: 100%; object-fit: contain;">
-              </div>
-              <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} ${baseGranLabel(localizedGranulation)}</span>
+              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
             </div>
             <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
@@ -2193,6 +2072,45 @@ function buildAndShowResults() {
           </div>
         `;
       }
+
+      S.selectedBlends.forEach(blend => {
+        const meta = BLEND_METADATA[blend];
+        if (!meta) return;
+        const qty = S.blendQuantities[blend] || getCategoryDefaultQty(meta.category);
+        const gran = S.blendGranulations[blend] || 'Fine';
+        const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+        const price = getProductMRP(blend, qty);
+        const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
+        const displayName = T('trad_blend_' + blend);
+        const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
+        const suffix = meta.category === 'atta' && itemFulfillment === 'chakki'
+          ? (S.lang === 'hi' ? ' (चक्की पिसान)' : ' (Chakki Grinding)')
+          : '';
+        const row = `
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+              <!-- Thumbnail -->
+              <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                ${displayName}${suffix}
+                ${(blend === 'multigrain' || blend === 'multimillet') ? `<span style="font-size: 9px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${(S.blendBases && S.blendBases[blend]) || 'Sharbati'} Base</span>` : ''}
+                ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+              </span>
+            </div>
+            <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
+              <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${price}</span>
+            </div>
+          </div>
+        `;
+        if (meta.type === 'delivery') {
+          homeDeliveryItemsHTML += row;
+        } else {
+          storePickupItemsHTML += row;
+        }
+      });
 
       let itemsBoxHTML = '';
       if (homeDeliveryItemsHTML) {
