@@ -84,7 +84,9 @@ var S = {
   nutrBaseWheat: 'Sharbati',
   nutrGranulation: 'Fine',
   nutrQuantity: 5,
-  attasOnlyLocked: false
+  attasOnlyLocked: false,
+  nutrFulfillment: 'chakki',
+  blendFulfillments: {}
 };
 
 function saveState() {

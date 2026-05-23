@@ -476,6 +476,10 @@ function selectTraditionalBlend(element, blendName) {
     S.blendQuantities[blendName] = defaultQty;
     S.blendGranulations[blendName] = 'Fine';
     
+    if (S.blendFulfillments) {
+      delete S.blendFulfillments[blendName];
+    }
+    
     // Sync the local card pills to their default values
     element.querySelectorAll('.qty-pill').forEach(btn => {
       if (String(btn.getAttribute('data-val')) === String(defaultQty)) {
@@ -495,6 +499,8 @@ function selectTraditionalBlend(element, blendName) {
     // Select
     S.selectedBlends.push(blendName);
     element.classList.add('sel');
+    if (!S.blendFulfillments) S.blendFulfillments = {};
+    S.blendFulfillments[blendName] = 'store';
   }
 
   const err = document.getElementById('e-trad');
@@ -656,6 +662,15 @@ function updateSidebarSummary() {
   emptyCard.style.display = 'none';
   unifiedCard.style.display = 'block';
 
+  // Initialize fulfillment options for traditional blends in state if not present
+  if (!S.blendFulfillments) S.blendFulfillments = {};
+  S.selectedBlends.forEach(blend => {
+    const meta = BLEND_METADATA[blend];
+    if (meta && meta.category === 'atta' && !S.blendFulfillments[blend]) {
+      S.blendFulfillments[blend] = 'store';
+    }
+  });
+
   let inStoreBlends = [];
   let deliveryBlends = [];
   let inStoreTotalWeight = S.chakkiActive ? parseQtyToKg(S.nutrQuantity) : 0;
@@ -713,15 +728,39 @@ function updateSidebarSummary() {
   inStoreBlends.forEach(item => {
     const gran = S.blendGranulations[item.blend] || 'Fine';
     const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+    
+    let fulfillmentSelectorHTML = '';
+    if (item.category === 'atta') {
+      const currentFulfillment = (S.blendFulfillments && S.blendFulfillments[item.blend]) || 'store';
+      const isStore = currentFulfillment === 'store';
+      const isChakki = currentFulfillment === 'chakki';
+      
+      fulfillmentSelectorHTML = `
+        <div style="display: flex; gap: 4px; margin-top: 6px; background: rgba(0,0,0,0.20); padding: 2.5px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); align-self: flex-start; width: max-content;" onclick="event.stopPropagation()">
+          <button type="button" class="opt-pill" style="font-size: 9px; padding: 2.5px 8px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.2s; font-weight: 700; ${isStore ? 'background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br);' : 'background: transparent; color: rgba(255,255,255,0.5);'}" onclick="setTraditionalFulfillment('${item.blend}', 'store')">
+            ${S.lang === 'hi' ? '🛒 स्टोर' : '🛒 Store'}
+          </button>
+          <button type="button" class="opt-pill" style="font-size: 9px; padding: 2.5px 8px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.2s; font-weight: 700; ${isChakki ? 'background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br);' : 'background: transparent; color: rgba(255,255,255,0.5);'}" onclick="setTraditionalFulfillment('${item.blend}', 'chakki')">
+            ${S.lang === 'hi' ? '⚙️ चक्की' : '⚙️ Chakki'}
+          </button>
+        </div>
+      `;
+    }
+
+    const fulfillmentStatusLabel = (S.blendFulfillments && S.blendFulfillments[item.blend] === 'chakki')
+      ? (S.lang === 'hi' ? '⚙️ चक्की में पिसाई' : '⚙️ Grinding in Chakki')
+      : (S.lang === 'hi' ? '🛒 इन-स्टोर मिल पिकअप' : '🛒 In-Store Mill Pickup');
+
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
-        <div style="flex: 1; padding-right: 8px;">
-          <div style="font-weight:600; color:#fff; font-size:13px;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
+        <div style="flex: 1; padding-right: 8px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left;">
+          <div style="font-weight:600; color:#fff; font-size:13px; text-align: left;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
           <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
             <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
             ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
-            <span>${S.lang === 'hi' ? '🛒 इन-स्टोर मिल पिकअप' : '🛒 In-Store Mill Pickup'}</span>
+            ${item.category !== 'atta' ? `<span>${fulfillmentStatusLabel}</span>` : ''}
           </div>
+          ${item.category === 'atta' ? fulfillmentSelectorHTML : ''}
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
           <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif; white-space: nowrap; flex-shrink: 0;">${formatQty(item.qty)}</div>
@@ -850,14 +889,35 @@ function updateSidebarSummary() {
   `;
 }
 
+function setTraditionalFulfillment(blend, fulfillmentType) {
+  if (!S.blendFulfillments) S.blendFulfillments = {};
+  S.blendFulfillments[blend] = fulfillmentType;
+  saveState();
+  updateSidebarSummary();
+}
+
 /**
  * Handle checkout for only in-store items
  */
 function checkoutInStore() {
   S.selectedBlends = S.selectedBlends.filter(blend => blend !== 'multigrain');
   S.isHomeDelivery = false;
+  
+  // Check if any selected traditional atta has fulfillment 'chakki'
+  const anyChakkiActive = S.selectedBlends.some(blend => {
+    const meta = BLEND_METADATA[blend];
+    return meta && meta.category === 'atta' && S.blendFulfillments && S.blendFulfillments[blend] === 'chakki';
+  });
+  
+  S.chakkiActive = anyChakkiActive;
   saveState();
-  buildAndShowResults();
+  
+  if (anyChakkiActive) {
+    applyTranslations();
+    show('s-chakki-processing');
+  } else {
+    buildAndShowResults();
+  }
 }
 
 /**
@@ -982,15 +1042,34 @@ function submitHomeDelivery(method) {
   S.paymentMethod = method;
   saveState();
 
+  const anyChakkiActive = S.selectedBlends.some(blend => {
+    const meta = BLEND_METADATA[blend];
+    return meta && meta.category === 'atta' && S.blendFulfillments && S.blendFulfillments[blend] === 'chakki';
+  });
+
   if (method === 'Online') {
     // Show mock payment processing loader
     show('s-processing');
     setTimeout(() => {
-      buildAndShowResults();
+      S.chakkiActive = anyChakkiActive;
+      saveState();
+      if (anyChakkiActive) {
+        applyTranslations();
+        show('s-chakki-processing');
+      } else {
+        buildAndShowResults();
+      }
     }, 2200);
   } else {
     // Proceeds directly to success screen
-    buildAndShowResults();
+    S.chakkiActive = anyChakkiActive;
+    saveState();
+    if (anyChakkiActive) {
+      applyTranslations();
+      show('s-chakki-processing');
+    } else {
+      buildAndShowResults();
+    }
   }
 }
 
@@ -1096,10 +1175,6 @@ function surveyNext(currentStep) {
         const err = document.getElementById('e-nutr');
         if (err) err.classList.add('show');
         showToast(T('toast_select_req'));
-        return;
-      }
-      if (S.nutritionGoals.length < 2) {
-        showToast(S.lang === 'hi' ? "कृपया 2 लक्ष्य चुनें" : "Please select exactly 2 goals");
         return;
       }
       saveState();
@@ -1211,6 +1286,10 @@ const BLEND_COMBOS = {
  * Tries both orderings of the variant key pair.
  */
 function getRecommendedBlend(goalA, goalB) {
+  if (!goalB) {
+    const vA = GOAL_TO_VARIANT[goalA] || goalA;
+    return vA + ' Atta';
+  }
   const vA = GOAL_TO_VARIANT[goalA] || goalA;
   const vB = GOAL_TO_VARIANT[goalB] || goalB;
 
@@ -1289,7 +1368,7 @@ function showNutrRecommendation() {
   // Render goal tags
   const goalsEl = document.getElementById('nutr-rec-goals');
   if (goalsEl) {
-    goalsEl.innerHTML = [goalA, goalB].map(g => {
+    goalsEl.innerHTML = [goalA, goalB].filter(Boolean).map(g => {
       const goalLabel = T('nutr_goal_' + g);
       return `<span style="display: inline-flex; align-items: center; gap: 5px; background: rgba(201,147,46,0.12); border: 1px solid rgba(201,147,46,0.22); padding: 5px 14px; border-radius: 20px; font-size: 11.5px; font-weight: 600; color: var(--g2);">${goalLabel}</span>`;
     }).join('');
@@ -1298,7 +1377,7 @@ function showNutrRecommendation() {
   // Render nutritional highlight chips
   const highlightsEl = document.getElementById('nutr-rec-highlights');
   if (highlightsEl) {
-    const variants = [variantA, variantB];
+    const variants = [variantA, variantB].filter(Boolean);
     highlightsEl.innerHTML = variants.map(v => {
       const h = VARIANT_HIGHLIGHTS[v] || { icon: '🌾', label: v, labelHi: v };
       const label = S.lang === 'hi' ? h.labelHi : h.label;
@@ -1314,18 +1393,48 @@ function showNutrRecommendation() {
     }).join('');
   }
 
+  // Render dynamic buttons in nutr-proceed-container
+  const proceedEl = document.getElementById('nutr-proceed-container');
+  if (proceedEl) {
+    if (S.nutritionGoals.length === 2) {
+      // 2 goals chosen -> ONLY Send to Chakki
+      proceedEl.innerHTML = `
+        <button class="btn" onclick="nutrRecProceed('chakki')" style="max-width: 440px; width: 100%; font-size: 15px; font-weight: 700; padding: 16px; border-radius: 14px; letter-spacing: 0.5px; height: 58px; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+          <span>${T('send_to_chakki')}</span>
+          <svg style="width:18px; height:18px; margin-left:6px; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      `;
+    } else {
+      // 1 goal chosen -> BOTH Pick-up in Store and Send to Chakki
+      proceedEl.innerHTML = `
+        <div style="display: flex; gap: 12px; width: 100%;">
+          <button class="btn-ghost" onclick="nutrRecProceed('store')" style="flex: 1; font-size: 13.5px; font-weight: 700; padding: 14px 10px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: #fff; cursor: pointer; transition: all 0.2s; height: 58px; display: flex; align-items: center; justify-content: center;">
+            <span>${T('pickup_in_store')}</span>
+          </button>
+          <button class="btn" onclick="nutrRecProceed('chakki')" style="flex: 1; font-size: 13.5px; font-weight: 700; padding: 14px 10px; border-radius: 14px; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); color: var(--br); border: none; cursor: pointer; height: 58px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span>${T('send_to_chakki')}</span>
+            <svg style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      `;
+    }
+  }
+
   applyTranslations();
   show('s-nutr-result');
 }
 
-/**
- * Proceed from recommendation screen to success/results
- */
-function nutrRecProceed() {
-  S.chakkiActive = true;
+function nutrRecProceed(fulfillmentType) {
+  const type = fulfillmentType || 'chakki';
+  S.nutrFulfillment = type;
+  S.chakkiActive = (type === 'chakki');
   saveState();
   applyTranslations();
-  show('s-chakki-processing');
+  if (type === 'chakki') {
+    show('s-chakki-processing');
+  } else {
+    proceedToBilling();
+  }
 }
 
 function exploreOtherProducts() {
@@ -1417,22 +1526,33 @@ function buildAndShowResults() {
   const hasDeliveryItems = S.selectedBlends.some(blend => BLEND_METADATA[blend] && BLEND_METADATA[blend].type === 'delivery');
 
   let fulfillmentMessage = '';
+  const isChakkiFulfillment = S.selectionTrack === 'nutrition' 
+    ? (S.nutrFulfillment === 'chakki') 
+    : S.selectedBlends.some(blend => {
+        const meta = BLEND_METADATA[blend];
+        return meta && meta.category === 'atta' && S.blendFulfillments && S.blendFulfillments[blend] === 'chakki';
+      });
+
   if (S.lang === 'hi') {
     if (hasInStoreItems && hasDeliveryItems) {
-      fulfillmentMessage = "आपका कस्टम आटा चक्की में पिस रहा है! आप इन-स्टोर उपलब्ध सामान स्टोर से ही तुरंत प्राप्त करेंगे, और आउट-ऑफ-स्टॉक सामान के लिए आपका डिलीवरी पता ले लिया गया है और आपका ऑर्डर 24 घंटे में आपके घर पहुँच जाएगा।";
+      fulfillmentMessage = isChakkiFulfillment
+        ? "आपका कस्टम आटा चक्की में पिस रहा है! आप इन-स्टोर उपलब्ध सामान स्टोर से ही तुरंत प्राप्त करेंगे, और आउट-ऑफ-स्टॉक सामान के लिए आपका डिलीवरी पता ले लिया गया है और आपका ऑर्डर 24 घंटे में आपके घर पहुँच जाएगा।"
+        : "आपका इन-स्टोर पिकअप ऑर्डर निर्धारित कर दिया गया है! आप उपलब्ध सामान स्टोर से ही तुरंत प्राप्त करेंगे, और आउट-ऑफ-स्टॉक सामान के लिए आपका डिलीवरी पता ले लिया गया है और आपका ऑर्डर 24 घंटे में आपके घर पहुँच जाएगा।";
     } else if (hasDeliveryItems) {
       fulfillmentMessage = "आउट-ऑफ-स्टॉक सामान के लिए आपका डिलीवरी पता सफलतापूर्वक ले लिया गया है और आपका ऑर्डर 24 घंटे में आपके घर पहुँच जाएगा।";
-    } else if (S.chakkiActive) {
+    } else if (isChakkiFulfillment) {
       fulfillmentMessage = "आपका ताज़ा पिसा हुआ आटा चक्की में तैयार किया जा रहा है! कृपया बिलिंग काउंटर पर जाएँ।";
     } else {
       fulfillmentMessage = "आपका इन-स्टोर पिकअप ऑर्डर निर्धारित कर दिया गया है! कृपया इसे काउंटर से प्राप्त करें।";
     }
   } else {
     if (hasInStoreItems && hasDeliveryItems) {
-      fulfillmentMessage = "Your custom Aata is grinding in the Chakki! You are going to pick up the active in-store items, and for out-of-stock items, your delivery address has been collected and will reach you in 24 hours.";
+      fulfillmentMessage = isChakkiFulfillment
+        ? "Your custom Aata is grinding in the Chakki! You are going to pick up the active in-store items, and for out-of-stock items, your delivery address has been collected and will reach you in 24 hours."
+        : "Your in-store pickup order has been scheduled! You are going to pick up the active in-store items, and for out-of-stock items, your delivery address has been collected and will reach you in 24 hours.";
     } else if (hasDeliveryItems) {
       fulfillmentMessage = "Your delivery address has been collected for out-of-stock items, the order has been placed and it will reach you in 24 hours.";
-    } else if (S.chakkiActive) {
+    } else if (isChakkiFulfillment) {
       fulfillmentMessage = "Your custom blend is freshly grinding in the Chakki! Please proceed to the billing counter.";
     } else {
       fulfillmentMessage = "Your in-store pickup order has been scheduled! Please pick it up from the store counter.";
@@ -1483,12 +1603,27 @@ function buildAndShowResults() {
       const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
       const price = getProductMRP(blend, qty);
       
+      const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
+      const aisleLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
+        ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
+        : meta.aisle;
+      const statusLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
+        ? (S.lang === 'hi' ? '⚙️ चक्की में' : '⚙️ Grinding')
+        : (S.lang === 'hi' ? '🛒 पिकअप' : '🛒 Pickup');
+      const backgroundStyle = meta.category === 'atta' && itemFulfillment === 'chakki'
+        ? 'background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.2); border-radius: 8px;'
+        : '';
+      const textStyleColor = meta.category === 'atta' && itemFulfillment === 'chakki'
+        ? 'color: var(--g2);'
+        : 'color: rgba(255,255,255,0.85);';
+      
       detailsHTML += `
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
           <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
             <span style="color: #fff; font-weight: 600;">${T('trad_blend_' + blend)}</span>
-            <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${meta.aisle}</span>
+            <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${aisleLabel}</span>
             ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+            <span style="font-size: 9.5px; color: var(--g2); font-weight: 600;">${statusLabel}</span>
           </div>
           <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
             <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
@@ -1511,6 +1646,11 @@ function buildAndShowResults() {
     const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
     const fullBlendNameLabel = `${blendName} (${S.nutrBaseWheat}, ${localizedGranulation})`;
     const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
+    
+    const pickupLocationLabel = S.nutrFulfillment === 'chakki'
+      ? (S.lang === 'hi' ? "चक्की काउंटर" : "Chakki Mill Counter")
+      : (S.lang === 'hi' ? "स्टोर काउंटर" : "Store Counter");
+      
     detailsHTML = `
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${labels.rec}:</span>
@@ -1526,7 +1666,7 @@ function buildAndShowResults() {
       </div>
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px; align-items: center;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">📍 ${S.lang === 'hi' ? "पिकअप स्थान:" : "Pickup Location:"}</span>
-        <span class="stock-badge in-stock" style="font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 12px; background: rgba(232,184,75,0.15); color: var(--g2); border: 1px solid rgba(232,184,75,0.3);">${S.lang === 'hi' ? "चक्की काउंटर" : "Chakki Mill Counter"}</span>
+        <span class="stock-badge in-stock" style="font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 12px; background: rgba(232,184,75,0.15); color: var(--g2); border: 1px solid rgba(232,184,75,0.3);">${pickupLocationLabel}</span>
       </div>
       <div style="display: flex; justify-content: space-between; padding-top: 10px; margin-top: 10px; font-size: 13.5px; font-weight: 700; border-top: 1.5px dashed rgba(232,184,75,0.2);">
         <span style="color: var(--g2);">${S.lang === 'hi' ? 'कुल मूल्य (MRP):' : 'Total Amount (MRP):'}</span>
@@ -1565,10 +1705,15 @@ function buildAndShowResults() {
           const gran = S.blendGranulations[blend] || 'Fine';
           const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
           const price = getProductMRP(blend, qty);
+          
+          const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
+          const suffix = meta.category === 'atta' && itemFulfillment === 'chakki'
+            ? (S.lang === 'hi' ? ' (चक्की पिसान)' : ' (Chakki Grinding)')
+            : '';
           const row = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
               <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                ${T('trad_blend_' + blend)}
+                ${T('trad_blend_' + blend)}${suffix}
                 ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
               </span>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
@@ -1584,29 +1729,27 @@ function buildAndShowResults() {
           }
         });
       } else {
-        if (S.chakkiActive) {
-          const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-          const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
-          const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
-          storePickupItemsHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
-              <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
-                <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
-                <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
-              </div>
-            </div>
-          `;
-        }
-        
+        const isChakki = S.nutrFulfillment === 'chakki';
         const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-        const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
+        const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
+        const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
+        
+        storePickupItemsHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: ${isChakki ? 'rgba(232,184,75,0.06)' : 'transparent'}; padding: 4px 8px; border-radius: 6px; ${isChakki ? 'border: 1px solid rgba(232,184,75,0.2);' : ''}">
+            <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
+            <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+              <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
+              <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
+            </div>
+          </div>
+        `;
+        
         homeDeliveryItemsHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
             <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
             <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
-              <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${recPrice}</span>
+              <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
             </div>
           </div>
         `;
