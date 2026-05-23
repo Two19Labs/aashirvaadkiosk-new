@@ -773,6 +773,21 @@ function selectBlendBase(button, blendName, value) {
   saveState();
 }
 
+function selectFulfillment(button, blendName, value) {
+  if (!S.blendFulfillments) S.blendFulfillments = {};
+  S.blendFulfillments[blendName] = value;
+  
+  // Highlight active button locally within this card's fulfillment container
+  const parentContainer = button.closest('div');
+  if (parentContainer) {
+    parentContainer.querySelectorAll('.fulfillment-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  
+  updateSidebarSummary();
+  saveState();
+}
+
 function syncTraditionalCardsUI() {
   const blends = [
     'sharbati', 'khapli', 'lokwan', 'multigrain', 'multimillet',
@@ -822,6 +837,19 @@ function syncTraditionalCardsUI() {
         card.querySelectorAll('.base-pill').forEach(btn => {
           const val = btn.getAttribute('data-val');
           if (val === base) {
+            btn.classList.add('sel');
+          } else {
+            btn.classList.remove('sel');
+          }
+        });
+      }
+
+      // Sync fulfillment pills (if category is atta)
+      if (meta && meta.category === 'atta') {
+        const fulfillment = (S.blendFulfillments && S.blendFulfillments[blend]) || 'store';
+        card.querySelectorAll('.fulfillment-pill').forEach(btn => {
+          const val = btn.getAttribute('data-val');
+          if (val === fulfillment) {
             btn.classList.add('sel');
           } else {
             btn.classList.remove('sel');
@@ -1155,6 +1183,7 @@ function setTraditionalFulfillment(blend, fulfillmentType) {
   if (!S.blendFulfillments) S.blendFulfillments = {};
   S.blendFulfillments[blend] = fulfillmentType;
   saveState();
+  syncTraditionalCardsUI();
   updateSidebarSummary();
 }
 
@@ -2309,6 +2338,8 @@ function resetSession() {
     pink_salt: 'Fine'
   };
   S.nutritionGoals = [];
+  S.selectedBlends = [];
+  S.blendFulfillments = {};
   S.recommendedBlend = '';
   S.chakkiActive = false;
   S.nutrBaseWheat = 'Sharbati';
