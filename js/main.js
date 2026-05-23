@@ -23,10 +23,41 @@ const BLEND_METADATA = {
   
   desi_cow_ghee: { name: 'Desi Cow Ghee', nameHi: 'देशी गाय का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
   buffalo_ghee: { name: 'Buffalo Ghee', nameHi: 'भैंस का घी', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
+  a2_cow_ghee_bilona: { name: 'A2 Cow Ghee Bilona', nameHi: 'A2 गाय घी बिलोना', aisle: 'Aisle 09', type: 'instore', category: 'ghee' },
   
   iodized_salt: { name: 'Iodized Salt', nameHi: 'आयोडीन युक्त नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
   black_salt: { name: 'Black Salt', nameHi: 'काला नमक', aisle: 'Aisle 10', type: 'instore', category: 'salt' },
   pink_salt: { name: 'Himalayan Pink Salt', nameHi: 'हिमालयन पिंक साल्ट', aisle: 'Aisle 10', type: 'instore', category: 'salt' }
+};
+
+const PRODUCT_IMAGES = {
+  sharbati: 'images/sharbati.png',
+  khapli: 'images/khapli.png',
+  lokwan: 'images/lokwan.png',
+  multigrain: 'images/multigrain.png',
+  multimillet: 'images/multimillet.png',
+
+  toor_dal: 'images/toor_dal.png',
+  masoor_dal: 'images/masoor_dal.png',
+  arhar_dal: 'images/arhar_dal.png',
+
+  turmeric: 'images/turmeric.png',
+  jeera_powder: 'images/jeera_powder.png',
+  garam_masala: 'images/garam_masala.png',
+
+  yellow_mustard_oil: 'images/yellow_mustard_oil.png',
+  groundnut_oil: 'images/groundnut_oil.png',
+  coconut_oil: 'images/coconut_oil.png',
+
+  desi_cow_ghee: 'images/desi_cow_ghee.png',
+  buffalo_ghee: 'images/buffalo_ghee.png',
+  a2_cow_ghee_bilona: 'images/a2_cow_ghee_bilona.png',
+
+  iodized_salt: 'images/iodized_salt.png',
+  black_salt: 'images/black_salt.png',
+  pink_salt: 'images/pink_salt.png',
+
+  custom_blend: 'images/nutritional.png'
 };
 
 function parseQtyToKg(qty) {
@@ -54,9 +85,46 @@ function formatQty(qty) {
   return qty;
 }
 
+// Centralized MRP lookup table — keyed by product, then by weight option.
+// Atta weights are numeric (kg); all other categories use the weight string.
+const PRODUCT_PRICES = {
+  sharbati:    { 1: 117, 2: 234, 5: 445, 10: 890 },
+  lokwan:      { 1: 110, 2: 220, 5: 530, 10: 1060 },
+  khapli:      { 1: 255, 2: 510, 5: 1245, 10: 2490 },
+  multigrain:  { 1: 127, 2: 254, 5: 605, 10: 1210 },
+  multimillet: { 1: 127, 2: 254, 5: 605, 10: 1210 },
+
+  toor_dal:   { '500g': 98, '1kg': 195 },
+  masoor_dal: { '500g': 70, '1kg': 140 },
+  arhar_dal:  { '500g': 98, '1kg': 195 },
+
+  turmeric:     { '50g': 22, '100g': 44, '250g': 110 },
+  jeera_powder: { '50g': 55, '100g': 110, '250g': 275 },
+  garam_masala: { '50g': 95, '100g': 190, '250g': 475 },
+
+  yellow_mustard_oil: { '250ml': 150, '500ml': 300, '1l': 600, '5l': 3000 },
+  coconut_oil:        { '250ml': 300, '500ml': 600, '1l': 1200, '5l': 6000 },
+  groundnut_oil:      { '250ml': 150, '500ml': 300, '1l': 600, '5l': 3000 },
+
+  desi_cow_ghee:      { '250ml': 500, '500ml': 1000, '1l': 2000, '5l': 10000 },
+  buffalo_ghee:       { '250ml': 355, '500ml': 710, '1l': 1420, '5l': 7100 },
+  a2_cow_ghee_bilona: { '250ml': 675, '500ml': 1350, '1l': 2700, '5l': 13500 },
+
+  iodized_salt: { '250g': 8, '500g': 15, '1kg': 30 },
+  black_salt:   { '250g': 15, '500g': 30, '1kg': 60 },
+  pink_salt:    { '250g': 33, '500g': 65, '1kg': 130 },
+
+  // Custom nutritional blend — flat functional-atta pricing
+  custom_blend: { 1: 233, 2: 466, 5: 1165, 10: 2330 }
+};
+
 function getProductMRP(productName, qty) {
-  // Centralized price lookup, currently returning 100 rupees placeholder everywhere
-  return 100;
+  const table = PRODUCT_PRICES[productName];
+  if (table) {
+    const key = (typeof qty === 'number') ? qty : String(qty).toLowerCase();
+    if (table[key] != null) return table[key];
+  }
+  return 100; // fallback placeholder
 }
 
 function getCategoryDefaultQty(category) {
@@ -79,6 +147,13 @@ function selectNutrBaseWheat(button, val) {
     parent.querySelectorAll('.nutr-base-pill').forEach(btn => btn.classList.remove('sel'));
   }
   button.classList.add('sel');
+  
+  // Dynamic image swapping on the Nutritional recommendation card (#nutr-rec-img)
+  const imgEl = document.querySelector('#nutr-rec-img img');
+  if (imgEl) {
+    imgEl.src = getNutrBlendImage();
+  }
+
   saveState();
 }
 
@@ -107,14 +182,6 @@ function selectNutrQuantity(button, val) {
   }
 
   saveState();
-}
-
-function unlockCategories() {
-  S.attasOnlyLocked = false;
-  saveState();
-  switchCategory('pulses');
-  const msg = S.lang === 'hi' ? "अन्य श्रेणियां अनलॉक हो गई हैं!" : "Other categories unlocked successfully!";
-  showToast(msg);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -295,12 +362,12 @@ function setupInputRestrictions() {
     });
   }
 
-  // Trial Phone Field
-  const trialPhoneInp = document.getElementById('trial-phone-input');
-  if (trialPhoneInp) {
+  // Trial Phone Field — there can be more than one trial card on the page
+  document.querySelectorAll('.trial-phone-input').forEach(function(trialPhoneInp) {
     trialPhoneInp.addEventListener('input', function() {
       this.value = this.value.replace(/[^0-9]/g, '');
-      const err = document.getElementById('e-trial-phone');
+      const card = this.closest('.trial-card');
+      const err = card ? card.querySelector('.trial-err-phone') : null;
       if (this.value.length === 10 && err) {
         err.classList.remove('show');
       }
@@ -308,10 +375,11 @@ function setupInputRestrictions() {
     trialPhoneInp.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
-        submitTrialPhone();
+        const card = this.closest('.trial-card');
+        submitTrialPhone(card ? card.querySelector('.trial-get-link-btn') : null);
       }
     });
-  }
+  });
 }
 
 // =============================================
@@ -450,6 +518,9 @@ function toggleComposition(element, ageGroup) {
 /**
  * Handle Q3: Select Atta Journey Track (Single-Select)
  */
+// =============================================
+// QUESTION 3 — TRACK SELECTION (traditional vs nutritional)
+// =============================================
 function selectTrack(element, track) {
   S.selectionTrack = track;
 
@@ -461,6 +532,87 @@ function selectTrack(element, track) {
 
   const err = document.getElementById('e-q3');
   if (err) err.classList.remove('show');
+}
+
+// =============================================
+// QUESTION 4 — PERSONALIZED WELLNESS SELECTION
+// =============================================
+// Section 1: pick exactly 1 or 2.  Section 2: pick exactly 1.
+// Sections 1 and 2 can never be combined.
+const WELLNESS_SECTION = {
+  protein: 1, iron: 1, sugar: 1, calcium: 1, complete: 1,
+  digestive: 1, strength: 1, lighter: 1, lowcarb: 1, heart: 1,
+  glutenfree: 2, keto: 2
+};
+
+function getNutrBlendImage() {
+  return PRODUCT_IMAGES.custom_blend;
+}
+
+function toggleWellnessOption(element, key) {
+  if (element.classList.contains('disabled')) return;
+  const section = WELLNESS_SECTION[key];
+  const idx = S.nutritionGoals.indexOf(key);
+
+  if (idx > -1) {
+    // Deselect
+    S.nutritionGoals.splice(idx, 1);
+    element.classList.remove('sel');
+  } else {
+    // Select — validate against the selection rules
+    const s1 = S.nutritionGoals.filter(g => WELLNESS_SECTION[g] === 1);
+    const s2 = S.nutritionGoals.filter(g => WELLNESS_SECTION[g] === 2);
+    if (section === 1) {
+      if (s2.length > 0) { showToast(T('toast_wellness_mix')); return; }
+      if (s1.length >= 2) { showToast(T('toast_limit_goals')); return; }
+    } else {
+      if (s1.length > 0 || s2.length > 0) { showToast(T('toast_wellness_mix')); return; }
+    }
+    S.nutritionGoals.push(key);
+    element.classList.add('sel');
+  }
+
+  refreshWellnessUI();
+  const err = document.getElementById('e-nutr');
+  if (err && S.nutritionGoals.length > 0) err.classList.remove('show');
+  saveState();
+}
+
+// Enable/disable every option card to reflect the current selection state.
+function refreshWellnessUI() {
+  const goals = S.nutritionGoals;
+  const s1 = goals.filter(g => WELLNESS_SECTION[g] === 1);
+  const s2 = goals.filter(g => WELLNESS_SECTION[g] === 2);
+
+  document.querySelectorAll('#s-q4-nutr .wellness-opt').forEach(card => {
+    const key = card.getAttribute('data-key');
+    const section = WELLNESS_SECTION[key];
+    const selected = goals.indexOf(key) > -1;
+    let disabled = false;
+
+    if (!selected) {
+      if (section === 1) {
+        if (s2.length > 0 || s1.length >= 2) disabled = true;
+      } else {
+        if (s1.length > 0 || s2.length > 0) disabled = true;
+      }
+    }
+    card.classList.toggle('disabled', disabled);
+  });
+
+  const g1 = document.getElementById('wellness-group-1');
+  const g2 = document.getElementById('wellness-group-2');
+  if (g1) g1.classList.toggle('is-locked', s2.length > 0);
+  if (g2) g2.classList.toggle('is-locked', s1.length > 0);
+}
+
+// Sync card .sel state from S.nutritionGoals (used when (re)entering Q3).
+function syncWellnessUI() {
+  document.querySelectorAll('#s-q4-nutr .wellness-opt').forEach(card => {
+    const key = card.getAttribute('data-key');
+    card.classList.toggle('sel', S.nutritionGoals.indexOf(key) > -1);
+  });
+  refreshWellnessUI();
 }
 
 function selectTraditionalBlend(element, blendName) {
@@ -512,6 +664,37 @@ function selectTraditionalBlend(element, blendName) {
   saveState();
 }
 
+/**
+ * Remove a blend from the cart directly from the order summary sidebar.
+ */
+function removeBlendFromCart(blendName) {
+  const idx = S.selectedBlends.indexOf(blendName);
+  if (idx === -1) return;
+
+  S.selectedBlends.splice(idx, 1);
+
+  // Reset weight back to category default and granulation to Fine
+  const meta = BLEND_METADATA[blendName];
+  const defaultQty = meta ? getCategoryDefaultQty(meta.category) : 5;
+  S.blendQuantities[blendName] = defaultQty;
+  S.blendGranulations[blendName] = 'Fine';
+
+  // Un-select and resync the matching product card
+  const card = document.querySelector(`.mcq[onclick*="'${blendName}'"]`);
+  if (card) {
+    card.classList.remove('sel');
+    card.querySelectorAll('.qty-pill').forEach(btn => {
+      btn.classList.toggle('sel', String(btn.getAttribute('data-val')) === String(defaultQty));
+    });
+    card.querySelectorAll('.gran-pill').forEach(btn => {
+      btn.classList.toggle('sel', btn.getAttribute('data-val') === 'Fine');
+    });
+  }
+
+  updateSidebarSummary();
+  saveState();
+}
+
 function selectQty(button, blendName, value) {
   S.blendQuantities[blendName] = value;
   
@@ -555,7 +738,7 @@ function syncTraditionalCardsUI() {
     'toor_dal', 'masoor_dal', 'arhar_dal',
     'turmeric', 'jeera_powder', 'garam_masala',
     'yellow_mustard_oil', 'groundnut_oil', 'coconut_oil',
-    'desi_cow_ghee', 'buffalo_ghee',
+    'desi_cow_ghee', 'buffalo_ghee', 'a2_cow_ghee_bilona',
     'iodized_salt', 'black_salt', 'pink_salt'
   ];
   blends.forEach(blend => {
@@ -604,17 +787,17 @@ function syncTraditionalCardsUI() {
 function switchCategory(category) {
   S.activeCategory = category;
   
-  // Highlight active tab and manage locked visibility
+  // Highlight active tab and manage visibility
   document.querySelectorAll('.cat-tab').forEach(tab => {
     const cat = tab.getAttribute('data-cat');
-    // Skip the unlock button (no data-cat) — handled separately
     if (!cat) return;
 
-    if (S.attasOnlyLocked && cat !== 'atta') {
-      tab.style.display = 'none';
-    } else {
-      tab.style.display = '';
-    }
+    let hidden = false;
+    // Traditional track shows Atta only until the user explores other products
+    if (S.attasOnlyLocked && cat !== 'atta') hidden = true;
+    // After "Explore Other Products", Atta is no longer shown
+    if (S.attaHidden && cat === 'atta') hidden = true;
+    tab.style.display = hidden ? 'none' : '';
 
     if (cat === category) {
       tab.classList.add('active');
@@ -632,16 +815,6 @@ function switchCategory(category) {
     }
   });
 
-  // Manage visibility of the inline unlock button
-  const unlockCard = document.getElementById('unlock-categories-card');
-  if (unlockCard) {
-    if (S.attasOnlyLocked) {
-      unlockCard.style.display = 'flex';
-    } else {
-      unlockCard.style.display = 'none';
-    }
-  }
-  
   saveState();
 }
 
@@ -651,6 +824,9 @@ function updateSidebarSummary() {
   const genBtn = document.querySelector('#s-track-trad .fnav .btn-sm');
 
   if (!unifiedCard || !emptyCard) return;
+
+  // Keep the trial card's product picker in sync with the cart
+  renderTrialProductPicker();
 
   if (S.selectedBlends.length === 0 && !S.chakkiActive) {
     unifiedCard.style.display = 'none';
@@ -707,13 +883,19 @@ function updateSidebarSummary() {
     const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(232,184,75,0.08); padding: 8px 12px; border-radius: 12px; border: 1.5px solid rgba(232,184,75,0.3); box-shadow: 0 4px 12px rgba(232,184,75,0.06);">
-        <div style="flex: 1; padding-right: 8px;">
-          <div style="font-weight:700; color:#fff; font-size:13px; display:flex; align-items:center; gap:6px;">
-            <span style="color:var(--g2);">🌾</span> ${customBlendName}
+        <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
+          <!-- Product image thumbnail -->
+          <div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
-          <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px;">
-            <span class="aisle-tag" style="background:rgba(232,184,75,0.15); color:var(--g2); border-color:rgba(232,184,75,0.3); padding: 1px 6px; font-size: 9px; line-height: 1.2;">Chakki Mill</span>
-            <span style="font-weight:600;">⚙️ ${S.lang === 'hi' ? 'चक्की में पिस रहा है' : 'Grinding in Chakki...'}</span>
+          <div style="flex: 1;">
+            <div style="font-weight:700; color:#fff; font-size:13px; display:flex; align-items:center; gap:6px;">
+              ${customBlendName}
+            </div>
+            <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px;">
+              <span class="aisle-tag" style="background:rgba(232,184,75,0.15); color:var(--g2); border-color:rgba(232,184,75,0.3); padding: 1px 6px; font-size: 9px; line-height: 1.2;">Chakki Mill</span>
+              <span style="font-weight:600;">⚙️ ${S.lang === 'hi' ? 'चक्की में पिस रहा है' : 'Grinding in Chakki...'}</span>
+            </div>
           </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
@@ -728,6 +910,8 @@ function updateSidebarSummary() {
   inStoreBlends.forEach(item => {
     const gran = S.blendGranulations[item.blend] || 'Fine';
     const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+    const imgUrl = PRODUCT_IMAGES[item.blend] || 'images/sharbati.png';
+    const displayName = S.lang === 'hi' ? item.nameHi : item.name;
     
     let fulfillmentSelectorHTML = '';
     if (item.category === 'atta') {
@@ -753,19 +937,26 @@ function updateSidebarSummary() {
 
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
-        <div style="flex: 1; padding-right: 8px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left;">
-          <div style="font-weight:600; color:#fff; font-size:13px; text-align: left;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
-          <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
-            <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
-            ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
-            ${item.category !== 'atta' ? `<span>${fulfillmentStatusLabel}</span>` : ''}
+        <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
+          <!-- Product image thumbnail -->
+          <div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
           </div>
-          ${item.category === 'atta' ? fulfillmentSelectorHTML : ''}
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left;">
+            <div style="font-weight:600; color:#fff; font-size:13px; text-align: left;">${displayName}</div>
+            <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
+              <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
+              ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
+              ${item.category !== 'atta' ? `<span>${fulfillmentStatusLabel}</span>` : ''}
+            </div>
+            ${item.category === 'atta' ? fulfillmentSelectorHTML : ''}
+          </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
           <div style="font-weight:700; color:var(--g2); background:rgba(232,184,75,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(232,184,75,0.24); font-size: 13px; font-family:'DM Sans', sans-serif; white-space: nowrap; flex-shrink: 0;">${formatQty(item.qty)}</div>
           <div style="font-size: 11px; font-weight: 700; color: var(--g2); font-family: 'DM Sans', sans-serif;">₹${getProductMRP(item.blend, item.qty)}</div>
         </div>
+        <button type="button" onclick="removeBlendFromCart('${item.blend}')" title="Remove" style="flex-shrink:0; margin-left:8px; width:24px; height:24px; border-radius:50%; border:1px solid rgba(255,107,107,0.4); background:rgba(255,107,107,0.12); color:#ff8a8a; font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
       </div>
     `;
   });
@@ -774,20 +965,29 @@ function updateSidebarSummary() {
   deliveryBlends.forEach(item => {
     const gran = S.blendGranulations[item.blend] || 'Fine';
     const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
+    const imgUrl = PRODUCT_IMAGES[item.blend] || 'images/sharbati.png';
+    const displayName = S.lang === 'hi' ? item.nameHi : item.name;
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
-        <div style="flex: 1; padding-right: 8px;">
-          <div style="font-weight:600; color:#fff; font-size:13px;">${S.lang === 'hi' ? item.nameHi : item.name}</div>
-          <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
-            <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2; background: rgba(255,107,107,0.15); color: #ff8a8a; border-color: rgba(255,107,107,0.3);">${item.aisle}</span>
-            ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
-            <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
+        <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
+          <!-- Product image thumbnail -->
+          <div style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight:600; color:#fff; font-size:13px;">${displayName}</div>
+            <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
+              <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2; background: rgba(255,107,107,0.15); color: #ff8a8a; border-color: rgba(255,107,107,0.3);">${item.aisle}</span>
+              ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
+              <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
+            </div>
           </div>
         </div>
         <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
           <div style="font-weight:700; color:#ff8a8a; background:rgba(255,107,107,0.12); padding:4px 10px; border-radius:8px; border:1px solid rgba(255,107,107,0.24); font-size: 13px; font-family:'DM Sans', sans-serif; white-space: nowrap; flex-shrink: 0;">${formatQty(item.qty)}</div>
           <div style="font-size: 11px; font-weight: 700; color: #ff8a8a; font-family: 'DM Sans', sans-serif;">₹${getProductMRP(item.blend, item.qty)}</div>
         </div>
+        <button type="button" onclick="removeBlendFromCart('${item.blend}')" title="Remove" style="flex-shrink:0; margin-left:8px; width:24px; height:24px; border-radius:50%; border:1px solid rgba(255,107,107,0.4); background:rgba(255,107,107,0.12); color:#ff8a8a; font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button>
       </div>
     `;
   });
@@ -1133,20 +1333,22 @@ function surveyNext(currentStep) {
         showToast(T('toast_select_req'));
         return;
       }
-
-      // Reset nested selections on navigation
       S.selectedBlend = '';
       S.selectedBlends = [];
-      S.nutritionGoals = [];
-      document.querySelectorAll('#s-track-trad .mcq').forEach(el => el.classList.remove('sel'));
-      document.querySelectorAll('#s-q4-nutr .mcq').forEach(el => el.classList.remove('sel'));
 
       if (S.selectionTrack === 'traditional') {
+        // Option 1 → straight to the traditional store page
         S.attasOnlyLocked = true;
+        S.attaHidden = false;
         updateSidebarSummary();
         switchCategory('atta');
+        showTrialSelectStep();
+        saveState();
         show('s-track-trad');
       } else {
+        // Option 2 → personalized wellness selection (Q4)
+        saveState();
+        syncWellnessUI();
         show('s-q4-nutr');
       }
       break;
@@ -1212,16 +1414,50 @@ function surveyBack(currentStep) {
 // =============================================
 // Each Q4 goal key maps to a functional variant key used in the blend combo lookup.
 const GOAL_TO_VARIANT = {
-  protein:     'Protein',
-  strength:    'Strength+',
-  digestive:   'High Fibre',
-  sugar:       'Low GI',
-  lighter:     'Low Calorie',
-  complete:    'Vitamin',
-  vitamin:     'Calcium',
-  alternative: 'Gluten Free',
-  heart:       'Low Cholesterol'
+  protein:    'Protein',
+  iron:       'Iron',
+  sugar:      'Low GI',
+  calcium:    'Calcium',
+  complete:   'Vitamin',
+  digestive:  'High Fibre',
+  strength:   'Strength+',
+  lighter:    'Low Calorie',
+  lowcarb:    'Low Carb',
+  heart:      'Low Cholesterol',
+  glutenfree: 'Gluten Free',
+  keto:       'Keto'
 };
+
+// Single-selection product names — exact functional variant names from Sheet1 (column A).
+const WELLNESS_SINGLE_NAMES = {
+  'Protein':         'Protein Atta',
+  'Iron':            'Iron Atta',
+  'Low GI':          'Low GI Atta',
+  'Calcium':         'Calcium Atta',
+  'Vitamin':         'Vitamin Atta',
+  'High Fibre':      'High Fibre Atta',
+  'Strength+':       'Strength+ (Zn Mg K Blend)',
+  'Low Calorie':     'Low Calorie Atta',
+  'Low Carb':        'Low Carb Atta',
+  'Low Cholesterol': 'Low Cholesterol Atta',
+  'Gluten Free':     'Gluten Free Atta',
+  'Keto':            'Keto Atta'
+};
+
+// Resolve the recommended product/blend name from the current selection.
+function getWellnessRecommendation() {
+  const goals = S.nutritionGoals;
+  if (goals.length === 1) {
+    const v = GOAL_TO_VARIANT[goals[0]];
+    return WELLNESS_SINGLE_NAMES[v] || (v + ' Atta');
+  }
+  return getRecommendedBlend(goals[0], goals[1]);
+}
+
+// Build a "(Base Wheat, Granulation)" label, omitting base wheat for specialty flows.
+function baseGranLabel(gran) {
+  return S.nutrBaseWheat ? `(${S.nutrBaseWheat}, ${gran})` : `(${gran})`;
+}
 
 // =============================================
 // 51-ENTRY BLEND COMBINATION LOOKUP TABLE
@@ -1321,11 +1557,9 @@ const VARIANT_HIGHLIGHTS = {
  * Build and display the nutritional recommendation screen
  */
 function showNutrRecommendation() {
-  const goalA = S.nutritionGoals[0];
-  const goalB = S.nutritionGoals[1];
-  const blendName = getRecommendedBlend(goalA, goalB);
-  const variantA = GOAL_TO_VARIANT[goalA];
-  const variantB = GOAL_TO_VARIANT[goalB];
+  const goals = S.nutritionGoals;
+  const variants = goals.map(g => GOAL_TO_VARIANT[g]);
+  const blendName = getWellnessRecommendation();
 
   // Store the recommended blend name in state for later use
   S.recommendedBlend = blendName;
@@ -1334,29 +1568,31 @@ function showNutrRecommendation() {
   const nameEl = document.getElementById('nutr-rec-name');
   if (nameEl) nameEl.textContent = blendName;
 
+  // Base Wheat selection is hidden for specialty (Gluten Free / Keto) flows
+  const isSpecialty = goals.some(g => WELLNESS_SECTION[g] === 2);
+  const baseBlock = document.getElementById('nutr-base-wheat-block');
+  if (baseBlock) baseBlock.style.display = isSpecialty ? 'none' : '';
+  if (isSpecialty) {
+    S.nutrBaseWheat = '';
+  } else if (!S.nutrBaseWheat) {
+    S.nutrBaseWheat = 'Sharbati';
+  }
+
+  // Set recommendation image src dynamically
+  const imgEl = document.querySelector('#nutr-rec-img img');
+  if (imgEl) {
+    imgEl.src = getNutrBlendImage();
+  }
+
   // Highlight active grinding pills in UI from state
   document.querySelectorAll('.nutr-base-pill').forEach(btn => {
-    if (btn.getAttribute('data-val') === S.nutrBaseWheat) {
-      btn.classList.add('sel');
-    } else {
-      btn.classList.remove('sel');
-    }
+    btn.classList.toggle('sel', btn.getAttribute('data-val') === S.nutrBaseWheat);
   });
-
   document.querySelectorAll('.nutr-gran-pill').forEach(btn => {
-    if (btn.getAttribute('data-val') === S.nutrGranulation) {
-      btn.classList.add('sel');
-    } else {
-      btn.classList.remove('sel');
-    }
+    btn.classList.toggle('sel', btn.getAttribute('data-val') === S.nutrGranulation);
   });
-
   document.querySelectorAll('.nutr-qty-pill').forEach(btn => {
-    if (parseInt(btn.getAttribute('data-val')) === S.nutrQuantity) {
-      btn.classList.add('sel');
-    } else {
-      btn.classList.remove('sel');
-    }
+    btn.classList.toggle('sel', parseInt(btn.getAttribute('data-val')) === S.nutrQuantity);
   });
 
   // Sync MRP display on recommendation page
@@ -1365,10 +1601,10 @@ function showNutrRecommendation() {
     mrpEl.innerText = '₹' + getProductMRP('custom_blend', S.nutrQuantity);
   }
 
-  // Render goal tags
+  // Render goal tags (consumer-facing wellness statements)
   const goalsEl = document.getElementById('nutr-rec-goals');
   if (goalsEl) {
-    goalsEl.innerHTML = [goalA, goalB].filter(Boolean).map(g => {
+    goalsEl.innerHTML = S.nutritionGoals.map(g => {
       const goalLabel = T('nutr_goal_' + g);
       return `<span style="display: inline-flex; align-items: center; gap: 5px; background: rgba(201,147,46,0.12); border: 1px solid rgba(201,147,46,0.22); padding: 5px 14px; border-radius: 20px; font-size: 11.5px; font-weight: 600; color: var(--g2);">${goalLabel}</span>`;
     }).join('');
@@ -1378,6 +1614,7 @@ function showNutrRecommendation() {
   const highlightsEl = document.getElementById('nutr-rec-highlights');
   if (highlightsEl) {
     const variants = [variantA, variantB].filter(Boolean);
+    highlightsEl.style.gridTemplateColumns = variants.length === 1 ? '1fr' : '1fr 1fr';
     highlightsEl.innerHTML = variants.map(v => {
       const h = VARIANT_HIGHLIGHTS[v] || { icon: '🌾', label: v, labelHi: v };
       const label = S.lang === 'hi' ? h.labelHi : h.label;
@@ -1386,7 +1623,6 @@ function showNutrRecommendation() {
           <span style="font-size: 20px;">${h.icon}</span>
           <div>
             <div style="font-size: 12px; font-weight: 700; color: #fff;">${label}</div>
-            <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px;">${v} Atta</div>
           </div>
         </div>
       `;
@@ -1439,19 +1675,49 @@ function nutrRecProceed(fulfillmentType) {
 
 function exploreOtherProducts() {
   S.attasOnlyLocked = false;
+  S.attaHidden = true;
   S.selectionTrack = 'traditional';
   saveState();
   updateSidebarSummary();
   applyTranslations();
   if (typeof switchCategory === 'function') {
-    switchCategory('atta');
+    switchCategory('pulses');
   }
+  showTrialSelectStep();
   show('s-track-trad');
 }
 
 function proceedToBilling() {
   saveState();
   buildAndShowResults();
+}
+
+/**
+ * Render a mock (decorative) barcode into #ref-barcode, deterministically
+ * derived from the order reference code so it looks tied to the order.
+ */
+function renderBarcode(code) {
+  const el = document.getElementById('ref-barcode');
+  if (!el) return;
+
+  // Seed a simple PRNG from the code string
+  let seed = 0;
+  for (let i = 0; i < code.length; i++) {
+    seed = (seed * 31 + code.charCodeAt(i)) >>> 0;
+  }
+  function rand() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  let bars = '';
+  const count = 64;
+  for (let i = 0; i < count; i++) {
+    const w = 1 + Math.floor(rand() * 4); // 1-4px wide
+    const isBar = i % 2 === 0;
+    bars += `<div style="width:${w}px; background:${isBar ? '#111' : '#fff'};"></div>`;
+  }
+  el.innerHTML = bars;
 }
 
 // =============================================
@@ -1463,6 +1729,9 @@ function buildAndShowResults() {
   if (refEl) {
     refEl.innerText = S.isHomeDelivery ? deliveryCode : refCode;
   }
+
+  // Render a mock barcode derived from the reference code
+  renderBarcode(refEl ? refEl.innerText : refCode);
 
   // Personalize Headline based on delivery
   const headline = document.getElementById('suc-headline');
@@ -1582,10 +1851,16 @@ function buildAndShowResults() {
       const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.2);">
-          <div>
-            <span style="color: #fff; font-weight: 700;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
-            <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
-            <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+            <!-- Thumbnail -->
+            <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+              <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div>
+              <span style="color: #fff; font-weight: 700;">${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
+              <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
+              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
+            </div>
           </div>
           <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
             <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
@@ -1602,6 +1877,8 @@ function buildAndShowResults() {
       const gran = S.blendGranulations[blend] || 'Fine';
       const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
       const price = getProductMRP(blend, qty);
+      const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
+      const displayName = T('trad_blend_' + blend);
       
       const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
       const aisleLabel = meta.category === 'atta' && itemFulfillment === 'chakki'
@@ -1619,11 +1896,17 @@ function buildAndShowResults() {
       
       detailsHTML += `
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
-          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-            <span style="color: #fff; font-weight: 600;">${T('trad_blend_' + blend)}</span>
-            <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${aisleLabel}</span>
-            ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
-            <span style="font-size: 9.5px; color: var(--g2); font-weight: 600;">${statusLabel}</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+            <!-- Thumbnail -->
+            <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+              <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span style="color: #fff; font-weight: 600;">${displayName}</span>
+              <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${aisleLabel}</span>
+              ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600;">${statusLabel}</span>
+            </div>
           </div>
           <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
             <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
@@ -1644,7 +1927,7 @@ function buildAndShowResults() {
     recLabel = S.nutritionGoals.map(goal => T(`nutr_goal_${goal}`)).join(' + ');
     const blendName = S.recommendedBlend || recLabel;
     const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
-    const fullBlendNameLabel = `${blendName} (${S.nutrBaseWheat}, ${localizedGranulation})`;
+    const fullBlendNameLabel = `${blendName} ${baseGranLabel(localizedGranulation)}`;
     const recPrice = getProductMRP('custom_blend', S.nutrQuantity);
     
     const pickupLocationLabel = S.nutrFulfillment === 'chakki'
@@ -1652,9 +1935,14 @@ function buildAndShowResults() {
       : (S.lang === 'hi' ? "स्टोर काउंटर" : "Store Counter");
       
     detailsHTML = `
-      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px; align-items: center;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${labels.rec}:</span>
-        <span style="color: #fff; font-weight: bold; text-align: right;">${fullBlendNameLabel}</span>
+        <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
+          <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+            <img src="${PRODUCT_IMAGES.custom_blend}" alt="${blendName}" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span style="color: #fff; font-weight: bold; text-align: right;">${fullBlendNameLabel}</span>
+        </div>
       </div>
       <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; gap: 14px;">
         <span style="color: var(--g2); font-weight: 600; flex-shrink:0;">${S.lang === 'hi' ? "चुने हुए लक्ष्य:" : "Selected Goals:"}</span>
@@ -1689,7 +1977,13 @@ function buildAndShowResults() {
           const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
           storePickupItemsHTML += `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
-              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                <!-- Thumbnail -->
+                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                  <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+              </div>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1705,17 +1999,24 @@ function buildAndShowResults() {
           const gran = S.blendGranulations[blend] || 'Fine';
           const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
           const price = getProductMRP(blend, qty);
-          
+          const imgUrl = PRODUCT_IMAGES[blend] || 'images/sharbati.png';
+          const displayName = T('trad_blend_' + blend);
           const itemFulfillment = S.blendFulfillments && S.blendFulfillments[blend] === 'chakki' ? 'chakki' : 'store';
           const suffix = meta.category === 'atta' && itemFulfillment === 'chakki'
             ? (S.lang === 'hi' ? ' (चक्की पिसान)' : ' (Chakki Grinding)')
             : '';
           const row = `
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-              <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                ${T('trad_blend_' + blend)}${suffix}
-                ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
-              </span>
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                <!-- Thumbnail -->
+                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                  <img src="${imgUrl}" alt="${displayName}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  ${displayName}${suffix}
+                  ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
+                </span>
+              </div>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(qty)}</span>
                 <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${price}</span>
@@ -1736,7 +2037,13 @@ function buildAndShowResults() {
         
         storePickupItemsHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: ${isChakki ? 'rgba(232,184,75,0.06)' : 'transparent'}; padding: 4px 8px; border-radius: 6px; ${isChakki ? 'border: 1px solid rgba(232,184,75,0.2);' : ''}">
-            <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+              <!-- Thumbnail -->
+              <div style="width: 32px; height: 32px; border-radius: 6px; border: ${isChakki ? '1px solid rgba(232,184,75,0.3)' : '1px solid rgba(255,255,255,0.15)'}; background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} (${S.nutrBaseWheat}, ${localizedGranulation}) (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
+            </div>
             <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
               <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1746,7 +2053,13 @@ function buildAndShowResults() {
         
         homeDeliveryItemsHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px;">
-            <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} (${S.nutrBaseWheat}, ${localizedGranulation})</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+              <!-- Thumbnail -->
+              <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                <img src="${getNutrBlendImage()}" alt="${recLabel || 'Custom Nutritional Atta'}" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span style="color: #fff; font-weight: 500;">${recLabel || 'Custom Nutritional Atta'} ${baseGranLabel(localizedGranulation)}</span>
+            </div>
             <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
               <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
               <span style="font-size: 10.5px; color: rgba(255,255,255,0.55); font-family:'DM Sans', sans-serif;">₹${customPrice}</span>
@@ -1873,8 +2186,9 @@ function buildAndShowResults() {
 // =============================================
 
 function clearActiveSurveyUI() {
-  document.querySelectorAll('.mcq').forEach(el => el.classList.remove('sel'));
+  document.querySelectorAll('.mcq').forEach(el => el.classList.remove('sel', 'disabled'));
   document.querySelectorAll('.err').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.wellness-group').forEach(el => el.classList.remove('is-locked'));
 }
 
 function resetSession() {
@@ -1903,6 +2217,7 @@ function resetSession() {
     coconut_oil: '1l',
     desi_cow_ghee: '1l',
     buffalo_ghee: '1l',
+    a2_cow_ghee_bilona: '1l',
     iodized_salt: '1kg',
     black_salt: '1kg',
     pink_salt: '1kg'
@@ -1924,6 +2239,7 @@ function resetSession() {
     coconut_oil: 'Fine',
     desi_cow_ghee: 'Fine',
     buffalo_ghee: 'Fine',
+    a2_cow_ghee_bilona: 'Fine',
     iodized_salt: 'Fine',
     black_salt: 'Fine',
     pink_salt: 'Fine'
@@ -1935,7 +2251,8 @@ function resetSession() {
   S.nutrGranulation = 'Fine';
   S.nutrQuantity = 5;
   S.attasOnlyLocked = false;
-  
+  S.attaHidden = false;
+
   // Reset Home Delivery State
   S.isHomeDelivery = false;
   S.paymentMethod = '';
@@ -2012,17 +2329,19 @@ function resetSession() {
   // Clear UI Selection Borders/Colors
   clearActiveSurveyUI();
   
-  // Reset Trial Screen State
-  const trialPhone = document.getElementById('trial-phone-input');
-  if (trialPhone) trialPhone.value = '';
-  const eTrialPhone = document.getElementById('e-trial-phone');
-  if (eTrialPhone) eTrialPhone.classList.remove('show');
-  const stepPhone = document.getElementById('trial-step-phone');
-  const stepQR = document.getElementById('trial-step-qr');
-  const stepLimit = document.getElementById('trial-step-limit');
-  if (stepPhone) stepPhone.style.display = 'flex';
-  if (stepQR) stepQR.style.display = 'none';
-  if (stepLimit) stepLimit.style.display = 'none';
+  // Reset Trial Card State (every trial card on the page)
+  document.querySelectorAll('.trial-card').forEach(function(card) {
+    const trialPhone = card.querySelector('.trial-phone-input');
+    if (trialPhone) trialPhone.value = '';
+    const eTrialPhone = card.querySelector('.trial-err-phone');
+    if (eTrialPhone) eTrialPhone.classList.remove('show');
+    const stepPhone = card.querySelector('.trial-step-phone');
+    const stepQR = card.querySelector('.trial-step-qr');
+    const stepLimit = card.querySelector('.trial-step-limit');
+    if (stepPhone) stepPhone.style.display = 'flex';
+    if (stepQR) stepQR.style.display = 'none';
+    if (stepLimit) stepLimit.style.display = 'none';
+  });
 
   if (typeof switchCategory === 'function') {
     switchCategory('atta');
@@ -2035,9 +2354,103 @@ function resetSession() {
 // =============================================
 // TRIAL / SAMPLE USER FLOW
 // =============================================
-function submitTrialPhone() {
-  const phoneInp = document.getElementById('trial-phone-input');
-  const err = document.getElementById('e-trial-phone');
+
+/**
+ * Populate the Traditional-page trial card's product picker from the cart.
+ */
+function renderTrialProductPicker() {
+  const list = document.querySelector('#s-track-trad .trial-product-list');
+  if (!list) return;
+
+  // Drop any trial selections no longer in the cart
+  S.trialSelections = (S.trialSelections || []).filter(b => S.selectedBlends.includes(b));
+
+  if (S.selectedBlends.length === 0) {
+    list.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.55); padding:10px 0; line-height:1.5;">${T('trial_select_empty')}</div>`;
+    return;
+  }
+
+  list.innerHTML = S.selectedBlends.map(blend => {
+    const sel = S.trialSelections.includes(blend);
+    const name = T('trad_blend_' + blend);
+    return `
+      <button type="button" class="trial-product-pick${sel ? ' sel' : ''}" onclick="toggleTrialProduct(this, '${blend}')"
+        style="display:flex; align-items:center; gap:10px; width:100%; padding:10px 12px; border-radius:10px; cursor:pointer; text-align:left;
+               border:1.5px solid ${sel ? 'var(--g2)' : 'rgba(255,255,255,0.15)'};
+               background:${sel ? 'rgba(232,184,75,0.14)' : 'rgba(0,0,0,0.18)'}; color:#fff; transition:all 0.15s;">
+        <span style="flex-shrink:0; width:18px; height:18px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+              border:1.5px solid ${sel ? 'var(--g2)' : 'rgba(255,255,255,0.3)'}; background:${sel ? 'var(--g2)' : 'transparent'}; color:var(--br);">${sel ? '✓' : ''}</span>
+        <span style="font-size:13px; font-weight:600;">${name}</span>
+      </button>`;
+  }).join('');
+}
+
+/**
+ * Toggle a product in the trial selection set.
+ */
+function toggleTrialProduct(btn, blend) {
+  const idx = S.trialSelections.indexOf(blend);
+  if (idx > -1) {
+    S.trialSelections.splice(idx, 1);
+  } else {
+    S.trialSelections.push(blend);
+  }
+  saveState();
+  renderTrialProductPicker();
+}
+
+/**
+ * Advance the Traditional trial card from product selection to phone entry.
+ */
+function trialContinueToPhone(btn) {
+  if (!S.trialSelections || S.trialSelections.length === 0) {
+    showToast(S.lang === 'hi' ? "कृपया कम से कम एक उत्पाद चुनें" : "Please select at least one product to try");
+    return;
+  }
+  const card = btn ? btn.closest('.trial-card') : null;
+  if (!card) return;
+  const stepSelect = card.querySelector('.trial-step-select');
+  const stepPhone = card.querySelector('.trial-step-phone');
+  if (stepSelect) stepSelect.style.display = 'none';
+  if (stepPhone) stepPhone.style.display = 'flex';
+}
+
+/**
+ * Go back from phone entry to the product picker.
+ */
+function trialBackToSelect(btn) {
+  const card = btn ? btn.closest('.trial-card') : null;
+  if (!card) return;
+  const stepSelect = card.querySelector('.trial-step-select');
+  const stepPhone = card.querySelector('.trial-step-phone');
+  const err = card.querySelector('.trial-err-phone');
+  if (err) err.classList.remove('show');
+  if (stepPhone) stepPhone.style.display = 'none';
+  if (stepSelect) stepSelect.style.display = 'flex';
+}
+
+/**
+ * Reset the Traditional trial card back to its product-selection step.
+ */
+function showTrialSelectStep() {
+  const card = document.querySelector('#s-track-trad .trial-card');
+  if (!card) return;
+  const sel = card.querySelector('.trial-step-select');
+  const ph = card.querySelector('.trial-step-phone');
+  const qr = card.querySelector('.trial-step-qr');
+  const lim = card.querySelector('.trial-step-limit');
+  if (sel) sel.style.display = 'flex';
+  if (ph) ph.style.display = 'none';
+  if (qr) qr.style.display = 'none';
+  if (lim) lim.style.display = 'none';
+}
+
+function submitTrialPhone(btn) {
+  const card = btn ? btn.closest('.trial-card') : document.querySelector('.trial-card');
+  if (!card) return;
+
+  const phoneInp = card.querySelector('.trial-phone-input');
+  const err = card.querySelector('.trial-err-phone');
   const phone = phoneInp ? phoneInp.value.trim() : '';
 
   if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
@@ -2050,8 +2463,8 @@ function submitTrialPhone() {
   if (err) err.classList.remove('show');
 
   if (phone === '7007679485') {
-    const stepPhone = document.getElementById('trial-step-phone');
-    const stepLimit = document.getElementById('trial-step-limit');
+    const stepPhone = card.querySelector('.trial-step-phone');
+    const stepLimit = card.querySelector('.trial-step-limit');
     if (stepPhone && stepLimit) {
       stepPhone.style.display = 'none';
       stepLimit.style.display = 'flex';
@@ -2067,8 +2480,8 @@ function submitTrialPhone() {
   }
 
   // Transition to step 2 (QR code reveal)
-  const stepPhone = document.getElementById('trial-step-phone');
-  const stepQR = document.getElementById('trial-step-qr');
+  const stepPhone = card.querySelector('.trial-step-phone');
+  const stepQR = card.querySelector('.trial-step-qr');
 
   if (stepPhone && stepQR) {
     stepPhone.style.display = 'none';
@@ -2091,12 +2504,15 @@ function submitTrialPhone() {
   }
 }
 
-function trialGoBack() {
-  const stepPhone = document.getElementById('trial-step-phone');
-  const stepQR = document.getElementById('trial-step-qr');
-  const stepLimit = document.getElementById('trial-step-limit');
-  const phoneInp = document.getElementById('trial-phone-input');
-  const err = document.getElementById('e-trial-phone');
+function trialGoBack(btn) {
+  const card = btn ? btn.closest('.trial-card') : document.querySelector('.trial-card');
+  if (!card) return;
+
+  const stepPhone = card.querySelector('.trial-step-phone');
+  const stepQR = card.querySelector('.trial-step-qr');
+  const stepLimit = card.querySelector('.trial-step-limit');
+  const phoneInp = card.querySelector('.trial-phone-input');
+  const err = card.querySelector('.trial-err-phone');
 
   if (stepPhone) {
     if (stepQR) stepQR.style.display = 'none';
