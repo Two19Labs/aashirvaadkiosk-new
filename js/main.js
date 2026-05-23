@@ -2457,15 +2457,21 @@ function renderTrialProductPicker() {
   const list = document.querySelector('#s-track-trad .trial-product-list');
   if (!list) return;
 
-  // Drop any trial selections no longer in the cart
-  S.trialSelections = (S.trialSelections || []).filter(b => S.selectedBlends.includes(b));
+  // Filter selected blends to only include Atta products
+  const selectedAttaBlends = S.selectedBlends.filter(blend => {
+    const meta = BLEND_METADATA[blend];
+    return meta && meta.category === 'atta';
+  });
 
-  if (S.selectedBlends.length === 0) {
+  // Drop any trial selections no longer in the filtered Atta cart
+  S.trialSelections = (S.trialSelections || []).filter(b => selectedAttaBlends.includes(b));
+
+  if (selectedAttaBlends.length === 0) {
     list.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.55); padding:10px 0; line-height:1.5;">${T('trial_select_empty')}</div>`;
     return;
   }
 
-  list.innerHTML = S.selectedBlends.map(blend => {
+  list.innerHTML = selectedAttaBlends.map(blend => {
     const sel = S.trialSelections.includes(blend);
     const name = T('trad_blend_' + blend);
     return `
