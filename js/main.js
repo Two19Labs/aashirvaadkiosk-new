@@ -911,7 +911,9 @@ function updateSidebarSummary() {
   // Keep the trial card's product picker in sync with the cart
   renderTrialProductPicker();
 
-  if (S.selectedBlends.length === 0 && !S.chakkiActive) {
+  const hasNutrBlend = (S.nutritionGoals && S.nutritionGoals.length > 0);
+
+  if (S.selectedBlends.length === 0 && !hasNutrBlend) {
     unifiedCard.style.display = 'none';
     emptyCard.style.display = 'block';
     if (genBtn) genBtn.style.display = 'block';
@@ -932,11 +934,11 @@ function updateSidebarSummary() {
 
   let inStoreBlends = [];
   let deliveryBlends = [];
-  let inStoreTotalWeight = S.chakkiActive ? parseQtyToKg(S.nutrQuantity) : 0;
+  let inStoreTotalWeight = hasNutrBlend ? parseQtyToKg(S.nutrQuantity) : 0;
   let deliveryTotalWeight = 0;
   let totalPrice = 0;
 
-  if (S.chakkiActive) {
+  if (hasNutrBlend) {
     totalPrice += getProductMRP('custom_blend', S.nutrQuantity);
   }
 
@@ -957,13 +959,21 @@ function updateSidebarSummary() {
   });
 
   const hasDelivery = deliveryBlends.length > 0;
-  const hasInStore = inStoreBlends.length > 0 || S.chakkiActive;
+  const hasInStore = inStoreBlends.length > 0 || hasNutrBlend;
 
   // Build items HTML
   let itemsHTML = '';
 
-  if (S.chakkiActive) {
+  if (hasNutrBlend) {
     const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
+    const isChakki = S.nutrFulfillment === 'chakki';
+    const statusText = isChakki 
+      ? (S.lang === 'hi' ? '⚙️ चक्की में पिस रहा है' : '⚙️ Grinding in Chakki...')
+      : (S.lang === 'hi' ? '🛒 इन-स्टोर पिकअप' : '🛒 In-Store Pickup');
+    const badgeText = isChakki 
+      ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
+      : (S.lang === 'hi' ? 'स्टोर काउंटर' : 'Store Counter');
+
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(232,184,75,0.08); padding: 8px 12px; border-radius: 12px; border: 1.5px solid rgba(232,184,75,0.3); box-shadow: 0 4px 12px rgba(232,184,75,0.06);">
         <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
@@ -976,8 +986,8 @@ function updateSidebarSummary() {
               ${customBlendName}
             </div>
             <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px;">
-              <span class="aisle-tag" style="background:rgba(232,184,75,0.15); color:var(--g2); border-color:rgba(232,184,75,0.3); padding: 1px 6px; font-size: 9px; line-height: 1.2;">Chakki Mill</span>
-              <span style="font-weight:600;">⚙️ ${S.lang === 'hi' ? 'चक्की में पिस रहा है' : 'Grinding in Chakki...'}</span>
+              <span class="aisle-tag" style="background:rgba(232,184,75,0.15); color:var(--g2); border-color:rgba(232,184,75,0.3); padding: 1px 6px; font-size: 9px; line-height: 1.2;">${badgeText}</span>
+              <span style="font-weight:600;">${statusText}</span>
             </div>
           </div>
         </div>
@@ -1151,7 +1161,7 @@ function updateSidebarSummary() {
   unifiedCard.innerHTML = `
     <h3 style="font-size: 14.5px; color: #fff; font-weight: 700; margin-bottom: 14px; border-bottom: 1.5px solid rgba(232,184,75,0.22); padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
       <span>${S.lang === 'hi' ? 'ऑर्डर सारांश' : 'Order Summary'}</span>
-      <span style="font-size: 11.5px; font-weight: 400; color: rgba(255,255,255,0.65);">${S.selectedBlends.length + (S.chakkiActive ? 1 : 0)} ${S.lang === 'hi' ? 'चयनित' : 'Selected'}</span>
+      <span style="font-size: 11.5px; font-weight: 400; color: rgba(255,255,255,0.65);">${S.selectedBlends.length + ((S.nutritionGoals && S.nutritionGoals.length > 0) ? 1 : 0)} ${S.lang === 'hi' ? 'चयनित' : 'Selected'}</span>
     </h3>
 
     <!-- Fulfillment Policy Note -->
@@ -1201,10 +1211,13 @@ function checkoutInStore() {
     return meta && meta.category === 'atta' && S.blendFulfillments && S.blendFulfillments[blend] === 'chakki';
   });
   
-  S.chakkiActive = anyChakkiActive;
+  const hasNutrBlend = (S.nutritionGoals && S.nutritionGoals.length > 0);
+  const nutrChakkiActive = hasNutrBlend && (S.nutrFulfillment === 'chakki');
+  
+  S.chakkiActive = anyChakkiActive || nutrChakkiActive;
   saveState();
   
-  if (anyChakkiActive) {
+  if (S.chakkiActive) {
     applyTranslations();
     show('s-chakki-processing');
   } else {
@@ -1334,10 +1347,12 @@ function submitHomeDelivery(method) {
   S.paymentMethod = method;
   saveState();
 
+  const hasNutrBlend = (S.nutritionGoals && S.nutritionGoals.length > 0);
+  const nutrChakkiActive = hasNutrBlend && (S.nutrFulfillment === 'chakki');
   const anyChakkiActive = S.selectedBlends.some(blend => {
     const meta = BLEND_METADATA[blend];
     return meta && meta.category === 'atta' && S.blendFulfillments && S.blendFulfillments[blend] === 'chakki';
-  });
+  }) || nutrChakkiActive;
 
   if (method === 'Online') {
     // Show mock payment processing loader
@@ -1920,9 +1935,10 @@ function buildAndShowResults() {
     }
   }
 
+  const hasNutrBlend = (S.nutritionGoals && S.nutritionGoals.length > 0);
   let totalPrice = 0;
   if (S.selectionTrack === 'traditional') {
-    if (S.chakkiActive) {
+    if (hasNutrBlend) {
       totalPrice += getProductMRP('custom_blend', S.nutrQuantity);
     }
     S.selectedBlends.forEach(blend => {
@@ -1936,13 +1952,28 @@ function buildAndShowResults() {
   }
 
   if (S.selectionTrack === 'traditional') {
-    // Prepend custom grinding blend if active in Chakki
-    if (S.chakkiActive) {
+    // Prepend custom recommended blend if configured in nutrition track
+    if (hasNutrBlend) {
+      const isChakki = S.nutrFulfillment === 'chakki';
       const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
       const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
       const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
+      
+      const badgeText = isChakki 
+        ? (S.lang === 'hi' ? 'चक्की मिल' : 'Chakki Mill')
+        : (S.lang === 'hi' ? 'स्टोर काउंटर' : 'Store Counter');
+      const statusText = isChakki
+        ? (S.lang === 'hi' ? '⚙️ चक्की में' : '⚙️ Grinding')
+        : (S.lang === 'hi' ? '🛒 पिकअप' : '🛒 Pickup');
+      const backgroundStyle = isChakki
+        ? 'background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.2); border-radius: 8px;'
+        : '';
+      const textStyleColor = isChakki
+        ? 'color: var(--g2);'
+        : 'color: rgba(255,255,255,0.85);';
+
       detailsHTML += `
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(232,184,75,0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 8px; font-size: 13px; padding: 6px 10px; ${backgroundStyle}">
           <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
             <!-- Thumbnail -->
             <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
@@ -1950,8 +1981,8 @@ function buildAndShowResults() {
             </div>
             <div>
               <span style="color: #fff; font-weight: 700;">${customBlendName} ${baseGranLabel(localizedGranulation)}</span>
-              <span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">Chakki Mill</span>
-              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">⚙️ ${S.lang === 'hi' ? 'चक्की में' : 'Grinding'}</span>
+              <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${badgeText}</span>
+              <span style="font-size: 9.5px; color: var(--g2); font-weight: 600; margin-left: 4px;">${statusText}</span>
             </div>
           </div>
           <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
@@ -2064,18 +2095,19 @@ function buildAndShowResults() {
       let storePickupItemsHTML = '';
 
       if (S.selectionTrack === 'traditional') {
-        if (S.chakkiActive) {
+        if (hasNutrBlend) {
+          const isChakki = S.nutrFulfillment === 'chakki';
           const localizedGranulation = S.lang === 'hi' ? (S.nutrGranulation === 'Fine' ? 'बारीक' : S.nutrGranulation === 'Medium' ? 'मध्यम' : 'दरदरा') : S.nutrGranulation;
           const customBlendName = S.recommendedBlend || (S.lang === 'hi' ? 'कस्टम न्यूट्रिशनल ब्लेंड' : 'Custom Nutritional Blend');
           const customPrice = getProductMRP('custom_blend', S.nutrQuantity);
           storePickupItemsHTML += `
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: rgba(232,184,75,0.06); padding: 4px 8px; border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; margin-bottom: 6px; font-size: 13px; background: ${isChakki ? 'rgba(232,184,75,0.06)' : 'transparent'}; padding: 4px 8px; border-radius: 6px; ${isChakki ? 'border: 1px solid rgba(232,184,75,0.2);' : ''}">
               <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
                 <!-- Thumbnail -->
-                <div style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(232,184,75,0.3); background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                <div style="width: 32px; height: 32px; border-radius: 6px; border: ${isChakki ? '1px solid rgba(232,184,75,0.3)' : '1px solid rgba(255,255,255,0.15)'}; background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                   <img src="${getNutrBlendImage()}" alt="${customBlendName}" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
-                <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding'})</span>
+                <span style="color: #fff; font-weight: 600;">🌾 ${customBlendName} ${baseGranLabel(localizedGranulation)} (${isChakki ? (S.lang === 'hi' ? 'चक्की पिसान' : 'Chakki Grinding') : (S.lang === 'hi' ? 'स्टोर पिकअप' : 'Store Pickup')})</span>
               </div>
               <div style="text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
                 <span style="color: var(--g2); font-weight: 700; font-family:'DM Sans', sans-serif; white-space: nowrap;">${formatQty(S.nutrQuantity)}</span>
