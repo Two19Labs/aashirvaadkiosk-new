@@ -800,6 +800,7 @@ function syncTraditionalCardsUI() {
   blends.forEach(blend => {
     const qty = S.blendQuantities[blend] || 5;
     const gran = S.blendGranulations[blend] || 'Fine';
+    const meta = BLEND_METADATA[blend];
     
     // Find card container
     const card = document.querySelector(`.mcq[onclick*="'${blend}'"]`);
