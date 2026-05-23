@@ -1613,9 +1613,9 @@ function showNutrRecommendation() {
   // Render nutritional highlight chips
   const highlightsEl = document.getElementById('nutr-rec-highlights');
   if (highlightsEl) {
-    const variants = [variantA, variantB].filter(Boolean);
-    highlightsEl.style.gridTemplateColumns = variants.length === 1 ? '1fr' : '1fr 1fr';
-    highlightsEl.innerHTML = variants.map(v => {
+    const filteredVariants = variants.filter(Boolean);
+    highlightsEl.style.gridTemplateColumns = filteredVariants.length === 1 ? '1fr' : '1fr 1fr';
+    highlightsEl.innerHTML = filteredVariants.map(v => {
       const h = VARIANT_HIGHLIGHTS[v] || { icon: '🌾', label: v, labelHi: v };
       const label = S.lang === 'hi' ? h.labelHi : h.label;
       return `
