@@ -55,6 +55,10 @@ var S = {
     black_salt: 'Fine',
     pink_salt: 'Fine'
   },
+  blendBases: {
+    multigrain: 'Sharbati',
+    multimillet: 'Sharbati'
+  },
   nutritionGoals: [],
   
   // Home Delivery State

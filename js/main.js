@@ -118,7 +118,23 @@ const PRODUCT_PRICES = {
   custom_blend: { 1: 233, 2: 466, 5: 1165, 10: 2330 }
 };
 
+const BASE_PRICES = {
+  Sharbati: { 1: 127, 2: 254, 5: 605, 10: 1210 },
+  Khapli:   { 1: 280, 2: 560, 5: 1300, 10: 2600 },
+  Lokwan:   { 1: 110, 2: 220, 5: 530, 10: 1060 }
+};
+
 function getProductMRP(productName, qty) {
+  if (productName === 'multigrain' || productName === 'multimillet') {
+    const base = S.blendBases ? S.blendBases[productName] : 'Sharbati';
+    const baseKey = base || 'Sharbati';
+    const table = BASE_PRICES[baseKey];
+    if (table) {
+      const key = (typeof qty === 'number') ? qty : String(qty).toLowerCase();
+      if (table[key] != null) return table[key];
+    }
+  }
+
   const table = PRODUCT_PRICES[productName];
   if (table) {
     const key = (typeof qty === 'number') ? qty : String(qty).toLowerCase();
@@ -732,6 +748,31 @@ function selectGranulation(button, blendName, value) {
   saveState();
 }
 
+function selectBlendBase(button, blendName, value) {
+  if (!S.blendBases) S.blendBases = {};
+  S.blendBases[blendName] = value;
+  
+  // Highlight active button locally within this card's base container
+  const parentContainer = button.closest('div');
+  if (parentContainer) {
+    parentContainer.querySelectorAll('.base-pill').forEach(btn => btn.classList.remove('sel'));
+  }
+  button.classList.add('sel');
+  
+  // Update MRP display in the card dynamically
+  const card = button.closest('.mcq');
+  if (card) {
+    const mrpEl = card.querySelector('.mrp-value');
+    if (mrpEl) {
+      const qty = S.blendQuantities[blendName] || 5;
+      mrpEl.innerText = '₹' + getProductMRP(blendName, qty);
+    }
+  }
+  
+  updateSidebarSummary();
+  saveState();
+}
+
 function syncTraditionalCardsUI() {
   const blends = [
     'sharbati', 'khapli', 'lokwan', 'multigrain', 'multimillet',
@@ -774,6 +815,19 @@ function syncTraditionalCardsUI() {
           btn.classList.remove('sel');
         }
       });
+
+      // Sync base preset pills (if multigrain or multimillet)
+      if (blend === 'multigrain' || blend === 'multimillet') {
+        const base = (S.blendBases && S.blendBases[blend]) || 'Sharbati';
+        card.querySelectorAll('.base-pill').forEach(btn => {
+          const val = btn.getAttribute('data-val');
+          if (val === base) {
+            btn.classList.add('sel');
+          } else {
+            btn.classList.remove('sel');
+          }
+        });
+      }
 
       // Sync MRP display on the card
       const mrpEl = card.querySelector('.mrp-value');
@@ -935,6 +989,10 @@ function updateSidebarSummary() {
       ? (S.lang === 'hi' ? '⚙️ चक्की में पिसाई' : '⚙️ Grinding in Chakki')
       : (S.lang === 'hi' ? '🛒 इन-स्टोर मिल पिकअप' : '🛒 In-Store Mill Pickup');
 
+    const base = (S.blendBases && S.blendBases[item.blend]) || 'Sharbati';
+    const baseText = S.lang === 'hi' ? (base === 'Sharbati' ? 'शरबती बेस' : base === 'Khapli' ? 'खापली बेस' : 'लोकवान बेस') : `${base} Base`;
+    const baseTagHTML = (item.blend === 'multigrain' || item.blend === 'multimillet') ? `<span style="background: rgba(232,184,75,0.12); color: var(--g2); border: 1px solid rgba(232,184,75,0.25); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${baseText}</span>` : '';
+
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
         <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
@@ -946,7 +1004,7 @@ function updateSidebarSummary() {
             <div style="font-weight:600; color:#fff; font-size:13px; text-align: left;">${displayName}</div>
             <div style="font-size:10px; color:var(--g2); display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
               <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2;">${item.aisle}</span>
-              ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
+              ${item.category === 'atta' ? `${baseTagHTML}<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
               ${item.category !== 'atta' ? `<span>${fulfillmentStatusLabel}</span>` : ''}
             </div>
             ${item.category === 'atta' ? fulfillmentSelectorHTML : ''}
@@ -967,6 +1025,10 @@ function updateSidebarSummary() {
     const localizedGran = S.lang === 'hi' ? (gran === 'Fine' ? 'बारीक' : gran === 'Medium' ? 'मध्यम' : 'दरदरा') : gran;
     const imgUrl = PRODUCT_IMAGES[item.blend] || 'images/sharbati.png';
     const displayName = S.lang === 'hi' ? item.nameHi : item.name;
+    const base = (S.blendBases && S.blendBases[item.blend]) || 'Sharbati';
+    const baseText = S.lang === 'hi' ? (base === 'Sharbati' ? 'शरबती बेस' : base === 'Khapli' ? 'खापली बेस' : 'लोकवान बेस') : `${base} Base`;
+    const baseTagHTML = (item.blend === 'multigrain' || item.blend === 'multimillet') ? `<span style="background: rgba(232,184,75,0.12); color: var(--g2); border: 1px solid rgba(232,184,75,0.25); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${baseText}</span>` : '';
+
     itemsHTML += `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background: rgba(0,0,0,0.18); padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
         <div style="display:flex; align-items:center; gap:10px; flex: 1; padding-right: 8px;">
@@ -978,7 +1040,7 @@ function updateSidebarSummary() {
             <div style="font-weight:600; color:#fff; font-size:13px;">${displayName}</div>
             <div style="font-size:10px; color:#ff8a8a; display:flex; align-items:center; gap:6px; margin-top: 3px; flex-wrap: wrap;">
               <span class="aisle-tag" style="padding: 1px 6px; font-size: 9px; line-height: 1.2; background: rgba(255,107,107,0.15); color: #ff8a8a; border-color: rgba(255,107,107,0.3);">${item.aisle}</span>
-              ${item.category === 'atta' ? `<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
+              ${item.category === 'atta' ? `${baseTagHTML}<span style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600;">${localizedGran}</span>` : ''}
               <span>${S.lang === 'hi' ? '🚚 होम डिलीवरी (इन ट्रांजिट)' : '🚚 Home Delivery (In Transit)'}</span>
             </div>
           </div>
@@ -1904,6 +1966,7 @@ function buildAndShowResults() {
             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
               <span style="color: #fff; font-weight: 600;">${displayName}</span>
               <span style="font-size: 9.5px; ${textStyleColor} background: rgba(232,184,75,0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.2); font-weight: 600;">${aisleLabel}</span>
+              ${(blend === 'multigrain' || blend === 'multimillet') ? `<span style="font-size: 9.5px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${(S.blendBases && S.blendBases[blend]) || 'Sharbati'} Base</span>` : ''}
               ${meta.category === 'atta' ? `<span style="font-size: 9.5px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
               <span style="font-size: 9.5px; color: var(--g2); font-weight: 600;">${statusLabel}</span>
             </div>
@@ -2014,6 +2077,7 @@ function buildAndShowResults() {
                 </div>
                 <span style="color: #fff; font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                   ${displayName}${suffix}
+                  ${(blend === 'multigrain' || blend === 'multimillet') ? `<span style="font-size: 9px; color: var(--g2); background: rgba(232,184,75,0.15); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(232,184,75,0.3); font-weight: 600;">${(S.blendBases && S.blendBases[blend]) || 'Sharbati'} Base</span>` : ''}
                   ${meta.category === 'atta' ? `<span style="font-size: 9px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); font-weight: 600;">${localizedGran}</span>` : ''}
                 </span>
               </div>
